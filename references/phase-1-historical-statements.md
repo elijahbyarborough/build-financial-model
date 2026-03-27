@@ -38,7 +38,7 @@ The Model View is a condensed, analytical version of the Reported View. It group
 
 **Model View design principles:**
 - **IS Model View**: Consolidate detailed OpEx lines into analytical categories (COGS, SG&A, R&D, D&A, SBC, Other). Add analytical subtotals not in GAAP: Gross Profit, EBITDA, EBIT. Add margin rows (italic %).
-- **BS Model View**: Group into analytical categories: Cash, Operating Current Assets, PP&E, Goodwill & Intangibles, Other Noncurrent Assets / Operating Current Liabilities, Debt (current + noncurrent), Other Noncurrent Liabilities, Equity. Each category maps to a build tab.
+- **BS Model View**: Group into analytical categories: Cash, Operating Current Assets, PP&E, Goodwill & Intangibles, Other Noncurrent Assets, M&A Assets / Operating Current Liabilities, Debt (current + noncurrent), Other Noncurrent Liabilities, Equity. Each category maps to a build tab. **M&A Assets is a structural placeholder** — set to 0 across all historical periods. It exists so Phase 4 can link cumulative acquisition spend here without touching Goodwill or the organic model (see `references/methodology.md`).
 - **CF Model View**: Organize into CFO (NI + non-cash adjustments + WC changes), CFI (capex + acquisitions + other), CFF (debt + dividends + buybacks + other). Each line should correspond to a BS change.
 
 **Model View rules:**
@@ -82,6 +82,48 @@ Create a mapping (on the Task Tracker or as a working section):
 **Every row must have a CF home.** If a BS item changes and you can't identify where on the CF it flows, that's a structural gap that must be resolved before Phase 2.
 
 **Key principle:** Cash is the PLUG — it equals Beginning Cash + all CF flows. The BS balances by construction because the CF IS the set of all BS changes.
+
+---
+
+## Step 4b: Lease Schedule Historicals (Debt Build)
+
+If `HAS_OPERATING_LEASES = Y`, add an **Operating Lease Schedule** section to the Debt Build with historical rows:
+- **Drivers**: New Operating Leases (implied from ROU roll-forward: `Ending ROU - Beginning ROU + Lease Cost`), Implied Useful Life (`Prior Liability / Lease Cost`), Operating Lease Cost, Lease Cost as % of Revenue (memo)
+- **Balance Sheet Items**: Operating Lease ROU Asset Net, Operating Lease Liability -- Current, Operating Lease Liability -- Noncurrent, Total Operating Lease Liability
+
+If `HAS_FINANCE_LEASES = Y`, add a **Finance Lease Schedule** section below:
+- **ROU Asset**: Beginning Gross, New Additions, Ending Gross, Accumulated Depreciation, Ending Net
+- **Liability**: Beginning, New Additions, Interest Accrual, Cash Payment, Ending, Current, Noncurrent
+- **Expense Memo**: Depreciation of ROU Assets, Interest on Lease Liabilities, Total Finance Lease Cost
+- **Drivers**: Implied Useful Life, Implied Interest Rate (`Interest / Average Liability`)
+
+All historical values must be formulas linking to the source data tab -- never hardcoded.
+
+### BS Mapping for Leases
+
+Document on the Task Tracker where each lease item sits in the company's reported financials:
+- OL ROU Asset: [BS line reference]
+- FL ROU Asset: inside PP&E (if `FL_IN_PPE=Y`) or separate line (if `FL_IN_PPE=N`)
+- FL Current Liability: inside "Other Current Liabilities" or separate line
+- FL Noncurrent Liability: inside "Other Noncurrent Liabilities" or separate line
+- OL Liability: typically its own line on the BS
+
+This mapping determines how the Working Capital Build disaggregates "Other" BS categories.
+
+### WC Build Historical Disaggregation
+
+The Noncurrent Operating Items section of the Working Capital Build must include dedicated rows for each lease balance sheet item. For historical periods:
+
+- **Operating Lease ROU Assets**: `=BS!OL_ROU_line`
+- **Operating Lease Liabilities**: `=BS!OL_Liability_line`
+- **Finance Lease Liability -- Current**: `='Debt Build'!FL_Current` (pulled from the Debt Build, which sources from the filing)
+- **Finance Lease Liability -- Noncurrent**: `='Debt Build'!FL_Noncurrent`
+
+The residual "Other" lines must EXCLUDE lease items:
+- **Other Current Liabilities (ex-Finance Lease)**: `=BS!Other_CL_reported - 'Debt Build'!FL_Current`
+- **Other Noncurrent Liabilities (ex-Finance Lease, NCI)**: `=BS!Other_NCL_reported - 'Debt Build'!FL_Noncurrent - NCI_if_applicable`
+
+This disaggregation is essential -- without it, lease items will be projected using revenue-based WC drivers instead of the Debt Build schedule, causing BS imbalances.
 
 ---
 

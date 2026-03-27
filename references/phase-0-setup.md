@@ -195,6 +195,27 @@ When the user provides source files, automatically:
 
 ---
 
+### Lease Detection
+
+When scanning source financials, identify lease presence and classification:
+
+1. **Scan BS** for: "Operating Lease ROU", "Right-of-use", "Finance Lease", "Capital Lease", "ROU Asset"
+2. **Scan IS** for: "Operating lease cost", "Finance lease depreciation", "Finance lease interest", "Lease expense"
+3. **Scan CF** for: "Finance lease payments", "Operating lease payments", "ROU asset amortization"
+4. **Determine FL_IN_PPE**: Check whether the company's reported Net PP&E includes or excludes finance lease ROU assets. Inspect the PP&E footnote or BS detail. If finance lease assets are inside the PP&E roll-forward, `FL_IN_PPE = Y`. If reported as a separate BS line, `FL_IN_PPE = N`.
+5. **Assess materiality**: If total lease ROU assets (operating + finance) are > 5% of total assets, `LEASE_MATERIALITY = HIGH`. Otherwise `LOW`.
+
+**Add to Task Tracker Model State Block**:
+
+HAS_OPERATING_LEASES: [Y/N]
+HAS_FINANCE_LEASES: [Y/N]
+FL_IN_PPE: [Y/N]
+LEASE_MATERIALITY: [HIGH/LOW]
+
+These flags control whether the Debt Build includes lease schedules and whether the PP&E Build needs FL-related adjustments.
+
+---
+
 ## Data Pull Tabs
 
 ### Data Pull (Live SPG Formulas)

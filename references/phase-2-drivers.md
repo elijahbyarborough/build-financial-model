@@ -60,6 +60,22 @@ The Tax Schedule must output the period-over-period change in Net DTL (or Net DT
 
 ---
 
+### Lease Drivers
+
+If `HAS_OPERATING_LEASES = Y`:
+- **New Operating Lease Additions**: Implied from ROU roll-forward. Historical = `Ending ROU - Beginning ROU + Lease Cost`. Projection assumption = flat dollar amount (yellow bg + blue text) based on trailing 3-year average.
+- **Implied Useful Life**: `Prior Total Liability / Annual Lease Cost`. Typically 5-10 years. Projection = carry forward last historical value unless management guidance indicates change.
+- **Operating Lease Cost as % of Revenue**: Memo row for context. Not used as the projection driver (lease cost is computed from liability / life, not revenue-driven).
+
+If `HAS_FINANCE_LEASES = Y`:
+- **New FL Additions**: Historical = `Ending Gross ROU - Beginning Gross ROU`. Projection assumption = flat dollar amount (yellow bg + blue text). Set to zero if portfolio is winding down.
+- **Useful Life**: For depreciation. Historical implied = `Beginning Net ROU / Annual Depreciation`. Projection = carry forward.
+- **Implicit Interest Rate**: `Annual FL Interest / Average FL Liability`. Projection = carry forward.
+
+These driver rows live in the Debt Build under each lease schedule's "Drivers" subheader. Historical values are formula-derived from reported data; projection values are hardcoded assumptions with source comments.
+
+---
+
 ## Key Rules for This Phase
 
 - **Historicals link to source tabs** — never hardcoded.
@@ -67,6 +83,7 @@ The Tax Schedule must output the period-over-period change in Net DTL (or Net DT
 - **Revenue is driver-based** — volume × price/rate strongly preferred.
 - **PP&E acquisitions in projection years: set to 0 as a placeholder.** Phase 4 (Capital Allocation) will overwrite with a live link. Never back-solve acquisitions as a plug.
 - **Non-contractual debt changes (optional prepayment, new issuance beyond scheduled amort) in projection years: set to 0 as a placeholder.** Phase 4 will incorporate final debt decisions.
+- **Cash & Equivalents lives on the Debt Build** as a target balance assumption (yellow bg + blue text in projections, green text linking to BS for historicals). The change in cash feeds the Capital Allocation Build -- see `references/methodology.md` for full spec.
 - **Each build tab outputs both balances (for BS) and deltas (for CF)** — the statements pull from build tabs in Phase 3.
 - **No freeze panes.**
 

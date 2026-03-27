@@ -3,9 +3,9 @@ name: build-model
 description: |
   FC modeling methodology and model architecture. Single source of truth for how every model is structured, what tabs exist, how projections are built, and how valuation and returns work. Methodology ONLY — defer to firm-formatting for all formatting.
 
-  Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, MOIC, sensitivity, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, or any model architecture decision.
+  Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, MOIC, sensitivity, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
 
-  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC/FCF yields standard in every model.
+  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC/FCF yields standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CF linkage.
 ---
 
 # FC Modeling Conventions
@@ -84,6 +84,9 @@ Always include:
 - **Capital Allocation Check**: `Unreconciled Residual = 0`
 
 If any check is non-zero, stop and debug. **Never use a plug, balancing item, or "other" line to force a check to zero.**
+
+### Lease Awareness
+When source data contains operating or finance leases (ASC 842), the model must include dedicated lease schedules on the Debt Build tab. Lease detection occurs in Phase 0/1. Key flags tracked on the Task Tracker: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `FL_IN_PPE`, `LEASE_MATERIALITY`. See `references/methodology.md` Lease Accounting section for full architecture. The critical rule: **CF Financing finance lease payment = principal only (depreciation amount), NEVER total payment (depreciation + interest).**
 
 ### Free Cash Flow
 Compute all three: Unlevered FCF (`EBIT × (1 - tax rate) + D&A - Capex - ΔWC`), Levered FCF (`CFO - Capex`), FCFE (`Levered FCF - Debt Repayment + Debt Issuance`).

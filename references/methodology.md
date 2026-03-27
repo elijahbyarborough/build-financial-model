@@ -98,13 +98,178 @@ Include below the roll-forward:
 
 ### Goodwill
 - Goodwill does not amortize under GAAP — carry forward at the most recent balance
-- Only adjust for impairments (if modeling a scenario) or new acquisitions (via M&A Build)
+- Only adjust for impairments (if modeling a scenario). In projections, acquisition spend flows through the M&A Assets line (see below), not Goodwill — Goodwill stays flat unless the analyst explicitly models a goodwill allocation.
 
 ### Intangible Assets
 - Build an amortization schedule: Beginning Balance - Amortization Expense + Additions = Ending Balance
 - Amortization expense: straight-line over estimated useful life by asset category
 - If the company discloses an amortization schedule in filings, use it directly
 - Amortization flows to the IS (either as a separate line or within D&A, depending on company reporting)
+
+### M&A Assets (Required BS Row)
+Every Balance Sheet must include an "M&A Assets" row in Noncurrent Assets, positioned after Other Noncurrent Assets and before Total Assets.
+
+- **Historical periods**: 0 (or link to reported goodwill from acquisitions if available)
+- **Projection periods**: Cumulative acquisition spend from the Capital Allocation Build, rolling forward each year:
+  - `FY1 = ABS(Cap Alloc Acquisitions FY1)`
+  - `FY2 = FY1 + ABS(Cap Alloc Acquisitions FY2)`
+- This line offsets the cash outflow from acquisitions on the CF/BS so the balance sheet stays balanced without touching Goodwill or the organic model
+- **Total Assets SUM range must include this row**
+
+---
+
+## Lease Accounting (ASC 842)
+
+Leases are projected on the **Debt Build** tab in dedicated schedule sections. Both operating and finance leases follow a roll-forward architecture that feeds the BS, IS, and CF through the Working Capital Build.
+
+### Detection & Classification (Phase 0 / Phase 1)
+
+When scanning source data (BAMSEC, Tegus, Historical Data), look for lease indicators before building any tabs.
+
+**Balance Sheet signals**: "Operating Lease ROU", "Right-of-use", "Finance Lease", "Capital Lease", "ROU Asset"
+**Income Statement signals**: "Operating lease cost", "Finance lease depreciation", "Finance lease interest", "Lease expense"
+**Cash Flow signals**: "Finance lease payments", "Operating lease payments", "ROU asset amortization"
+
+Set the following flags on the Task Tracker Model State Block:
+- `HAS_OPERATING_LEASES`: Y/N
+- `HAS_FINANCE_LEASES`: Y/N
+- `FL_IN_PPE`: Y/N -- does the company include finance lease ROU assets inside reported Net PP&E?
+- `LEASE_MATERIALITY`: HIGH/LOW -- HIGH if lease assets > 5% of total assets
+
+**Materiality shortcut**: If `LEASE_MATERIALITY = LOW` and the portfolio is declining (no material new lease additions), use simplified straight-line runoff with no new additions instead of the full roll-forward architecture.
+
+### Operating Lease Schedule
+
+Built on the **Debt Build** tab in a dedicated "Operating Lease Schedule" section.
+
+**Drivers (assumption rows, yellow bg + blue text)**:
+- New Operating Leases (noncash ROU addition): flat dollar amount based on trailing 3-year average
+- Implied Useful Life (years): based on historical implied life (prior liability / annual cost)
+
+**ROU Asset roll-forward**:
+
+Ending ROU = Beginning ROU + New Leases - Lease Cost
+
+**Liability roll-forward**:
+
+Ending Liability = Beginning Liability + New Leases - Lease Cost
+
+Under ASC 842 for operating leases, the full lease cost (P&L expense) reduces the liability. There is no interest/principal split for operating leases.
+
+**Current / Noncurrent split**: Formula-driven, never hardcoded in projections. Use one of:
+1. `=MIN(Total_Liability, Next_Year_Lease_Cost)` for current portion
+2. Historical current/total ratio applied to projected total
+
+Noncurrent = Total - Current.
+
+**IS linkage**: Operating lease cost flows to operating expenses (SG&A or a dedicated "Lease Expense" line). This is an operating expense, NOT interest.
+
+**CF linkage**: The net change in operating lease balances (Change in ROU Asset - Change in Liability) flows through working capital on the CF statement. When new lease additions roughly equal amortization, this nets to approximately zero. No separate CF Financing entry for operating leases.
+
+### Finance Lease Schedule
+
+Built on the **Debt Build** tab in a dedicated "Finance Lease Schedule" section, below the Operating Lease Schedule.
+
+**Drivers (assumption rows, yellow bg + blue text)**:
+- New Finance Lease Additions: flat dollar amount (or zero if portfolio is winding down)
+- Useful Life (years): for depreciation calculation
+- Implicit Interest Rate: based on historical implied rate (interest expense / average liability)
+
+**ROU Asset roll-forward**:
+
+Ending Gross ROU = Beginning Gross ROU + New Additions
+Accumulated Depreciation rolls forward with annual depreciation
+Ending Net ROU = Ending Gross - Ending Accumulated Depreciation
+
+**Depreciation**: `FL Depreciation = Beginning Net ROU / Useful Life` (straight-line). This is NOT the same as the cash payment.
+
+**Interest**: `FL Interest = Beginning Liability * Implicit Rate`. Flows to IS interest expense.
+
+**Total FL Cost (memo)**: `= Depreciation + Interest`. This equals the total cash lease payment.
+
+**Liability roll-forward**:
+
+Ending Liability = Beginning Liability + New Additions + Interest Accrual - Cash Payment
+
+Where Cash Payment = Depreciation + Interest (total lease cost). The liability reduction each period equals the principal portion (= Depreciation), because Payment - Interest = Depreciation.
+
+**Current / Noncurrent split**: Same rules as operating leases -- formula-driven, never hardcoded. Use `=MIN(Total_Liability, Next_Year_Principal_Payment)` or historical ratio.
+
+**IS linkage**:
+- FL Depreciation: included in D&A (either inside PP&E Build D&A if `FL_IN_PPE=Y`, or as a separate component)
+- FL Interest: included in total interest expense
+
+### Finance Lease ROU Asset Placement (FL_IN_PPE Decision)
+
+**This decision determines the entire model structure for finance leases.** Check the company's reported balance sheet to determine whether finance lease ROU assets are bundled inside Net PP&E or reported as a separate line item.
+
+**How to determine**: If the PP&E footnote or BS detail includes finance lease ROU assets within the PP&E gross/net roll-forward, then `FL_IN_PPE = Y`. If the BS shows a separate line for "Finance Lease ROU Assets", then `FL_IN_PPE = N`.
+
+#### FL_IN_PPE = Y (finance lease ROU inside PP&E)
+
+- **PP&E Build**: New FL additions flow through an "Other" capex line: `='Debt Build'!New_FL_Additions`. FL depreciation is embedded in total D&A.
+- **D&A driver calculation (CRITICAL)**: The D&A-as-%-of-revenue driver must be calculated EXCLUDING finance lease depreciation. Otherwise the FL portion inflates the %, leading to over-projection of D&A. Historical driver formula: `=(Total D&A - FL Depreciation) / Revenue`. Projection D&A allocation formula must subtract FL depreciation before applying the segment/corporate split.
+- **BS**: Single "Net PP&E" line that includes FL ROU. No separate BS line for FL ROU asset.
+- **CF**: Total D&A add-back on CF already includes FL depreciation (it is inside PP&E Build D&A).
+
+#### FL_IN_PPE = N (finance lease ROU separate from PP&E)
+
+- **PP&E Build**: Clean -- no FL items at all. D&A is purely operating D&A. No complex allocation needed.
+- **Debt Build**: Tracks the full FL ROU asset roll-forward (in addition to the liability roll).
+- **BS**: New noncurrent asset line "Finance Lease ROU Assets, Net" pulling from `='Debt Build'!FL_ROU_Net`. Place between Net PP&E and Goodwill (or wherever the company reports it).
+- **CF**: Total D&A add-back = PP&E Build D&A + Debt Build FL Depreciation (two separate pulls).
+
+### Cash Flow Rules for Leases (HARD STOP)
+
+**This is the most common lease modeling error. Read carefully.**
+
+**CF Operating**:
+- D&A add-back INCLUDES finance lease depreciation (it is a noncash charge)
+- Working capital changes include the net change in operating lease balances (ROU - Liability)
+- FL interest is already captured in Net Income, which flows to CFO -- no separate add-back needed
+
+**CF Financing**:
+- Finance lease payment in CF Financing = **PRINCIPAL ONLY** = the depreciation amount
+- Pull from: `=-'Debt Build'!FL_Depreciation` (the depreciation row, NOT the total payment row)
+- **NEVER** pull from the total payment row (Depreciation + Interest). The interest component is already inside Net Income, which flows through CFO. Pulling the total payment double-counts the interest as a cash outflow.
+
+**Verification**: After building, confirm that `Total CF from Financing` includes only the FL principal (depreciation) amount, not dep + interest. If the BS check is non-zero by roughly the amount of FL interest expense, this is almost certainly the cause.
+
+### Working Capital Build Disaggregation
+
+The Working Capital Build is the bridge between the Debt Build (where leases are projected) and the BS/CF. Lease items MUST be disaggregated from generic "Other" balance sheet lines.
+
+**Required rows in WC Build Noncurrent Operating Items section**:
+- Operating Lease ROU Assets: pull from Debt Build OL ROU
+- Operating Lease Liabilities: pull from Debt Build OL Liability (noncurrent or total, matching BS presentation)
+- Finance Lease Liability -- Noncurrent: pull from Debt Build FL Noncurrent
+- Finance Lease Liability -- Current: pull from Debt Build FL Current
+
+**Historical formula pattern for disaggregation**:
+- "Other Current Liabilities (ex-Finance Lease)" = `BS!Other_CL_as_reported - 'Debt Build'!FL_Current`
+- "Other Noncurrent Liabilities (ex-Finance Lease, NCI)" = `BS!Other_NCL_as_reported - 'Debt Build'!FL_Noncurrent - BS!NCI`
+
+This ensures the "Other" lines contain only the residual items that should be projected using revenue-based or flat-line drivers, while lease items are projected by the Debt Build schedule.
+
+**Projection formula pattern**: In projection years, each lease row pulls directly from the Debt Build. The "Other" lines use their own drivers (% of revenue, flat, etc.) and do NOT include any lease amounts.
+
+### Build Order (Updated for Leases)
+
+When leases are present, the build order for Phase 3 (Forward Statements) is:
+
+1. Revenue Build
+2. Costs Build (operating expenses, including OL lease cost)
+3. **Debt Build (including Operating Lease Schedule and Finance Lease Schedule)**
+4. PP&E Build (needs FL additions and depreciation from Debt Build if `FL_IN_PPE=Y`)
+5. Working Capital Build (needs lease balances from Debt Build)
+6. Tax Schedule
+7. Income Statement assembly
+8. Balance Sheet assembly
+9. Cash Flow assembly
+
+The Debt Build must complete before the PP&E Build because PP&E needs:
+- New FL additions (for "Other" capex if `FL_IN_PPE=Y`)
+- FL depreciation (to exclude from the D&A% driver calculation)
 
 ---
 
@@ -175,6 +340,17 @@ For each debt instrument:
 - Fixed-rate debt: use the contractual rate
 - Floating-rate debt: base rate assumption (SOFR) + spread. Base rate assumption cell: yellow background (#FFFF00) + blue text (#0000FF) + source comment.
 - Interest income on cash balances: separate line, use conservative money market rate
+
+### Cash & Equivalents
+Cash & Equivalents lives on the Debt Build alongside the debt tranches. Historical periods pull from the BS tab (green text). Projection periods are a **hardcoded target balance assumption** (yellow bg + blue text) -- the analyst sets the target cash balance directly, just like debt balances.
+
+The change in cash flows into the Capital Allocation Build as a source/use of cash:
+- **Capital Allocation Build**: `Net Change in Cash = -(Target Cash - Prior Period Cash)`
+- **Sign convention**: cash increase = negative (use of cash, reduces Cash Available for Allocation); cash decrease = positive (source of cash)
+- Net Change in Cash sits in the **Cash Available for Allocation** section, NOT in Capital Deployment
+- The BS Cash line pulls FROM the Debt Build (`='Debt Build'!cell`), not from the CF tab
+
+This ensures the buyback plug on the Capital Allocation Build automatically adjusts when the analyst changes the target cash balance.
 
 ### Debt = Input (Capital Allocation Decision)
 Debt assumptions (contractual amortization, planned issuance, optional prepayment) live on the Debt Build tab. The Capital Allocation Build waterfall (Phase 4) incorporates net debt changes from the Debt Build as an input to the cash waterfall. The Debt Build owns the debt assumptions; the Cap Alloc waterfall passes them through.

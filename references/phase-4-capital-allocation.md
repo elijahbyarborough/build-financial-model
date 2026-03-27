@@ -31,6 +31,7 @@ Phase 3 set dividends, acquisitions, share repurchases, and diluted share count 
 | CF tab → Acquisitions (CFI) | `='Capital Allocation Build'!Acquisitions` |
 | IS tab → Diluted Share Count | `='Capital Allocation Build'!Diluted Shares` |
 | PP&E Build → Acquisitions row | `='Capital Allocation Build'!Acquisition Budget` (sign-flipped) |
+| BS tab → M&A Assets | Cumulative `ABS(acquisitions)` from Capital Allocation Build (roll-forward: prior period + current period) |
 
 **After re-linking, re-verify all integrity checks** (BS Check = 0, CF Check = 0, NI ties, RE roll-forward) for every projection year. The model is now circular (waterfall depends on CF, CF depends on waterfall) — this is expected and requires iterative calculation enabled in Excel.
 
@@ -52,6 +53,16 @@ Phase 3 set dividends, acquisitions, share repurchases, and diluted share count 
 - Less: SBC dilution offset
 - = Net Share Repurchases
 - **Waterfall Check** = 0
+
+---
+
+### Finance Lease Obligations
+
+Finance lease principal payments are mandatory, non-discretionary uses of cash, similar to scheduled debt repayment. Include in the financing / mandatory outflows section of the Capital Allocation Build:
+
+- **Finance Lease Principal Payment**: `='Debt Build'!FL_Depreciation` (principal portion only)
+- This amount reduces available cash for discretionary allocation (M&A, buybacks, dividends, voluntary debt repayment)
+- Operating lease payments do NOT appear here -- they are operating expenses already captured in EBITDA/CFO
 
 ---
 
