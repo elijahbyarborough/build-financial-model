@@ -15,7 +15,6 @@ Build the Returns tab — a compact, single-section analysis grid with YEARFRAC 
 3. **Dividend income**: YEARFRAC-weighted DPS received per period
 4. **Dual cash flow rows**: Net Cash Flow (total) and Core Cash Flow (ex-M&A)
 5. **IRR decomposition**: EPS CAGR, M&A Value, Dividend Yield, Multiple Change, total IRR
-6. **After completion**, add Intrinsic Value per Share back to Model tab KPI section
 
 ---
 
@@ -291,7 +290,6 @@ Only THREE assumptions on this entire tab. Everything else is derived from these
 - **Dual cash flow rows**: Net (total) and Core (ex-M&A) enable M&A IRR attribution.
 - **IRR decomposes into 4 components**: EPS CAGR, M&A Value, Dividend Yield, Multiple Change.
 - **Pulls from Model Tab** for EPS and from **Cap Alloc Build** for M&A Value Per Share and DPS.
-- **After completion**, add Intrinsic Value per Share back to Model tab KPI section.
 - **No freeze panes. All formatting defers to `firm-formatting`.**
 
 **STOP. Update Task Tracker. Report XIRR and results. Wait for "continue."**

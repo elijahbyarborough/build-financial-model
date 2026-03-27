@@ -110,11 +110,12 @@ Include below the roll-forward:
 Every Balance Sheet must include an "M&A Assets" row in Noncurrent Assets, positioned after Other Noncurrent Assets and before Total Assets.
 
 - **Historical periods**: 0 (or link to reported goodwill from acquisitions if available)
-- **Projection periods**: Cumulative acquisition spend from the Capital Allocation Build, rolling forward each year:
-  - `FY1 = ABS(Cap Alloc Acquisitions FY1)`
-  - `FY2 = FY1 + ABS(Cap Alloc Acquisitions FY2)`
+- **Projection periods**: Pull directly from the Capital Allocation Build's **Cumulative M&A Invested Capital** row:
+  - `='Capital Allocation Build'!Cumulative_M&A_Invested_Capital` for each projection year
+  - This is the running total of all acquisition spend (Phase 4, Section 3, Row 3)
 - This line offsets the cash outflow from acquisitions on the CF/BS so the balance sheet stays balanced without touching Goodwill or the organic model
 - **Total Assets SUM range must include this row**
+- The Phase 4 Re-Link step explicitly maps: `BS!M&A Assets = Cap Alloc!Cumulative M&A Invested Capital`
 
 ---
 
@@ -316,14 +317,39 @@ These are common patterns, not prescriptive rules. Always verify against the act
 
 ## Tax
 
-### Blended Approach
+### Default Approach: Effective Tax Rate (Most Companies)
+
+Most companies can be modeled with a simple effective tax rate. This is the default unless the company has material NOLs or complex tax structures.
+
 - **Income Statement**: Apply an effective tax rate assumption to EBT
   - Effective tax rate: yellow background (#FFFF00) + blue text (#0000FF), source comment with historical average and statutory reference
   - `Income Tax Expense = EBT × Effective Tax Rate`
-- **Balance Sheet**: Model DTAs and DTLs explicitly
+  - Default: use the trailing 3-year average effective rate unless management guides otherwise
+  - If EBT is negative, set tax expense to 0 (do not model a tax benefit unless there is a clear DTA to support it)
+- **Balance Sheet**: Model DTAs and DTLs on the Tax Schedule tab
   - Deferred Tax Assets: driven by tax loss carryforwards, SBC deductions, accruals timing
   - Deferred Tax Liabilities: driven by accelerated depreciation, intangible amortization timing
-  - Net DTA/DTL change flows through the CF statement as a non-cash adjustment
+  - Net DTA/DTL change flows through the CF statement as a non-cash CFO adjustment
+  - For most companies, project net DTL as a % of PP&E or as flat-to-growing based on historical trend
+
+### NOL Companies (When Applicable)
+
+When a company has material Net Operating Loss carryforwards (check the tax footnote), the Tax Schedule needs additional rows:
+
+- **Beginning NOL Balance**: sourced from the most recent 10-K tax footnote
+- **NOL Utilization**: `=MIN(NOL Balance, EBT × Section 382 Limit %)` — NOLs offset taxable income up to the Section 382 annual limit (if applicable) or 80% of taxable income post-TCJA
+- **Ending NOL Balance**: `=Beginning - Utilization`
+- **Cash Tax Rate**: `=MAX(0, (EBT - NOL Utilization) × Statutory Rate) / EBT` — the actual cash tax paid after NOL shielding
+- **GAAP Tax Rate**: Use the effective rate for IS presentation (GAAP requires full provision regardless of NOL usage). The difference between GAAP and cash tax creates the DTA drawdown.
+
+The key output: **DTA drawdown** = NOL Utilization × Statutory Rate. This is a non-cash charge that flows through CFO as a negative adjustment (DTA decrease = cash source).
+
+### Tax Schedule Outputs
+
+The Tax Schedule tab must output these rows for other tabs to reference:
+1. **Income Tax Expense** → IS pulls this
+2. **Net change in DTA/DTL** → CF pulls this as a CFO non-cash adjustment
+3. **Cash Taxes Paid** (memo) → useful for FCF sanity checks
 
 ---
 
@@ -362,12 +388,13 @@ Debt assumptions (contractual amortization, planned issuance, optional prepaymen
 **Share count logic lives on the Capital Allocation Build tab**, since buybacks are the primary driver and buyback dollars come from the capital allocation waterfall.
 
 ### Diluted Shares via Treasury Stock Method
-1. **Basic shares**: Beginning shares - buyback shares = ending basic shares
+1. **Basic shares**: Beginning shares - buyback shares + SBC dilution = ending basic shares
 2. **Diluted shares**: Basic shares + dilutive impact of options/RSUs via TSM
    - TSM: `Dilutive Shares = In-the-Money Options × (1 - Exercise Price / Current Stock Price)`
-   - Current stock price: use the implied share price from the model (Exit Multiple × metric / shares) or market price for historical
-3. **Buyback shares**: `Buyback Dollars / Buyback Price` (Buyback Price = Entry Price from the Returns tab)
-4. **Diluted share count feeds back to IS** for EPS computation
+   - Current stock price: use market price for historical
+3. **Buyback shares**: `Buyback Dollars / Buyback Price` (Buyback Price is a hardcoded assumption on the Capital Allocation Build, separate from the investor's Entry Price on the Returns tab)
+4. **SBC Dilution**: `SBC Dollars / Buyback Price` — net share dilution from stock-based compensation at the assumed share price
+5. **Diluted share count feeds back to IS** for EPS computation
 
 ---
 

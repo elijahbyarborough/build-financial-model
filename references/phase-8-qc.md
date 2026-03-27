@@ -2,7 +2,7 @@
 
 **Reference:** `references/phase-8-qc.md`
 **Prerequisite:** Phase 7 complete (formatting applied).
-**Also load:** `references/data-quality.md` for the 6 quality gates and formula rules.
+**Also load:** `references/data-quality.md` for the 4 quality gates and formula rules.
 **Next phase:** Phase 9 (Output) → load `references/phase-9-output.md`
 
 ---
@@ -13,22 +13,20 @@ Run structural and formula QC across the entire model. The audit reads — it do
 
 ---
 
-## 6 Quality Gates
+## 4 Quality Gates
 
 | Gate | What It Checks | Pass Criteria |
 |------|---------------|---------------|
 | 1. Structural integrity | BS Check = 0, CF Check = 0, NI linkage, RE roll-forward, BS→CF mapping holds | Zero errors, all periods |
 | 2. Assumption review | All blue-text cells sourced, no stale assumptions (>90 days) | Every assumption sourced and current |
-| 3. Comps validation | SPG() formulas resolving, peer set valid | Variances within +/-10% or documented |
-| 4. Thesis consistency | Key Decisions Log aligns with model assumptions | No contradictions |
-| 5. Model tab consistency | Summary numbers match underlying tabs | Zero mismatches |
-| 6. Returns sanity | XIRR/MOIC consistent, sensitivity reasonable | IRR/MOIC plausible |
+| 3. Model tab consistency | Summary numbers match underlying tabs | Zero mismatches |
+| 4. Returns sanity | XIRR internally consistent, Returns tab pulls from Model tab correctly, entry price current | IRR plausible |
 
 ### Gate Failure Protocol
 - **Gate 1**: Fix structural errors first. No exceptions.
-- **Gates 2-4**: Flag, propose fix, get user confirmation.
-- **Gate 5**: Refresh Model tab.
-- **Gate 6**: Trace upstream to the offending assumption.
+- **Gate 2**: Flag, propose fix, get user confirmation.
+- **Gate 3**: Refresh Model tab.
+- **Gate 4**: Trace upstream to the offending assumption.
 
 ---
 

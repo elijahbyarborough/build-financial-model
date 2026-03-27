@@ -14,7 +14,7 @@ Build the Capital Allocation Build tab — a continuous cash waterfall from CFO 
 2. **Capital Deployment**: acquisitions, dividends, and buybacks (residual sweep)
 3. **M&A Value Build**: track cumulative M&A capital and compound at assumed IRR
 4. **SBC section**: single source of truth for SBC on this tab (drives dilution + returns)
-5. **Share count roll-forward**: Entry Price dynamics, buyback accretion, SBC dilution, TSM
+5. **Share count roll-forward**: Buyback Price dynamics, buyback accretion, SBC dilution, TSM
 6. **Dividend Policy**: DPS-driven with growth assumption
 7. **Shareholder Returns**: FCF less SBC, % of NI allocation ratios
 8. **Re-link Phase 3 placeholders** (see below)
@@ -118,7 +118,7 @@ Two rows that serve as the SINGLE source of truth for SBC across the model's cap
 | 2 | SBC ($mm) | `=IS!SBC row` | `=SBC % * IS!Revenue` | Currency ($#,##0.0) |
 
 SBC feeds two downstream calculations:
-- **SBC Dilution** in the Share Count section: `SBC $ / Entry Price` = shares diluted by SBC grants
+- **SBC Dilution** in the Share Count section: `SBC $ / Buyback Price` = shares diluted by SBC grants
 - **FCF less SBC** in the Shareholder Returns section: `FCF - SBC` = cash truly available to equity holders
 
 This dual-use is why SBC needs its own section — it is not just an IS line item on this tab, it is a key input to both dilution and returns analysis.
@@ -131,10 +131,10 @@ Full share count roll-forward with 8 rows:
 
 | Row | Label | Historical | Projection Formula | Format |
 |-----|-------|-----------|-------------------|--------|
-| 1 | Entry Price ($/share) | n/a or manually entered | Year 1: user-specified entry price (blue/yellow). Year N: `=prior * (1 + appreciation%)` where appreciation default is 15% | Per-share ($#,##0.00), blue/yellow |
+| 1 | Buyback Price ($/share) | n/a or manually entered | Hardcoded assumption each year (blue/yellow). Default: Year 1 = current share price, Year N = `prior * (1 + appreciation%)` where appreciation default is 15%. Analyst can override individual years. | Per-share ($#,##0.00), blue/yellow |
 | 2 | Beginning Basic Shares (mm) | hardcoded or sourced | `=prior period Ending Basic Shares` | Decimal (0.0) |
-| 3 | Shares Repurchased (mm) | n/a or calculated | `=IF(Entry Price=0, 0, ABS(Gross Share Repurchases) / Entry Price)` | Decimal (0.0) |
-| 4 | SBC Dilution (mm) | n/a or calculated | `=IF(Entry Price=0, 0, SBC $ / Entry Price)` | Decimal (0.0) |
+| 3 | Shares Repurchased (mm) | n/a or calculated | `=IF(Buyback Price=0, 0, ABS(Gross Share Repurchases) / Buyback Price)` | Decimal (0.0) |
+| 4 | SBC Dilution (mm) | n/a or calculated | `=IF(Buyback Price=0, 0, SBC $ / Buyback Price)` | Decimal (0.0) |
 | 5 | Ending Basic Shares (mm) | hardcoded or sourced | `=Beginning - Repurchased + SBC Dilution` | Decimal (0.0), bold |
 | 6 | Dilutive Securities (TSM) | n/a | assumption (blue/yellow, e.g. 1.0mm) | Decimal (0.0), blue/yellow |
 | 7 | **Diluted Shares Outstanding (mm)** | hardcoded or sourced | `=Ending Basic + Dilutive Securities` | **Major total** (F2F2F2 fill, bold, 0.0) |
@@ -142,9 +142,9 @@ Full share count roll-forward with 8 rows:
 
 ### Key Design Decisions
 
-- **Entry Price** grows at an assumed appreciation rate (default 15%/yr). This is a blue/yellow assumption. It drives both the number of shares retired by buybacks AND the dilution from SBC grants.
-- **Shares Repurchased** = `ABS(buyback dollars from deployment) / Entry Price`. Buyback dollars come from the residual sweep, so shares repurchased is a derived output, not an input.
-- **SBC Dilution** = `SBC dollars (from SBC section) / Entry Price`. This is the net share dilution from stock-based compensation at the assumed share price.
+- **Buyback Price** is the assumed share price the company pays when repurchasing stock. Each year is a hardcoded blue/yellow assumption. Default approach: start at the current share price and grow at an assumed appreciation rate (default 15%/yr), but the analyst can override individual years. This is separate from the investor's Entry Price on the Returns tab — Buyback Price drives the capital allocation model, Entry Price drives the returns analysis. Buyback Price drives both the number of shares retired by buybacks AND the dilution from SBC grants.
+- **Shares Repurchased** = `ABS(buyback dollars from deployment) / Buyback Price`. Buyback dollars come from the residual sweep, so shares repurchased is a derived output, not an input.
+- **SBC Dilution** = `SBC dollars (from SBC section) / Buyback Price`. This is the net share dilution from stock-based compensation at the assumed share price.
 - **Ending Basic** = `Beginning - Repurchased + SBC Dilution`. Net share count change reflects both buyback accretion and SBC dilution.
 - **Dilutive Securities (TSM)** is a flat assumption for Treasury Stock Method dilution from outstanding options/RSUs not captured in the annual SBC dilution flow.
 - **Y/Y Change in Diluted Shares** is a quick visual sanity check — should show steady net accretion (negative %) if buybacks exceed SBC dilution.
@@ -278,8 +278,7 @@ All assumptions on the Cap Alloc Build tab (blue text #0000FF, yellow background
 | Acquisitions, Net | M&A section | Company-specific | "Source: management guidance / analyst assumption" |
 | Acquisition IRR | M&A section | 15% | "Source: Analyst assumption -- based on [rationale]" |
 | SBC % of Revenue | SBC section | Match recent history (e.g. 0.75%) | "Source: 5yr historical average" |
-| Entry Price ($/share) | Share Count | Current share price | "Source: market data as of [date]" |
-| Entry Price appreciation | Share Count (implied) | 15% annual | "Analyst assumption -- [rationale]" |
+| Buyback Price ($/share) | Share Count | Current share price, growing at appreciation % | "Source: market data as of [date]; appreciation per analyst assumption" |
 | Dilutive Securities (TSM) | Share Count | ~1mm or calibrate | "Source: latest proxy, TSM calculation" |
 | DPS ($/share) | Dividend Policy | Last actual DPS | "Source: latest dividend declaration" |
 | DPS Growth % | Dividend Policy | 5% or historical CAGR | "Source: 5yr DPS CAGR" |
@@ -312,7 +311,7 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 - **Waterfall Check**, **FCF less SBC**, **Ending Basic Shares**, **Total Dividends**, **M&A Portfolio Value**: bold subtotals
 - All percentage rows (IRR, SBC %, DPS Growth %, Y/Y share change, % of NI ratios): italic
 - Share counts: decimal format (0.0), not integer
-- DPS and Entry Price: per-share format ($#,##0.00)
+- DPS and Buyback Price: per-share format ($#,##0.00)
 - Section Boundary Rule applies within each sub-section for `$` placement
 - Historical data cells: green font (cross-sheet pulls)
 - Projection assumptions: blue font + yellow background
@@ -325,7 +324,7 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 - **Buybacks are the residual** — never an assumption. Residual sweep formula ensures Waterfall Check = 0 by construction.
 - **Acquisitions are a capital allocation decision** — budget lives HERE, PP&E Build pulls from this.
 - **Dividends are DPS-driven** — never a % of NI or FCF.
-- **Entry Price appreciates** — drives both buyback share count and SBC dilution.
+- **Buyback Price is hardcoded per year** — drives both buyback share count and SBC dilution. Separate from the investor's Entry Price on the Returns tab.
 - **SBC section is the single source of truth** — feeds dilution and returns analysis.
 - **Waterfall check must = 0.** Debug before proceeding.
 - **No freeze panes.**

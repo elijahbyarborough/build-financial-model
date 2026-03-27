@@ -45,8 +45,8 @@ Tab order in the workbook (left to right):
 
 | Tab | Purpose | Color |
 |-----|---------|-------|
-| Task Tracker | Session state, task list, key decisions log | Amber (#D4963A) |
-| Returns | XIRR, sensitivity tables | Navy (#1C3553) |
+| Task Tracker | Session state, task list | Amber (#D4963A) |
+| Returns | XIRR, IRR decomposition | Navy (#1C3553) |
 | Model | Summary IS, key drivers, KPIs, ROIC/ROTIC, FCF yields. **Blank until Phase 5.** | Navy (#1C3553) |
 | IS | Detailed Income Statement (Model View + Reported View) | Steel blue (#5B8FA8) |
 | BS | Detailed Balance Sheet (Model View + Reported View) | Steel blue (#5B8FA8) |
@@ -61,7 +61,6 @@ Tab order in the workbook (left to right):
 | Historical Data | Quarterly/annual actuals capture | Dark teal (#436E71) |
 | Data Pull | Live SPG() formulas | Gray (#7C7F88) |
 | Data Pull (Values) | Pasted-as-values snapshot | Gray (#7C7F88) |
-| Comps | Peer trading multiples | Gray (#7C7F88) |
 
 Tabs can be added or removed based on company/sector. This is the baseline — not a straitjacket.
 
@@ -161,7 +160,7 @@ The data flow is: **Raw sources → Historical Data tab (capture layer) → Buil
 | Existing model being rebuilt | `Old Model` or original tab names with `(old)` suffix |
 
 ### Tab Color
-All source/reference tabs: Gray (#7C7F88), same as Data Pull and Comps.
+All source/reference tabs: Gray (#7C7F88), same as Data Pull.
 
 ### Rules
 - **Never delete source tabs** during the build process. They are the audit trail.
@@ -258,7 +257,7 @@ BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CF link directly 
 1. Count segments. If >1 with >500bps margin differential, propose segment-level builds.
 2. Different business models → separate revenue cascades.
 3. Different capital structures → flag for SOTP.
-4. Document in Key Decisions Log.
+4. Document segment structure in Task Tracker Notes.
 
 ### Non-Standard BS Patterns
 
@@ -270,7 +269,7 @@ BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CF link directly 
 | Financial assets | Banks, insurance | Replace WC with financial asset/liability modeling |
 | Rental fleet | Equipment rental | Fleet = PP&E equivalent |
 
-### Discovery Outputs (document in Key Decisions Log)
+### Discovery Outputs (document in Task Tracker Notes)
 1. Revenue model type and cascade
 2. Segment structure
 3. Non-standard BS patterns
@@ -319,7 +318,7 @@ BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CF link directly 
 
 | Column | Content |
 |--------|---------|
-| Phase | 0-8 |
+| Phase | 0-9 |
 | Task | ID + name |
 | Description | What needs doing |
 | Status | DONE / IN PROGRESS / NOT STARTED / BLOCKED |
@@ -330,13 +329,10 @@ BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CF link directly 
 ### Blockers Section
 Blocker ID, Description, Blocking Tasks, Owner, Status, Resolution.
 
-### Key Decisions Log
-Date, Decision, Rationale, Affects.
-
 ### Rules
 - Update after every work session
 - Read tracker first at start of every session
-- Log significant decisions
+- Log significant decisions in the Notes column
 - Respect dependencies
 - Uses firm-formatting styling
 

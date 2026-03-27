@@ -13,7 +13,7 @@ Populate all build tabs with historical data and driver-based forward projection
 
 1. **Revenue Build** (or segment tabs): driver-based revenue using the cascade from sector discovery
 2. **Costs Build**: margin analysis, OpEx projections, incremental margins
-3. **PP&E Build**: capex split (maintenance + growth), depreciation schedule, net PP&E roll-forward
+3. **PP&E Build**: capex split (maintenance + growth), depreciation schedule, net PP&E roll-forward. **Set driver assumptions only in this phase — do NOT write forward projection formulas yet.** PP&E forward projections are built in Phase 3, after the Debt Build (including lease schedules) is complete. If `FL_IN_PPE=Y`, PP&E forward formulas depend on Debt Build finance lease data that may not exist until Phase 3.
 4. **Debt Build**: tranche-by-tranche balances, interest expense
 5. **Working Capital Build**: ALL operating BS items — current AND noncurrent — with explicit drivers
 6. **Tax Schedule**: effective tax rate, NOL balances, DTA/DTL

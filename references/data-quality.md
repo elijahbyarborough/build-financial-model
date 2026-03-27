@@ -1,6 +1,6 @@
 # Data Standards & Quality Gates
 
-Rules for data sourcing, SPG() formulas, comps construction, formula discipline, and the quality gate checklist. Load this reference when working with external data, building comps, or running final QC.
+Rules for data sourcing, SPG() formulas, formula discipline, and the quality gate checklist. Load this reference when working with external data or running final QC.
 
 ---
 
@@ -57,32 +57,6 @@ Source: [Document Type], [Date], [Specific Reference]
 
 ---
 
-## Comps Construction
-
-### Peer Selection
-- **3-5 publicly-traded peers** with US exchange:ticker identifiers (NYSE, NASDAQGS)
-- Select peers based on: business model similarity, end-market overlap, size proximity, margin/growth profile
-- Mark acquired or private companies as **inactive** — no SPG() formulas for inactive peers
-- CIQ is the primary data source for comps
-
-### Comps Tab Layout
-1. **Company header block**: Ticker, name, market cap, EV, last price, shares outstanding
-2. **Trading multiples**: EV/Revenue, EV/EBITDA, EV/EBIT, P/E, P/FCF — LTM and NTM
-3. **Growth metrics**: Revenue growth, EBITDA growth — LTM and NTM
-4. **Margin metrics**: Gross margin, EBITDA margin, net margin — LTM
-5. **Summary statistics**: Mean, median, 25th percentile, 75th percentile for each metric
-6. **Subject company row**: Show where the subject company falls vs. peers
-
-### Multiple Calibration (feeds into Returns)
-From the comps tab, extract:
-1. Historical 5yr trading range of the subject company's multiple (median, 25th, 75th)
-2. Current peer median and range
-3. Premium/discount assessment based on growth and quality differential
-
-These three data points calibrate the exit multiple assumption on the Returns tab.
-
----
-
 ## Formula Construction Rules
 
 ### Always
@@ -122,24 +96,22 @@ Must equal zero in every period. If non-zero, there's a missing cash flow item o
 
 ---
 
-## 6 Quality Gates
+## 4 Quality Gates
 
-Every model must pass all 6 gates before presentation. Run them in order.
+Every model must pass all 4 gates before presentation. Run them in order.
 
 | Gate | Method | Pass Criteria |
 |------|--------|--------------|
 | 1. Structural integrity | BS Check = 0, CF Check = 0, NI linkage, RE roll-forward (see Phase 1 / Phase 3 integrity checks) | Zero errors across all periods |
 | 2. Assumption review | Review all blue-text cells: source comments present, no stale assumptions (>90 days), no "Aggressive" tags without documented rationale | Every assumption sourced and current |
-| 3. Comps validation | Re-check Comps tab: all SPG() formulas resolving, peer set still valid, summary stats current | All variances within +/-10% of consensus or documented explanation |
-| 4. Thesis consistency | Review Key Decisions Log on Task Tracker: assumptions align with stated thesis, no internal contradictions | No contradictions between model assumptions and investment narrative |
-| 5. Model tab consistency | Verify Model tab summary numbers match underlying IS/BS/CF/build tabs: summary revenue = IS revenue, summary EPS = IS EPS, ROIC inputs match BS/IS, FCF yields match CF/market data, key drivers match build tab assumptions (see Phase 5) | Zero mismatches between Model tab and source tabs |
-| 6. Returns sanity | Re-check Returns tab: XIRR/MOIC internally consistent, Returns tab pulls from Model tab correctly, sensitivity table reasonable, entry price current (see Phase 6) | IRR/MOIC plausible, sensitivity grid spans realistic range |
+| 3. Model tab consistency | Verify Model tab summary numbers match underlying IS/BS/CF/build tabs: summary revenue = IS revenue, summary EPS = IS EPS, ROIC inputs match BS/IS, FCF yields match CF/market data, key drivers match build tab assumptions (see Phase 5) | Zero mismatches between Model tab and source tabs |
+| 4. Returns sanity | Re-check Returns tab: XIRR internally consistent, Returns tab pulls from Model tab correctly, entry price current (see Phase 6) | IRR plausible |
 
 ### Gate Failure Protocol
 - **Gate 1 failure**: Fix the structural error before anything else. Use the BS→CF mapping from Phase 1 to diagnose. No exceptions.
-- **Gate 2-4 failure**: Flag the specific issue, propose a fix, and get user confirmation before proceeding.
-- **Gate 5 failure**: Model tab formula is broken or stale — refresh per Phase 5.
-- **Gate 6 failure**: Usually indicates an assumption issue upstream — trace back to the offending input.
+- **Gate 2 failure**: Flag the specific issue, propose a fix, and get user confirmation before proceeding.
+- **Gate 3 failure**: Model tab formula is broken or stale — refresh per Phase 5.
+- **Gate 4 failure**: Usually indicates an assumption issue upstream — trace back to the offending input.
 
 ---
 

@@ -22,8 +22,6 @@ Populate the Model tab — the summary and analytical overview of the entire mod
 5. **Summary Balance Sheet** — condensed BS
 6. **Summary Cash Flow Statement** — condensed CF
 
-**After Phase 6 (Returns)**, add Intrinsic Value per Share to KPI section as a final cross-link.
-
 ---
 
 ## Key Rules

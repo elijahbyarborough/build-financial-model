@@ -23,7 +23,7 @@ This tab is the model's "front page" for investment committee presentations, dea
 
 ### Row 1-2: Title Block
 
-- **Row 1**: Company name + " Investment Summary" — bold, large font
+- **Row 1**: Company name + " Investment Summary" — bold, Arial 10pt (per firm-formatting; no oversized fonts)
 - **Row 2**: Units subtitle: "($ in millions, except per share data)"
 
 ### Row 4: Tier 1 Header — "5-Year Forward Valuation"
@@ -144,12 +144,14 @@ Structure pattern:
 
 ### Formatting
 
-- Historical columns: green font (#008000)
-- Projection columns: default black font
-- $ items: $#,##0 (no decimals for millions)
-- Per-share: $#,##0.00 (two decimals)
-- Margins: 0.0%, italic
-- Shares: 0.0
+All number formats follow `firm-formatting.md` with `_)` right-padding:
+
+- Historical columns: green font (#008000); projection columns: default black font (Output tab exception per firm-formatting)
+- $ items: `$#,##0_);($#,##0);"-"` (no decimals for millions)
+- Per-share: `$#,##0.00_);($#,##0.00);"-"` (two decimals)
+- Margins: `0.0%_);(0.0%);"-"`, italic
+- Shares: `0.0`
+- Multiples: `0.0"x"_);(0.0"x");"-"`
 
 ---
 
@@ -239,13 +241,14 @@ The Output tab has exactly TWO source tabs: **Model Tab** and **Returns**. It ne
 
 ### Data Formatting
 
-- Historical columns: Green font (#008000)
-- Projection columns: Default black font
-- $ items: $#,##0 (no decimals for millions)
-- Per-share items: $#,##0.00 (two decimals)
-- Margins/percentages: 0.0%, italic
-- Multiples: 0.0"x"
-- Share counts: 0.0
+All number formats defer to `firm-formatting.md` — use the standard format strings with `_)` right-padding and `"-"` for zeros:
+
+- Historical columns: Green font (#008000); projection columns: default black (Output tab exception per firm-formatting)
+- $ items: `$#,##0_);($#,##0);"-"`
+- Per-share items: `$#,##0.00_);($#,##0.00);"-"`
+- Margins/percentages: `0.0%_);(0.0%);"-"`, italic
+- Multiples: `0.0"x"_);(0.0"x");"-"`
+- Share counts: `0.0`
 
 ### Row Formatting Patterns
 

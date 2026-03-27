@@ -3,7 +3,7 @@ name: build-model
 description: |
   FC modeling methodology and model architecture. Single source of truth for how every model is structured, what tabs exist, how projections are built, and how valuation and returns work. Methodology ONLY — defer to firm-formatting for all formatting.
 
-  Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, MOIC, sensitivity, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
+  Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
 
   Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC/FCF yields standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CF linkage.
 ---

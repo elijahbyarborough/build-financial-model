@@ -3,7 +3,7 @@ name: firm-formatting
 description: |
   FC firm-wide formatting and visual standards for Excel models, PowerPoint exhibits, and any financial output. This skill is the single source of truth for how every model, spreadsheet, and presentation looks. It enforces a strict visual hierarchy, number formatting with _) alignment padding, color coding, spacing, and a section-by-section workflow with self-checks.
 
-  Triggers on: any Excel model, spreadsheet formatting, financial model reformat, PowerPoint deck, equity research output, valuation output, earnings workbook, comps sheet, returns analysis, or any task where visual consistency of financial outputs matters. Also triggers when the user says "reformat", "clean up this model", "make it look right", "firm format", or "standardize this".
+  Triggers on: any Excel model, spreadsheet formatting, financial model reformat, PowerPoint deck, equity research output, valuation output, earnings workbook, returns analysis, or any task where visual consistency of financial outputs matters. Also triggers when the user says "reformat", "clean up this model", "make it look right", "firm format", or "standardize this".
 
   This skill is formatting and workflow ONLY. It does not contain modeling methodology (SBC treatment, valuation approach, projection rules, etc.) -- those belong in separate skills.
 ---
@@ -257,6 +257,8 @@ Maximum indent depth: 2 levels.
 | External data links (SPG(), etc.) | Red | #FF0000 |
 | NM / NA / not meaningful | Gray | #7C7F88 |
 
+**Output tab exception**: The Output tab is designed for print. On the Output tab, use green font (#008000) for **historical columns** and default black for **projection columns** to visually delineate actual vs. estimated years. This overrides the cross-sheet = green rule for that tab only, since every cell on the Output tab is a cross-sheet reference and applying green everywhere would defeat the purpose.
+
 **Structural labels are always black** — year headers, row labels, section headers, unit labels, and other non-data text are black (#212529) even though they are technically hardcoded. The blue = hardcoded rule applies only to data assumption values, not to structural elements of the model. Year headers in particular are always black and locally hardcoded per the Year Label Convention.
 
 **Key assumption cells** (hardcoded inputs that are critical model drivers): Blue text (#0000FF) + yellow background (#FFFF00).
@@ -397,7 +399,7 @@ All borders span from label column through all year/data columns.
 | Session management | Task Tracker | Amber/gold | #D4963A |
 | Analytical build | Revenue Build, Costs Build, PP&E Build, Debt Build, WC Build, Capital Allocation Build, Tax Schedule, M&A Build | Steel blue | #5B8FA8 |
 | Data capture | Historical Data | Dark Teal | #436E71 |
-| Reference/external | BAMSEC, Tegus, broker sources, Data Pull, Data Pull (Values), Comps, Source Notes | Gray | #7C7F88 |
+| Reference/external | BAMSEC, Tegus, broker sources, Data Pull, Data Pull (Values), Source Notes | Gray | #7C7F88 |
 
 ---
 
