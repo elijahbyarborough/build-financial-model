@@ -89,15 +89,7 @@ For each identified cell:
 3. Change the font color to **blue (#0000FF)** — this marks it as a hardcoded input per firm-formatting color coding
 4. **Do NOT add yellow background** — yellow bg is reserved for assumption cells (projection drivers). Historical hardcodes get blue text only.
 
-### Step 4: Add Source Comments
-
-For each hardcoded cell, add or preserve a source comment:
-- If the cell already has a source comment, keep it
-- If not, add: `Source: Hardcoded from [source tab name], [date of hardcode]`
-
-This preserves the audit trail — anyone reviewing the model can see where the value originally came from.
-
-### Step 5: Verify Integrity
+### Step 4: Verify Integrity
 
 After all replacements:
 1. **BS Check = 0** across all historical periods
@@ -107,7 +99,7 @@ After all replacements:
 
 If any check fails, a replacement introduced an error. Undo and investigate.
 
-### Step 6: Report
+### Step 5: Report
 
 Report to the user:
 - Total cells hardcoded
@@ -173,7 +165,6 @@ The key distinction: historical hardcodes get **blue text only** (no yellow back
 - **Only hardcode source-tab references** — never touch cross-tab model formulas.
 - **Blue font (#0000FF)** on every hardcoded cell — marks it as a hardcoded input.
 - **No yellow background** on historical hardcodes — yellow is for projection assumptions only.
-- **Preserve or add source comments** — maintain the audit trail.
 - **Verify all integrity checks** after hardcoding — BS Check, CF Check, reconciliation.
 - **Do not delete source tabs** — that's the user's decision.
 - **Report before and after** — list what will be hardcoded, then confirm results.
