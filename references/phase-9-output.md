@@ -2,7 +2,7 @@
 
 **Reference:** `references/phase-9-output.md`
 **Prerequisite:** Phase 8 complete (QC passed, all gates clear).
-**This is the final phase.**
+**Next phase:** Phase 10 (Consensus) → load `references/phase-10-consensus.md`
 
 ---
 

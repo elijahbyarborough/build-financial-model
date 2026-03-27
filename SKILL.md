@@ -28,12 +28,14 @@ Identify the current phase, then load ONLY its reference file. Do not load every
 | **Phase 7 — Formatting** | `references/phase-7-formatting.md` |
 | **Phase 8 — QC** | `references/phase-8-qc.md` |
 | **Phase 9 — Output** | `references/phase-9-output.md` |
+| **Phase 10 — Consensus** | `references/phase-10-consensus.md` |
+| **Phase 11 — Hardcode Sources** | `references/phase-11-hardcode.md` |
 
 **Resume protocol:** If a Task Tracker tab exists, you are resuming. Read the tracker. Identify the current phase from the Model State Block. Load ONLY that phase's reference file. Do NOT reload Phase 0 content.
 
 **Phase boundaries:** After completing each phase, STOP. Update the Task Tracker. Report status. Wait for "continue."
 
-**Sequencing enforcement:** Each phase must complete before the next begins. Phase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9. No skipping. Dependencies are specified in each phase's reference file.
+**Sequencing enforcement:** Each phase must complete before the next begins. Phase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11. No skipping. Dependencies are specified in each phase's reference file.
 
 All skills are designed for Claude for Excel cell-level operations.
 
@@ -42,7 +44,7 @@ All skills are designed for Claude for Excel cell-level operations.
 ## Core Rules (Always Apply — Every Phase)
 
 ### No Freeze Panes
-**Never freeze panes on any tab, ever.** No exceptions. Gridlines off. No merged cells in data area.
+**Never freeze panes on any tab, ever.** One exception: the Consensus tab (Phase 10) freezes at row 5. Gridlines off. No merged cells in data area.
 
 ### Projection Length
 **7 dynamic projection years** (5yr hold + NTM exit window). Calculate from today's date + FYE. When in doubt, add one more year.
