@@ -3,7 +3,7 @@
 **Reference:** `references/phase-5-model-tab.md`
 **Prerequisite:** Phase 4 complete (capital allocation built, share count finalized, IS has final diluted EPS).
 **Next phase:** Phase 6 (Returns) → load `references/phase-6-returns.md`
-**Also load:** `references/methodology.md` (ROIC/ROTIC and FCF yield sections).
+**Also load:** `references/methodology.md` (ROIC/ROTIC section).
 
 ---
 
@@ -13,7 +13,7 @@ Populate the Model tab — the master consolidation sheet where all model output
 
 The Model Tab serves two purposes:
 1. **Internal reference** — one place to see every key metric across the full historical + projection time series
-2. **Feed for Output and Returns tabs** — the Output tab and Returns tab pull from the Model Tab (not from individual build tabs), keeping the formula graph clean
+2. **Feed for Output and Returns tabs** — the Output tab pulls from the Model Tab (for IS, KPIs, Cap Alloc, ROIC) and the Returns tab (for the returns timeline). The Returns tab pulls Diluted EPS from the Model Tab and DPS/M&A Value from the Capital Allocation Build.
 
 The Model Tab is a pure pull-sheet with one exception: the ROIC/ROTIC section contains original calculations (NOPAT, Invested Capital, returns). Everything else is a one-cell formula referencing another tab.
 
@@ -122,9 +122,8 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 | | Capital Expenditures | `='Capital Allocation Build'!Capex` | Number, green font |
 | | **Free Cash Flow** | `='Capital Allocation Build'!FCF` | **Major Total** (F2F2F2 fill, bold, Currency) |
 | | *FCF Margin %* | `=FCF / IS!Revenue` | 0.0%, italic |
-| | *FCF Conversion %* | `=FCF / EBITDA` | 0.0%, italic |
-
-FCF Conversion = FCF / EBITDA (or FCF / Net Income — use whichever the model already defines; EBITDA is more common).
+| | *FCF Conversion %* | `=FCF / IS!Net Income` | 0.0%, italic |
+| | *EBITDA Conversion %* | `=FCF / EBITDA` | 0.0%, italic |
 
 ### Tier 2 Subheader — "Capital Deployment"
 
@@ -184,17 +183,9 @@ This is the ONE section with original calculations. The formulas are computed he
 | | *Average Tangible IC* | `=(Current + Prior) / 2` | Currency, italic |
 | | **ROTIC** | `=IF(Avg Tangible IC=0, "", NOPAT / Avg Tangible IC)` | 0.0%, bold |
 
-**Incremental Returns:**
-
-| Row | Label | Formula | Format |
-|-----|-------|---------|--------|
-| | *Incremental ROIC* | `=IF(Delta Avg IC=0, "", Delta NOPAT / Delta Avg IC)` | 0.0%, italic |
-| | *Incremental ROTIC* | `=IF(Delta Avg Tangible IC=0, "", Delta NOPAT / Delta Avg Tangible IC)` | 0.0%, italic |
-
 ### Flexibility Rules
 
 - If the company has no goodwill/intangibles (rare), the Tangible IC section can be omitted or will equal IC
-- Incremental returns use year-over-year changes: `(current NOPAT - prior NOPAT) / (current Avg IC - prior Avg IC)`
 - All return % rows use IF guards: `=IF(denominator=0, "", NOPAT/IC)`
 - If the BS doesn't separately break out Goodwill and Intangibles, use whatever intangible asset lines exist
 
@@ -291,8 +282,8 @@ Scan the CF tab and pull major line items, plus the three FCF definitions.
 
 | Consumer | What it pulls |
 |----------|--------------|
-| Output tab | IS summary, KPIs, Cap Alloc metrics, ROIC/ROTIC |
-| Returns tab | Diluted EPS |
+| Output tab | IS summary, KPIs, Cap Alloc metrics, ROIC/ROTIC (Output also pulls returns timeline from Returns tab) |
+| Returns tab | Diluted EPS (Returns also pulls DPS and M&A Value Per Share from Capital Allocation Build) |
 
 ---
 

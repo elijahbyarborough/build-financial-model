@@ -8,7 +8,7 @@
 
 ## What Happens in This Phase
 
-Build the Output tab — a single-page investment summary that consolidates the entire model onto one printable sheet. It pulls from exactly two source tabs (Model Tab and Returns) and contains ZERO hardcoded values except the Exit P/E assumption (which mirrors the Returns tab input).
+Build the Output tab — a single-page investment summary that consolidates the entire model onto one printable sheet. The Returns Timeline section (rows 6-25) pulls from the **Returns tab**. Everything below (IS, KPIs, Capital Allocation) pulls from the **Model Tab**. Contains ZERO hardcoded values except the Exit P/E assumption (which mirrors the Returns tab input).
 
 This tab is the model's "front page" for investment committee presentations, deal memos, or quick reference.
 
@@ -186,8 +186,9 @@ Formatting: Same conventions as IS section — bold for key totals, italic for %
 | | **Free Cash Flow** | `='Model Tab'!FCF` | $#,##0, bold |
 | | *FCF Margin %* | `='Model Tab'!FCF%` | 0.0%, italic |
 | | *FCF Conversion %* | `='Model Tab'!FCF Conv` | 0.0%, italic |
+| | *EBITDA Conversion %* | `='Model Tab'!EBITDA Conv` | 0.0%, italic |
 
-FCF Conversion = FCF / Net Income.
+FCF Conversion = FCF / Net Income. EBITDA Conversion = FCF / EBITDA.
 
 ### Tier 2 Subheader — "Capital Deployment"
 

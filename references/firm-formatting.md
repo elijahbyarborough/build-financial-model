@@ -395,7 +395,8 @@ All borders span from label column through all year/data columns.
 
 | Category | Tabs | Color | Hex |
 |----------|------|-------|-----|
-| Primary output | Returns, Model | Dark navy | #1C3553 |
+| Primary output | Output, Returns, Model | Dark navy | #1C3553 |
+| Financial statements | IS, BS, CF | Sage green | #6B9E6F |
 | Session management | Task Tracker | Amber/gold | #D4963A |
 | Analytical build | Revenue Build, Costs Build, PP&E Build, Debt Build, WC Build, Capital Allocation Build, Tax Schedule, M&A Build | Steel blue | #5B8FA8 |
 | Data capture | Historical Data | Dark Teal | #436E71 |

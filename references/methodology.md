@@ -419,7 +419,7 @@ As many years of actuals as the data supports. No fixed minimum. More history = 
 
 ## ROIC & ROTIC Analysis
 
-**Every model must include ROIC and ROTIC, including incremental measures.** These are the core capital allocation quality metrics. Build them as a dedicated section on the Model tab (within or immediately after KPIs).
+**Every model must include ROIC and ROTIC.** These are the core capital allocation quality metrics. Build them as a dedicated section on the Model tab.
 
 ### ROIC (Return on Invested Capital)
 
@@ -441,49 +441,7 @@ ROTIC = NOPAT / Average Tangible Invested Capital
 
 ROTIC isolates the return on the company's physical and working capital — strips out acquisition-driven goodwill and intangibles to reveal the underlying asset productivity.
 
-### Incremental ROIC
-
-```
-Incremental ROIC = ΔNOPAT / ΔInvested Capital
-                 = (NOPAT_t - NOPAT_t-1) / (Invested Capital_t - Invested Capital_t-1)
-```
-
-Measures the marginal return on each new dollar invested. This is the most important capital allocation signal:
-- **Trend**: rising incremental ROIC = improving reinvestment quality; declining = deteriorating
-
-### Incremental ROTIC
-
-```
-Incremental ROTIC = ΔNOPAT / ΔTangible Invested Capital
-```
-
-Same logic as incremental ROIC but excludes changes in goodwill and intangibles. Useful for isolating organic capital efficiency from M&A-driven changes in the IC base.
-
 ### Presentation
-- Show ROIC, ROTIC, Incremental ROIC, and Incremental ROTIC for all historical and projection years
+- Show ROIC and ROTIC for all historical and projection years
 - Format as percentage rows (italic, percentage format)
 
----
-
-## FCF Yield Analysis
-
-**Every model must include FCF yield metrics.** These connect the model's cash generation to the market price.
-
-### Definitions
-
-```
-uFCF Yield = Unlevered FCF / Enterprise Value
-Levered FCF Yield = Levered FCF / Market Cap (Equity Value)
-FCFE Yield = FCFE / Market Cap (Equity Value)
-```
-
-### Implementation
-- Compute all three yields for each historical and projection year
-- **Enterprise Value and Market Cap**: for historical years, use actual market data (from Data Pull). For projection years, use the implied values from the model's exit multiple.
-- Alternatively, for a "current yield" view: hold today's EV and market cap constant across all years to show how yields evolve if the stock price doesn't move. This answers "what yield am I buying at today's price?"
-
-### Presentation
-- Show as a dedicated block within the KPI section on the Model tab
-- Format as percentage rows (italic, percentage format)
-- Include both the "implied value" yields and the "current price" yields if space permits
-- FCF yield trending up = improving cash generation relative to value (bullish signal for a long-only investor)

@@ -46,11 +46,12 @@ Tab order in the workbook (left to right):
 | Tab | Purpose | Color |
 |-----|---------|-------|
 | Task Tracker | Session state, task list | Amber (#D4963A) |
+| Output | Single-page investment summary. **Blank until Phase 9.** | Navy (#1C3553) |
 | Returns | XIRR, IRR decomposition | Navy (#1C3553) |
-| Model | Summary IS, key drivers, KPIs, ROIC/ROTIC, FCF yields. **Blank until Phase 5.** | Navy (#1C3553) |
-| IS | Detailed Income Statement (Model View + Reported View) | Steel blue (#5B8FA8) |
-| BS | Detailed Balance Sheet (Model View + Reported View) | Steel blue (#5B8FA8) |
-| CF | Detailed Cash Flow Statement (Model View + Reported View) | Steel blue (#5B8FA8) |
+| Model | Summary IS, key drivers, KPIs, ROIC/ROTIC. **Blank until Phase 5.** | Navy (#1C3553) |
+| IS | Detailed Income Statement (Model View + Reported View) | Sage green (#6B9E6F) |
+| BS | Detailed Balance Sheet (Model View + Reported View) | Sage green (#6B9E6F) |
+| CF | Detailed Cash Flow Statement (Model View + Reported View) | Sage green (#6B9E6F) |
 | Revenue Build | Driver-based revenue projections | Steel blue (#5B8FA8) |
 | Costs Build | OpEx detail, margin analysis | Steel blue (#5B8FA8) |
 | PP&E Build | Capex, depreciation schedule | Steel blue (#5B8FA8) |

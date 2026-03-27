@@ -5,7 +5,7 @@ description: |
 
   Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
 
-  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC/FCF yields standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CF linkage.
+  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CF linkage.
 ---
 
 # FC Modeling Conventions
@@ -89,8 +89,8 @@ If any check is non-zero, stop and debug. **Never use a plug, balancing item, or
 ### Lease Awareness
 When source data contains operating or finance leases (ASC 842), the model must include dedicated lease schedules on the Debt Build tab. Lease detection occurs in Phase 0/1. Key flags tracked on the Task Tracker: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `FL_IN_PPE`, `LEASE_MATERIALITY`. See `references/methodology.md` Lease Accounting section for full architecture. The critical rule: **CF Financing finance lease payment = principal only (depreciation amount), NEVER total payment (depreciation + interest).**
 
-### Free Cash Flow
-Compute all three: Unlevered FCF (`EBIT × (1 - tax rate) + D&A - Capex - ΔWC`), Levered FCF (`CFO - Capex`), FCFE (`Levered FCF - Debt Repayment + Debt Issuance`).
+### Iterative Calculation Required
+After Phase 4, the model contains intentional circular references (Capital Allocation waterfall depends on CF, CF depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 4. Without it, the model will show circular reference errors.
 
-### ROIC, ROTIC & FCF Yield
-Standard in every model. ROIC, ROTIC, Incremental ROIC, Incremental ROTIC, uFCF/EV yield, Levered FCF/Mkt Cap yield, FCFE/Mkt Cap yield. See `references/methodology.md` for full formulas.
+### ROIC & ROTIC
+Standard in every model. ROIC and ROTIC on the Model Tab. See `references/methodology.md` for full formulas.
