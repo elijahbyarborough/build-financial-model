@@ -44,7 +44,7 @@ All skills are designed for Claude for Excel cell-level operations.
 ## Core Rules (Always Apply — Every Phase)
 
 ### No Freeze Panes
-**Never freeze panes on any tab, ever.** One exception: the Consensus tab (Phase 10) freezes at row 5. Gridlines off. No merged cells in data area.
+**Never freeze panes on any tab, ever.** No exceptions. Gridlines off. No merged cells in data area.
 
 ### Projection Length
 **7 dynamic projection years** (5yr hold + NTM exit window). Calculate from today's date + FYE. When in doubt, add one more year.

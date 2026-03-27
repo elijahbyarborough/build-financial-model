@@ -52,7 +52,6 @@ Build the Consensus tab — a model-vs-street comparison sheet that shows the us
 ### Key Formatting
 
 - **Gray medium vertical border** between the last historical column and the first projection column — visually separates actuals from estimates
-- **Freeze panes at row 5** so headers stay visible when scrolling (this is the ONE tab where freeze panes are permitted — exception to the core rule)
 - Year labels do NOT have colored fills
 - Rows 4 and 5 have thin bottom borders
 
@@ -267,7 +266,7 @@ Bloomberg and FactSet consensus data often stores numbers differently from the m
 
 ### Freeze Panes
 
-Freeze at row 5 (below dates, above data). This is the one exception to the no-freeze-panes rule — the Consensus tab benefits from pinned headers because it is a wide comparison grid.
+**No freeze panes.** Consistent with all other tabs.
 
 ---
 
@@ -279,6 +278,6 @@ Freeze at row 5 (below dates, above data). This is the one exception to the no-f
 - **Cross-check units** — validate at least one historical year before building forward columns.
 - **Conditional formatting** — green (#006100) for positive deltas, red (#9C0006) for negative.
 - **No F2F2F2 fills** — white background on all data rows.
-- **Freeze panes at row 5** (exception to core rule for this tab only).
+- **No freeze panes. Gridlines off.**
 
 **STOP. Update Task Tracker. Report consensus comparison results. Wait for "continue."**
