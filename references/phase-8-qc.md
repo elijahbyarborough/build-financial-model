@@ -3,7 +3,7 @@
 **Reference:** `references/phase-8-qc.md`
 **Prerequisite:** Phase 7 complete (formatting applied).
 **Also load:** `references/data-quality.md` for the 6 quality gates and formula rules.
-**This is the final phase.**
+**Next phase:** Phase 9 (Output) → load `references/phase-9-output.md`
 
 ---
 

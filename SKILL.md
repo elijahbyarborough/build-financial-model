@@ -27,12 +27,13 @@ Identify the current phase, then load ONLY its reference file. Do not load every
 | **Phase 6 — Returns** | `references/phase-6-returns.md` |
 | **Phase 7 — Formatting** | `references/phase-7-formatting.md` |
 | **Phase 8 — QC** | `references/phase-8-qc.md` |
+| **Phase 9 — Output** | `references/phase-9-output.md` |
 
 **Resume protocol:** If a Task Tracker tab exists, you are resuming. Read the tracker. Identify the current phase from the Model State Block. Load ONLY that phase's reference file. Do NOT reload Phase 0 content.
 
 **Phase boundaries:** After completing each phase, STOP. Update the Task Tracker. Report status. Wait for "continue."
 
-**Sequencing enforcement:** Each phase must complete before the next begins. Phase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8. No skipping. Dependencies are specified in each phase's reference file.
+**Sequencing enforcement:** Each phase must complete before the next begins. Phase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9. No skipping. Dependencies are specified in each phase's reference file.
 
 All skills are designed for Claude for Excel cell-level operations.
 

@@ -78,7 +78,7 @@ Unlike the build tabs, this tab is NOT organized as a long vertical build. It is
 | 1 | Diluted EPS | `=YearFrac * FY1_EPS + (1-YearFrac) * FY2_EPS` | `=Model Tab!EPS` (green pull) | `=YearFrac * LastFY_EPS + (1-YearFrac) * NextFY_EPS` | $#,##0.00, per-share |
 | 2 | Exit P/E | `=Entry Price / Entry EPS` (implied, bold) | blank or n/a | Blue/yellow assumption (e.g. 26.0x) | 0.0"x" multiple format |
 | 3 | EPS-Implied Price | `=Entry Price` (=$D$5) | blank | `=Exit EPS * Exit P/E` | **Major total** ($#,##0.00, F2F2F2 fill) |
-| 4 | M&A Value Per Share | blank or 0 | `=Cap Alloc Build!M&A Value Per Share` (green pull) | `=YearFrac * LastFY_M&A + (1-YearFrac) * NextFY_M&A` | Bold italic, green font, $#,##0.00 |
+| 4 | M&A Value Per Share | blank or 0 | `=Cap Alloc Build!M&A Value Per Share` (green pull) | `=YearFrac * LastFY_M&A + (1-YearFrac) * NextFY_M&A` | Italic, green font, $#,##0.00 |
 | 5 | Total Price | `=EPS-Implied Price` (=Entry Price) | blank | `=EPS-Implied Price + M&A Value Per Share` | **Major total** ($#,##0.00, F2F2F2 fill) |
 
 ### Calendarization Mechanics (CRITICAL)
@@ -266,7 +266,7 @@ Only THREE assumptions on this entire tab. Everything else is derived from these
 
 - **EPS-Implied Price**, **Total Price**, **Net Cash Flow**, **IRR**: Major Totals (F2F2F2 fill, bold)
 - **DPS Received**: bold (sub-total level)
-- **M&A Value Per Share**: bold italic with green font (cross-tab pull that is also a key output)
+- **M&A Value Per Share**: italic with green font (cross-tab pull that is also a key output)
 - **Entry P/E**: bold (implied/derived, not an assumption)
 - **Exit P/E**: bold, blue/yellow (the key exit assumption)
 - All decomposition rows (EPS CAGR, M&A Value, Dividend Yield, Multiple Change): italic
