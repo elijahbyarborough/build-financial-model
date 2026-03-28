@@ -74,16 +74,38 @@ Three lines in strict priority order, plus a check row:
 |-----|-------|-------------------|-------------------|-------|
 | 1 | Acquisitions, Net | `=CFS!Acquisitions row` | `=-Acquisitions assumption (from M&A section below)` | Priority 1 |
 | 2 | Dividends Paid | `=CFS!Dividends row` | `=Total Dividends (from Dividend Policy section below)` | Priority 2 |
-| 3 | Gross Share Repurchases | `=CFS!Share Repurchases row` | `=-(Cash Available + Acquisitions + Dividends)` | **RESIDUAL SWEEP** |
-| 4 | **Waterfall Check** | `=Cash Available + all deployment = 0` | `=Cash Available + all deployment = 0` | Must be 0. Bold. |
+| 3 | Gross Share Repurchases | `=CFS!Share Repurchases row` | See Buyback Plug Formula below | **RESIDUAL SWEEP** |
+| 4 | **Waterfall Check** | `=Cash Available + all deployment = 0` | `=Cash Available + all deployment = 0` | Should be ~0. Bold. |
 
-### Buybacks Are the RESIDUAL SWEEP (CRITICAL)
+### Buyback Plug Formula (MANDATORY)
 
-- Buybacks are **NOT** an assumption — they are calculated as the residual after all other uses are funded
-- Formula: `Buybacks = -(Cash Available + Acquisitions + Dividends)`
-- This ensures the Waterfall Check = 0 by construction (`Cash Available + Acquisitions + Dividends + Buybacks = 0`)
-- The Waterfall Check row should still be displayed for auditability even though it is zero by construction
-- The deployment order reflects real-world priority: acquisitions are strategic commitments, dividends are quasi-fixed obligations, buybacks absorb whatever is left
+Buybacks are the residual sweep — they absorb all excess cash after acquisitions, dividends, and every other CF flow. However, do NOT compute buybacks from the Cap Alloc waterfall residual. The waterfall is informational only.
+
+Instead, compute buybacks as a direct plug against the Debt Build cash target. The formula enumerates every CF line item EXCEPT buybacks:
+
+```
+Buybacks = Target_Cash - Prior_End_Cash - CFO - CFI - SBC_Withholding - Dividends - Debt_Issuance - Debt_Repayment - Other_Financing - FX
+```
+
+Where:
+- Target_Cash = Debt Build cash balance for the current period (e.g., `='Debt Build'!L10`)
+- Prior_End_Cash = CFS ending cash from the prior period (e.g., `=CFS!K42`)
+- All other terms reference their respective CFS tab rows for the current period
+- Dividends references the Cap Alloc Build dividend row (which flows to CFS)
+
+This guarantees CFS End Cash = Target Cash every period. The waterfall residual approach is fragile because any CFS line not explicitly included in the waterfall (e.g., SBC withholding payments, finance lease principal payments) causes buybacks to be mis-sized, which breaks the BS balance.
+
+The Cap Alloc waterfall and its check row remain useful as an informational decomposition of cash sources and uses, but the actual buyback number must come from the direct plug formula.
+
+### CFS End Cash Architecture
+
+CFS End Cash must remain flow-based:
+- `CFS!Net_Change_in_Cash = CFO + CFI + CFF + FX`
+- `CFS!Beginning_Cash = Prior period CFS!Ending_Cash`
+- `CFS!Ending_Cash = Beginning_Cash + Net_Change_in_Cash`
+- `BS!Cash = CFS!Ending_Cash`
+
+Do NOT override CFS!Ending_Cash or CFS!Net_Change_in_Cash to pull directly from the Debt Build cash target. That disconnects the flow identity (Beg + Flows = End) and causes the BS to break. The buyback plug formula is what forces End Cash to equal the target — the CFS formulas themselves must stay structural.
 
 ---
 
@@ -259,9 +281,9 @@ Explicit sign conventions for the Capital Allocation Build tab:
 **Waterfall Check:**
 - `= Cash Available (positive) + All Deployment Items (all negative) = 0`
 
-**Buyback residual formula uses negation:**
-- `Buybacks = -(Cash Available + Acquisitions + Dividends)`
-- This produces a negative number (since Cash Available > ABS(Acquisitions + Dividends))
+**Buyback plug formula:**
+- Buybacks are computed as a direct plug against the Debt Build cash target (see Buyback Plug Formula above)
+- The result is negative (cash deployed outward), consistent with other deployment items
 
 ---
 
@@ -298,7 +320,40 @@ Phase 3 set dividends, acquisitions, share repurchases, and diluted share count 
 | PP&E Build → Acquisitions row | `='Capital Allocation Build'!Acquisitions, Net` (sign-flipped) |
 | BS tab → M&A Assets | Cumulative `ABS(acquisitions)` from Capital Allocation Build (= Cumulative M&A Invested Capital row) |
 
-**After re-linking, re-verify all integrity checks** (BS Check = 0, CF Check = 0, NI ties, RE roll-forward) for every projection year. The model is now circular (waterfall depends on CFS, CFS depends on waterfall) — this is expected and requires iterative calculation enabled in Excel.
+---
+
+## Post-Wiring BS Equity Adjustment (MANDATORY)
+
+Phase 3 builds BS equity projection formulas with zero placeholders for buybacks and dividends. After Phase 4 wires these flows into the CFS tab, the BS equity formulas MUST be patched to reflect them. If you skip this step, the BS will not balance.
+
+1. **Retained Earnings**: Add dividends (which reduce RE).
+   `= Prior_RE + IS!Net_Income + CFS!Dividends_Paid`
+   Dividends are negative on the CFS tab, so adding them reduces RE. Phase 3's formula is `= Prior_RE + IS!Net_Income` which is incomplete once dividends are non-zero.
+
+2. **Common Stock & APIC**: Add buybacks (which reduce equity via share retirements).
+   `= Prior_CSAPIC - IS!SBC + CFS!SBC_Withholding + CFS!Buybacks`
+   Buybacks are negative on the CFS tab, so adding them reduces CSAPIC. Phase 3's formula is `= Prior_CSAPIC - IS!SBC + CFS!SBC_Withholding` which is incomplete once buybacks are non-zero.
+
+   Note: Alphabet retires repurchased shares rather than holding treasury stock, so buybacks flow through CSAPIC. For companies that use treasury stock accounting, create a Treasury Stock line on the BS instead: `= Prior_Treasury - CFS!Buybacks` (treasury is a contra-equity, stored as negative).
+
+These formulas must reference the CFS tab cells directly (not Cap Alloc Build) to maintain the single-direction flow: Cap Alloc Build → CFS → BS.
+
+---
+
+## Verification Gate (Updated)
+
+After ALL wiring is complete (Cap Alloc → CFS → BS → IS), force a full recalculation and verify ALL of the following:
+
+1. BS Check = $0 all projection years
+2. CF Check = $0 all projection years
+3. NI Check = $0 all projection years (IS Net Income ties to CFS)
+4. Waterfall Check = $0 all projection years
+5. CFS End Cash = Debt Build Cash Target all projection years
+6. CFS End Cash = BS Cash all projection years (cash tie-out)
+
+If any check fails, diagnose and fix before proceeding. The most common failure mode is: BS Check ≠ 0 because the BS equity formulas were not patched (see Post-Wiring BS Equity Adjustment above).
+
+The model is now circular (waterfall depends on CFS, CFS depends on waterfall) — this is expected and requires iterative calculation enabled in Excel.
 
 ---
 
@@ -321,12 +376,26 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 
 ## Key Rules
 
-- **Buybacks are the residual** — never an assumption. Residual sweep formula ensures Waterfall Check = 0 by construction.
+- **Buybacks are the residual plug** — computed directly against the Debt Build cash target, not from the waterfall. See Buyback Plug Formula.
 - **Acquisitions are a capital allocation decision** — budget lives HERE, PP&E Build pulls from this.
 - **Dividends are DPS-driven** — never a % of NI or FCF.
 - **Buyback Price is hardcoded per year** — drives both buyback share count and SBC dilution. Separate from the investor's Entry Price on the Returns tab.
 - **SBC section is the single source of truth** — feeds dilution and returns analysis.
-- **Waterfall check must = 0.** Debug before proceeding.
+- **Post-wiring BS equity patch is mandatory** — RE and CSAPIC/Treasury must be updated after wiring. See Post-Wiring BS Equity Adjustment.
+- **CFS End Cash stays flow-based** — never override with a direct Debt Build pull. See CFS End Cash Architecture.
+- **All 6 verification checks must pass.** See Verification Gate.
 - **No freeze panes.**
 
-**STOP. Update Task Tracker. Report waterfall check. Wait for "continue."**
+---
+
+## Common Failure Modes
+
+1. **BS imbalance after wiring buybacks/dividends**: BS equity formulas (Retained Earnings, CSAPIC/Treasury Stock) were not updated to include the new CFS flows. See Post-Wiring BS Equity Adjustment.
+
+2. **CFS End Cash diverges from cash target**: Buybacks were computed from the waterfall residual instead of the direct plug formula. A CFS line item (typically SBC withholding) was missing from the waterfall, causing buybacks to be oversized. See Buyback Plug Formula.
+
+3. **CFS End Cash ≠ BS Cash**: CFS!Ending_Cash was overridden to pull from Debt Build instead of being computed as Beg + Net Change. See CFS End Cash Architecture.
+
+4. **Waterfall Check ≠ 0 but BS balances**: The informational waterfall is missing a line item. This is cosmetic if the buyback plug formula is used, but should still be fixed for auditability. Common missing items: SBC withholding, FX effects, finance lease principal payments.
+
+**STOP. Update Task Tracker. Report all 6 verification checks. Wait for "continue."**
