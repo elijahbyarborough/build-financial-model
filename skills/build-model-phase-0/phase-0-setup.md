@@ -48,7 +48,7 @@ Tab order in the workbook (left to right):
 | Task Tracker | Session state, task list | Amber (#D4963A) |
 | Output | Single-page investment summary. **Blank until Phase 9.** | Navy (#1C3553) |
 | Returns | XIRR, IRR decomposition | Navy (#1C3553) |
-| Model | Summary IS, key drivers, KPIs, ROIC/ROTIC. **Blank until Phase 5.** | Navy (#1C3553) |
+| Model Tab | Summary IS, key drivers, KPIs, ROIC/ROTIC. **Blank until Phase 5.** | Navy (#1C3553) |
 | IS | Detailed Income Statement (Model View + Reported View) | Sage green (#6B9E6F) |
 | BS | Detailed Balance Sheet (Model View + Reported View) | Sage green (#6B9E6F) |
 | CFS | Detailed Cash Flow Statement (Model View + Reported View) | Sage green (#6B9E6F) |
