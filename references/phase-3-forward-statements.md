@@ -24,7 +24,7 @@ When lease flags are set on the Task Tracker (`HAS_OPERATING_LEASES=Y` or `HAS_F
 2. Costs Build (including operating lease cost as an OpEx line item)
 3. **Debt Build -- including Operating Lease Schedule and Finance Lease Schedule projections**
 4. PP&E Build (requires Debt Build FL data if `FL_IN_PPE=Y`)
-5. Working Capital Build (requires Debt Build lease balances)
+5. Working Capital Build (requires Debt Build lease balances, uses Lease BS Map for disaggregation)
 6. Tax Schedule
 7. Income Statement assembly
 8. Balance Sheet assembly
@@ -117,14 +117,18 @@ Phase 4 (Capital Allocation) will overwrite all of these with live formulas link
 ### BS -- Lease Line Items
 
 **Assets**:
-- **Operating Lease ROU Assets**: Pull from WC Build (which sources from Debt Build OL ROU). Noncurrent asset line.
-- **Finance Lease ROU Assets**: If `FL_IN_PPE=Y`, already inside Net PP&E (from PP&E Build). If `FL_IN_PPE=N`, add a separate noncurrent asset line pulling from `='Debt Build'!FL_ROU_Net`.
+- **Operating Lease ROU Assets**: From WC Build (sourced from Debt Build OL ROU). Placed per
+  Lease BS Map OL_ROU_ASSET_NC.
+- **Finance Lease ROU Assets**: If FL_IN_PPE=Y, already inside Net PP&E. If FL_IN_PPE=N,
+  placed per Lease BS Map FL_ROU_ASSET_NC (own line or through WC Build into host line).
 - **Net PP&E**: From PP&E Build. Includes FL ROU only if `FL_IN_PPE=Y`.
 
 **Liabilities**:
-- **Operating Lease Liabilities**: Pull from WC Build (which sources from Debt Build OL Noncurrent Liability). Noncurrent liability line. OL Current portion included in "Other Current Liabilities" via WC Build.
-- **Finance Lease Current Liability**: Included in "Other Current Liabilities" on the BS, sourced from WC Build (which pulls from Debt Build FL Current).
-- **Finance Lease Noncurrent Liability**: Included in "Other Noncurrent Liabilities" on the BS, sourced from WC Build (which pulls from Debt Build FL Noncurrent).
+- **Finance Lease Current Liability**: Per Lease BS Map FL_LIAB_C — either its own BS line or
+  embedded in the mapped host line via WC Build disaggregation.
+- **Finance Lease Noncurrent Liability**: Per Lease BS Map FL_LIAB_NC — either its own BS line
+  or embedded in the mapped host line via WC Build disaggregation.
+- **Operating Lease Liabilities**: Per Lease BS Map OL_LIAB_C and OL_LIAB_NC — typically their own dedicated BS lines, sourced from WC Build (which pulls from Debt Build).
 
 ### CF -- Lease Cash Flow Rules (HARD STOP)
 

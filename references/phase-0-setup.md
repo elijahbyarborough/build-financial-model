@@ -203,17 +203,31 @@ When scanning source financials, identify lease presence and classification:
 1. **Scan BS** for: "Operating Lease ROU", "Right-of-use", "Finance Lease", "Capital Lease", "ROU Asset"
 2. **Scan IS** for: "Operating lease cost", "Finance lease depreciation", "Finance lease interest", "Lease expense"
 3. **Scan CF** for: "Finance lease payments", "Operating lease payments", "ROU asset amortization"
-4. **Determine FL_IN_PPE**: Check whether the company's reported Net PP&E includes or excludes finance lease ROU assets. Inspect the PP&E footnote or BS detail. If finance lease assets are inside the PP&E roll-forward, `FL_IN_PPE = Y`. If reported as a separate BS line, `FL_IN_PPE = N`.
+4. **Build the Lease BS Map**: Read the lease accounting policy footnote for explicit disclosure of
+   where lease items are presented on the BS (e.g., "Finance leases are included in property and
+   equipment, net, accrued expenses and other current liabilities, and other liabilities"). Cross-
+   reference against the face of the BS (look for dedicated lease lines) and the PP&E footnote
+   (look for FL ROU in the gross detail). Populate every field of the Lease BS Map on the Task
+   Tracker. Then derive FL_IN_PPE from the map (Y if FL_ROU_ASSET_NC maps to a PP&E line).
 5. **Assess materiality**: If total lease ROU assets (operating + finance) are > 5% of total assets, `LEASE_MATERIALITY = HIGH`. Otherwise `LOW`.
 
 **Add to Task Tracker Model State Block**:
 
 HAS_OPERATING_LEASES: [Y/N]
 HAS_FINANCE_LEASES: [Y/N]
-FL_IN_PPE: [Y/N]
 LEASE_MATERIALITY: [HIGH/LOW]
+LEASE BS MAP:
+  OL_ROU_ASSET_NC:     [line name or "own line"]
+  OL_ROU_ASSET_C:      [line name or "N/A"]
+  OL_LIAB_C:           [line name or "own line"]
+  OL_LIAB_NC:          [line name or "own line"]
+  FL_ROU_ASSET_NC:     [line name or "own line"]
+  FL_ROU_ASSET_C:      [line name or "N/A"]
+  FL_LIAB_C:           [line name or "own line"]
+  FL_LIAB_NC:          [line name or "own line"]
+FL_IN_PPE: [Y/N] (derived — Y if FL_ROU_ASSET_NC is a PP&E line)
 
-These flags control whether the Debt Build includes lease schedules and whether the PP&E Build needs FL-related adjustments.
+These flags and the Lease BS Map control whether the Debt Build includes lease schedules, how the WC Build disaggregates lease components, and whether the PP&E Build needs FL-related adjustments.
 
 ---
 

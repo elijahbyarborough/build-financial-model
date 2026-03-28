@@ -101,27 +101,23 @@ All historical values must be formulas linking to the source data tab -- never h
 
 ### BS Mapping for Leases
 
-Document on the Task Tracker where each lease item sits in the company's reported financials:
-- OL ROU Asset: [BS line reference]
-- FL ROU Asset: inside PP&E (if `FL_IN_PPE=Y`) or separate line (if `FL_IN_PPE=N`)
-- FL Current Liability: inside "Other Current Liabilities" or separate line
-- FL Noncurrent Liability: inside "Other Noncurrent Liabilities" or separate line
-- OL Liability: typically its own line on the BS
-
-This mapping determines how the Working Capital Build disaggregates "Other" BS categories.
+For each lease component, check the Lease BS Map to determine whether it has its own dedicated
+BS line or is embedded inside a broader line. For embedded components, the WC Build must
+disaggregate: create an "ex-lease" version of the host line using the formula pattern from
+methodology.md § Working Capital Build Disaggregation. The map tells you exactly which reported
+lines to strip lease amounts from.
 
 ### WC Build Historical Disaggregation
 
-The Noncurrent Operating Items section of the Working Capital Build must include dedicated rows for each lease balance sheet item. For historical periods:
+The Working Capital Build must include dedicated rows for each lease balance sheet item mapped in the Lease BS Map. For historical periods, each lease row pulls from the Debt Build (which sources from the filing). For each lease component that is embedded inside a broader reported BS line (per the Lease BS Map), create an "ex-lease" version of that host line:
 
-- **Operating Lease ROU Assets**: `=BS!OL_ROU_line`
-- **Operating Lease Liabilities**: `=BS!OL_Liability_line`
-- **Finance Lease Liability -- Current**: `='Debt Build'!FL_Current` (pulled from the Debt Build, which sources from the filing)
-- **Finance Lease Liability -- Noncurrent**: `='Debt Build'!FL_Noncurrent`
+```
+[Reported BS line] (ex-[lease component]) = BS![Reported line as reported] - 'Debt Build'![lease component]
+```
 
-The residual "Other" lines must EXCLUDE lease items:
-- **Other Current Liabilities (ex-Finance Lease)**: `=BS!Other_CL_reported - 'Debt Build'!FL_Current`
-- **Other Noncurrent Liabilities (ex-Finance Lease, NCI)**: `=BS!Other_NCL_reported - 'Debt Build'!FL_Noncurrent - NCI_if_applicable`
+If a lease component has its own dedicated BS line (e.g., "Operating lease liabilities, current"), no disaggregation is needed — the WC Build row simply references it directly.
+
+If multiple lease components are embedded in the same reported line, disaggregate all of them from that line.
 
 This disaggregation is essential -- without it, lease items will be projected using revenue-based WC drivers instead of the Debt Build schedule, causing BS imbalances.
 

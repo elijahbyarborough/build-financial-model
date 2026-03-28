@@ -34,7 +34,11 @@ Run structural and formula QC across the entire model. The audit reads — it do
 
 If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional checks:
 
-1. **BS tie-out**: Verify that every lease balance on the BS (OL ROU, OL Liability, FL ROU if separate, FL Current, FL Noncurrent) matches the corresponding Debt Build ending balance for each projection year. Any mismatch indicates a broken link or missing WC Build row.
+1. **BS tie-out**: For each lease component in the Lease BS Map, verify that the projected BS
+   balance matches the corresponding Debt Build ending balance. If the component is embedded in
+   a broader BS line, verify that the WC Build "ex-lease" formula correctly strips it. Check
+   both current and noncurrent splits. Any mismatch indicates a broken link, a missing WC Build
+   row, or an incorrect Lease BS Map entry.
 
 2. **CF Finance Lease payment = principal only**: Confirm that the CF Financing line for finance lease payments pulls from the Debt Build DEPRECIATION row (principal portion), NOT the total payment row (depreciation + interest). If the BS check is off by approximately the FL interest amount, this is almost certainly the cause.
 
