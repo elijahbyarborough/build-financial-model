@@ -1,6 +1,6 @@
 ---
 name: build-model-phase-3
-description: "Phase 3 -- Forward Statements. Build all forward projections (IS/BS/CF), lease schedules, PP&E, WC, debt, tax. Includes full methodology for leases, PP&E, WC, tax, interest/debt, and goodwill. Load after build-model and firm-formatting."
+description: "Phase 3 -- Forward Statements. Build all forward projections (IS/BS/CFS), lease schedules, PP&E, WC, debt, tax. Includes full methodology for leases, PP&E, WC, tax, interest/debt, and goodwill. Load after build-model and firm-formatting."
 ---
 
 # Phase 3 -- Forward Statements

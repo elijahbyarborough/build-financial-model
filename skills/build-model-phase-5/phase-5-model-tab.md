@@ -31,7 +31,7 @@ The Model Tab has a fixed section hierarchy. The sections always appear in this 
 6. **Summary Balance Sheet** (Tier 1 header)
 7. **Summary Cash Flow Statement** (Tier 1 header)
 
-This order flows logically: how the company earns (IS) → what drives the earnings (KPIs) → what's done with the cash (Cap Alloc) → how efficiently capital is deployed (ROIC) → the resulting financial position (BS) → the cash flow reconciliation (CF).
+This order flows logically: how the company earns (IS) → what drives the earnings (KPIs) → what's done with the cash (Cap Alloc) → how efficiently capital is deployed (ROIC) → the resulting financial position (BS) → the cash flow reconciliation (CFS).
 
 ---
 
@@ -222,7 +222,7 @@ Scan the BS tab and pull major category totals. The goal is a condensed view, no
 
 ## Section 6: Summary Cash Flow Statement
 
-Scan the CF tab and pull major line items, plus the three FCF definitions.
+Scan the CFS tab and pull major line items, plus the three FCF definitions.
 
 ### Required Pattern
 
@@ -258,8 +258,8 @@ Scan the CF tab and pull major line items, plus the three FCF definitions.
 
 ### Flexibility Rules
 
-- All three FCF definitions should be pulled from the CF tab (where they're calculated)
-- If the CF tab has additional operating items (deferred taxes, gain on sale, etc.), they can be grouped into "Other Operating" here
+- All three FCF definitions should be pulled from the CFS tab (where they're calculated)
+- If the CFS tab has additional operating items (deferred taxes, gain on sale, etc.), they can be grouped into "Other Operating" here
 - The level of detail in financing should match what matters: if the company has complex debt, show Net LT Debt and Net ST Debt separately
 - CF Check is mandatory — core model integrity check
 
@@ -276,7 +276,7 @@ Scan the CF tab and pull major line items, plus the three FCF definitions.
 | Capital Allocation | Capital Allocation Build, Debt Build |
 | ROIC / ROTIC | IS (EBIT, Tax Rate), BS (Equity, Goodwill, Intangibles), Debt Build (Debt, Cash) |
 | Summary BS | BS tab |
-| Summary CF | CF tab |
+| Summary CF | CFS tab |
 
 ### What Model Tab is READ BY
 
@@ -291,7 +291,7 @@ Scan the CF tab and pull major line items, plus the three FCF definitions.
 
 ### Headers
 
-- **Tier 1** (IS, KPIs, ROIC, BS, CF): Navy fill (#1C3553), white bold text
+- **Tier 1** (IS, KPIs, ROIC, BS, CFS): Navy fill (#1C3553), white bold text
 - **Tier 2** (Cap Alloc, Deployment, each segment): Light blue fill (#C2D5EB)
 
 ### Data
@@ -318,13 +318,13 @@ EBITDA, Net Income, NOPAT, Invested Capital, Tangible IC, Total Assets, Total L&
 
 ## Key Design Principles
 
-1. **Scan, don't hardcode** — The skill should scan whatever tabs exist and assemble the Model Tab dynamically. Different companies = different segments = different KPIs = different BS/CF structures.
+1. **Scan, don't hardcode** — The skill should scan whatever tabs exist and assemble the Model Tab dynamically. Different companies = different segments = different KPIs = different BS/CFS structures.
 2. **Consolidation hub** — Every key metric lives here. The Output and Returns tabs pull from Model Tab, not from individual build tabs.
 3. **One original calculation section** — ROIC/ROTIC is the only section with formulas that aren't simple pulls. Everything else is `=OtherTab!cell`.
 4. **Full time series** — Spans all historical AND projection years.
 5. **Two mandatory checks** — BS Check and CF Check, both must = 0.
 6. **Faithful to source** — Don't invent metrics that aren't on the source tabs. Mirror what exists, condensed where appropriate.
-7. **Section order is fixed, contents are flexible** — IS always comes first, then KPIs, then Cap Alloc, then ROIC, then BS, then CF. Within each section, the specific rows depend on the company.
+7. **Section order is fixed, contents are flexible** — IS always comes first, then KPIs, then Cap Alloc, then ROIC, then BS, then CFS. Within each section, the specific rows depend on the company.
 
 ---
 

@@ -51,7 +51,7 @@ Tab order in the workbook (left to right):
 | Model | Summary IS, key drivers, KPIs, ROIC/ROTIC. **Blank until Phase 5.** | Navy (#1C3553) |
 | IS | Detailed Income Statement (Model View + Reported View) | Sage green (#6B9E6F) |
 | BS | Detailed Balance Sheet (Model View + Reported View) | Sage green (#6B9E6F) |
-| CF | Detailed Cash Flow Statement (Model View + Reported View) | Sage green (#6B9E6F) |
+| CFS | Detailed Cash Flow Statement (Model View + Reported View) | Sage green (#6B9E6F) |
 | Revenue Build | Driver-based revenue projections | Steel blue (#5B8FA8) |
 | Costs Build | OpEx detail, margin analysis | Steel blue (#5B8FA8) |
 | PP&E Build | Capex, depreciation schedule | Steel blue (#5B8FA8) |
@@ -88,12 +88,12 @@ Every model build starts from one of three scenarios. Identify which one applies
 ### Scenario 1: Fresh Build from BAMSEC + Tegus
 
 **Most common.** You receive:
-- **BAMSEC Excel export**: raw financial tables (IS, BS, CF) pulled from SEC filings. This is the primary source of truth for reported historicals.
+- **BAMSEC Excel export**: raw financial tables (IS, BS, CFS) pulled from SEC filings. This is the primary source of truth for reported historicals.
 - **Tegus model**: Excel file with detailed, accurate historicals and often richer line-item granularity than BAMSEC. **Ignore Tegus projections entirely** — they are underdeveloped and unreliable. Use Tegus for historicals and operating metrics only.
 
 **Workflow:**
 1. Keep BAMSEC and Tegus sheets in the workbook as source tabs (do not delete or hide them — they serve as the audit trail)
-2. Map BAMSEC line items to the standard IS/BS/CF structure on the detailed statement tabs
+2. Map BAMSEC line items to the standard IS/BS/CFS structure on the detailed statement tabs
 3. Auto-detect segment breakouts from BAMSEC and/or Tegus for the Revenue Build
 4. Pull historical KPIs and operating metrics from Tegus where available
 5. Flag any line items that don't map cleanly to the standard structure and ask the user before proceeding
@@ -134,17 +134,17 @@ When multiple sources of historical financial data exist, **always default to th
 
 ### Linking Hierarchy (what build tabs and statement tabs reference)
 
-Once data is in the model, build tabs and IS/BS/CF tabs need to link to it via formulas:
+Once data is in the model, build tabs and IS/BS/CFS tabs need to link to it via formulas:
 
 1. **Historical Data tab (preferred when it exists)** — if the Historical Data tab has curated raw sources into a clean capture layer, this is the preferred intermediary. Build tabs and statement tabs link here via `='Historical Data'!cell`. The Historical Data tab itself is the one place where hardcoded actuals from filings are acceptable.
 2. **Raw source tabs (when no Historical Data tab exists)** — link directly to BAMSEC/Tegus/broker source tabs via `='Tegus'!cell` or `='BAMSEC'!cell`.
 
-The data flow is: **Raw sources → Historical Data tab (capture layer) → Build tabs / IS / BS / CF link via formulas**. When no Historical Data tab exists, build tabs link directly to raw source tabs.
+The data flow is: **Raw sources → Historical Data tab (capture layer) → Build tabs / IS / BS / CFS link via formulas**. When no Historical Data tab exists, build tabs link directly to raw source tabs.
 
 ### How to Apply
 
-- **At the start of every model build**, scan ALL available source tabs and identify which has the most complete IS, BS, and CF historicals.
-- The most exhaustive source becomes the **default source for the Reported View** on IS/BS/CF tabs — its line items, ordering, and granularity define the GAAP presentation.
+- **At the start of every model build**, scan ALL available source tabs and identify which has the most complete IS, BS, and CFS historicals.
+- The most exhaustive source becomes the **default source for the Reported View** on IS/BS/CFS tabs — its line items, ordering, and granularity define the GAAP presentation.
 - The Model View pulls from build tabs as always — the source hierarchy affects the Reported View and the historical data foundation.
 - If the user has an existing model AND a Tegus/broker model, the Tegus/broker model's historicals take priority unless the user explicitly overrides.
 - When in doubt, ask: "I see both [source A] and [source B]. [Source A] has more complete GAAP financials — should I use that as the foundation for historicals?"
@@ -175,11 +175,11 @@ All source/reference tabs: Gray (#7C7F88), same as Data Pull.
 
 When the user provides source files, automatically:
 
-1. **Map BAMSEC line items to the standard IS/BS/CF structure**
+1. **Map BAMSEC line items to the standard IS/BS/CFS structure**
    - Revenue, COGS, SG&A, R&D, D&A, Interest, Tax, etc.
    - Subtotals: Gross Profit, Operating Income, EBITDA, EBT, Net Income
    - BS: Current Assets, PP&E, Intangibles, Goodwill, Current Liabilities, LT Debt, Equity
-   - CF: CFO, CFI, CFF, beginning/ending cash
+   - CFS: CFO, CFI, CFF, beginning/ending cash
 
 2. **Auto-detect segment breakouts for the Revenue Build**
    - Look for segment revenue tables in BAMSEC
@@ -202,7 +202,7 @@ When scanning source financials, identify lease presence and classification:
 
 1. **Scan BS** for: "Operating Lease ROU", "Right-of-use", "Finance Lease", "Capital Lease", "ROU Asset"
 2. **Scan IS** for: "Operating lease cost", "Finance lease depreciation", "Finance lease interest", "Lease expense"
-3. **Scan CF** for: "Finance lease payments", "Operating lease payments", "ROU asset amortization"
+3. **Scan CFS** for: "Finance lease payments", "Operating lease payments", "ROU asset amortization"
 4. **Build the Lease BS Map**: Read the lease accounting policy footnote for explicit disclosure of
    where lease items are presented on the BS (e.g., "Finance leases are included in property and
    equipment, net, accrued expenses and other current liabilities, and other liabilities"). Cross-
@@ -247,8 +247,8 @@ These flags and the Lease BS Map control whether the Debt Build includes lease s
 ### Full Linking Hierarchy
 ```
 SPG() formulas → Data Pull (live) → paste-as-values → Data Pull (Values) → Model tabs reference here
-BAMSEC / Tegus / Broker source tabs → Historical Data tab (if built) → Build tabs / IS / BS / CF link via formulas
-BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CF link directly (if no Historical Data tab)
+BAMSEC / Tegus / Broker source tabs → Historical Data tab (if built) → Build tabs / IS / BS / CFS link via formulas
+BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CFS link directly (if no Historical Data tab)
 ```
 
 **No Hardcoded Historicals**: Every historical value on build tabs and statement tabs must be a formula linking to a source tab (or to the Historical Data tab as an intermediary). Never copy-paste values from source tabs — always use cell references so the audit trail is one click away. The only tab where hardcoded historical values are acceptable is the Historical Data tab itself (it IS the capture layer).
@@ -296,7 +296,7 @@ BAMSEC / Tegus / Broker source tabs → Build tabs / IS / BS / CF link directly 
 
 ## Assumptions Organization
 
-**All assumptions live on build tabs.** The Model tab and IS/BS/CF are output layers.
+**All assumptions live on build tabs.** The Model tab and IS/BS/CFS are output layers.
 
 - **Revenue Build**: pricing, volume, growth, mix
 - **Costs Build**: margin targets, OpEx growth

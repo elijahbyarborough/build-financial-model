@@ -1,6 +1,6 @@
 ## Lease Accounting (ASC 842)
 
-Leases are projected on the **Debt Build** tab in dedicated schedule sections. Both operating and finance leases follow a roll-forward architecture that feeds the BS, IS, and CF through the Working Capital Build.
+Leases are projected on the **Debt Build** tab in dedicated schedule sections. Both operating and finance leases follow a roll-forward architecture that feeds the BS, IS, and CFS through the Working Capital Build.
 
 ### Detection & Classification (Phase 0 / Phase 1)
 
@@ -160,7 +160,7 @@ This is a derived flag from the Lease BS Map. If `FL_ROU_ASSET_NC` maps to a PP&
 - **PP&E Build**: New FL additions flow through an "Other" capex line: `='Debt Build'!New_FL_Additions`. FL depreciation is embedded in total D&A.
 - **D&A driver calculation (CRITICAL)**: The D&A-as-%-of-revenue driver must be calculated EXCLUDING finance lease depreciation. Otherwise the FL portion inflates the %, leading to over-projection of D&A. Historical driver formula: `=(Total D&A - FL Depreciation) / Revenue`. Projection D&A allocation formula must subtract FL depreciation before applying the segment/corporate split.
 - **BS**: Single "Net PP&E" line that includes FL ROU. No separate BS line for FL ROU asset.
-- **CF**: Total D&A add-back on CF already includes FL depreciation (it is inside PP&E Build D&A).
+- **CFS**: Total D&A add-back on CFS already includes FL depreciation (it is inside PP&E Build D&A).
 
 #### FL_IN_PPE = N (finance lease ROU NOT inside PP&E)
 
@@ -169,7 +169,7 @@ When `FL_ROU_ASSET_NC` maps to something other than PP&E (e.g., "Other assets," 
 - **PP&E Build**: Clean -- no FL items at all. D&A is purely operating D&A. No complex allocation needed.
 - **Debt Build**: Tracks the full FL ROU asset roll-forward (in addition to the liability roll).
 - **BS**: The FL ROU asset gets its own line (or flows through the WC Build into whatever "Other" line the map specifies), pulling from `='Debt Build'!FL_ROU_Net`.
-- **CF**: Total D&A add-back = PP&E Build D&A + Debt Build FL Depreciation (two separate pulls).
+- **CFS**: Total D&A add-back = PP&E Build D&A + Debt Build FL Depreciation (two separate pulls).
 
 ### Cash Flow Rules for Leases (HARD STOP)
 
@@ -189,7 +189,7 @@ When `FL_ROU_ASSET_NC` maps to something other than PP&E (e.g., "Other assets," 
 
 ### Working Capital Build Disaggregation
 
-The Working Capital Build is the bridge between the Debt Build (where leases are projected) and the BS/CF. Lease items MUST be disaggregated from whatever reported BS lines they are embedded in. The Lease BS Map determines which lines need disaggregation.
+The Working Capital Build is the bridge between the Debt Build (where leases are projected) and the BS/CFS. Lease items MUST be disaggregated from whatever reported BS lines they are embedded in. The Lease BS Map determines which lines need disaggregation.
 
 **Required WC Build rows for leases** (one row per mapped component):
 - Operating Lease ROU Assets (noncurrent): pull from Debt Build OL ROU

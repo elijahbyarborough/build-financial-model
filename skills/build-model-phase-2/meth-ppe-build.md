@@ -7,7 +7,7 @@ On the PP&E Build tab, use the **asset perspective** for all line items:
 - **Acquisitions**: POSITIVE (adds to asset base) — pulled from Capital Allocation Build
 - **Asset Disposals**: POSITIVE or NEGATIVE depending on direction
 
-The CF tab negates capex when pulling it: `CF!Capex = -'PP&E Build'!Capex` to show it as a cash outflow. The PP&E Build itself always uses the asset perspective.
+The CFS tab negates capex when pulling it: `CFS!Capex = -'PP&E Build'!Capex` to show it as a cash outflow. The PP&E Build itself always uses the asset perspective.
 
 ### Ending PP&E = Organic Roll-Forward (NEVER a Target Ratio)
 Ending Net PP&E is ALWAYS the sum of its components:

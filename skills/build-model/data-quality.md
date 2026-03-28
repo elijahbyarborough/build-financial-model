@@ -83,7 +83,7 @@ BS Check = Total Assets - Total Liabilities & Equity
 ```
 Must equal zero in every period. If non-zero, the model has a structural error — stop and debug.
 
-**CF Check** (on the CF tab):
+**CF Check** (on the CFS tab):
 ```
 CF Check = Beginning Cash + Total Cash Flow from All Activities - Ending Cash
 ```
@@ -104,7 +104,7 @@ Every model must pass all 4 gates before presentation. Run them in order.
 |------|--------|--------------|
 | 1. Structural integrity | BS Check = 0, CF Check = 0, NI linkage, RE roll-forward (see Phase 1 / Phase 3 integrity checks) | Zero errors across all periods |
 | 2. Assumption review | Review all blue-text cells: source comments present, no stale assumptions (>90 days), no "Aggressive" tags without documented rationale | Every assumption sourced and current |
-| 3. Model tab consistency | Verify Model tab summary numbers match underlying IS/BS/CF/build tabs: summary revenue = IS revenue, summary EPS = IS EPS, ROIC inputs match BS/IS, key drivers match build tab assumptions (see Phase 5) | Zero mismatches between Model tab and source tabs |
+| 3. Model tab consistency | Verify Model tab summary numbers match underlying IS/BS/CFS/build tabs: summary revenue = IS revenue, summary EPS = IS EPS, ROIC inputs match BS/IS, key drivers match build tab assumptions (see Phase 5) | Zero mismatches between Model tab and source tabs |
 | 4. Returns sanity | Re-check Returns tab: XIRR internally consistent, Returns tab pulls from Model tab correctly, entry price current (see Phase 6) | IRR plausible |
 
 ### Gate Failure Protocol

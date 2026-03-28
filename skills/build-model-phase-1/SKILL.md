@@ -1,6 +1,6 @@
 ---
 name: build-model-phase-1
-description: "Phase 1 -- Historical Statements. Build historical IS, BS, CF with model view and reported view. Includes lease schedule setup and WC Build disaggregation. Load after build-model and firm-formatting."
+description: "Phase 1 -- Historical Statements. Build historical IS, BS, CFS with model view and reported view. Includes lease schedule setup and WC Build disaggregation. Load after build-model and firm-formatting."
 ---
 
 # Phase 1 — Historical Statements
@@ -15,13 +15,13 @@ Then read the **Task Tracker** to understand the current model state, completed 
 
 ## Instructions
 
-Follow the detailed steps in `phase-1-historical-statements.md` to build historical IS, BS, and CF statements with both Reported View and Model View. Ensure all integrity checks pass before completing this phase.
+Follow the detailed steps in `phase-1-historical-statements.md` to build historical IS, BS, and CFS statements with both Reported View and Model View. Ensure all integrity checks pass before completing this phase.
 
 ### Methodology References (included in this skill)
 
 - **meth-lease-full.md** — Full lease accounting methodology (ASC 842): detection & classification, Lease BS Map, operating lease schedule, finance lease schedule, FL_IN_PPE placement logic, cash flow rules, Working Capital Build disaggregation, and build order.
 - **meth-working-capital.md** — Working capital 4-step discovery protocol, driver types table, common WC items, and projection methodology.
-- **meth-ppe-signs.md** — PP&E Build sign conventions (asset perspective for capex, D&A, acquisitions, disposals, and the CF tab sign flip).
+- **meth-ppe-signs.md** — PP&E Build sign conventions (asset perspective for capex, D&A, acquisitions, disposals, and the CFS tab sign flip).
 
 ## After Completing Phase 1
 

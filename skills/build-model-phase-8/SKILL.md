@@ -1,7 +1,7 @@
 ---
 name: build-model-phase-8
 description: |
-  Phase 8 -- QC (Quality Control). Runs quality gates, checks BS balance, CF reconciliation, and lease integrity.
+  Phase 8 -- QC (Quality Control). Runs quality gates, checks BS balance, CFS reconciliation, and lease integrity.
   Load after `build-model` and `firm-formatting` are already in context.
 ---
 

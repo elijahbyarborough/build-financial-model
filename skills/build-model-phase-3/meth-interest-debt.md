@@ -19,7 +19,7 @@ The change in cash flows into the Capital Allocation Build as a source/use of ca
 - **Capital Allocation Build**: `Net Change in Cash = -(Target Cash - Prior Period Cash)`
 - **Sign convention**: cash increase = negative (use of cash, reduces Cash Available for Allocation); cash decrease = positive (source of cash)
 - Net Change in Cash sits in the **Cash Available for Allocation** section, NOT in Capital Deployment
-- The BS Cash line pulls FROM the Debt Build (`='Debt Build'!cell`), not from the CF tab
+- The BS Cash line pulls FROM the Debt Build (`='Debt Build'!cell`), not from the CFS tab
 
 This ensures the buyback plug on the Capital Allocation Build automatically adjusts when the analyst changes the target cash balance.
 

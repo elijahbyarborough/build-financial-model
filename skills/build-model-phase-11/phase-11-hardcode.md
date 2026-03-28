@@ -25,7 +25,7 @@ Convert all source-tab references across the model into hardcoded values. This m
 
 - IS (Reported View historical cells)
 - BS (Reported View historical cells)
-- CF (Reported View historical cells)
+- CFS (Reported View historical cells)
 - Revenue Build (historical cells)
 - Costs Build (historical cells)
 - PP&E Build (historical cells)
@@ -74,7 +74,7 @@ Read the workbook tab list. Flag every tab that matches the source tab criteria 
 
 ### Step 2: Scan for Source References
 
-For each target tab (IS, BS, CF, all build tabs):
+For each target tab (IS, BS, CFS, all build tabs):
 1. Read every cell with a formula
 2. Check if the formula references any identified source tab
 3. Build a list: `[Tab, Cell, Current Formula, Current Value]`
@@ -94,7 +94,7 @@ For each identified cell:
 After all replacements:
 1. **BS Check = 0** across all historical periods
 2. **CF Check = 0** across all historical periods
-3. **Reconciliation checks = 0** (Model View vs Reported View on IS/BS/CF)
+3. **Reconciliation checks = 0** (Model View vs Reported View on IS/BS/CFS)
 4. **All projection formulas still work** — projections should be unaffected since they reference build tabs, not source tabs
 
 If any check fails, a replacement introduced an error. Undo and investigate.

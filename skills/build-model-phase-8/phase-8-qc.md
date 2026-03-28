@@ -44,7 +44,7 @@ If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional 
 
 3. **No interest double-count**: FL interest must appear in exactly two places: (a) IS interest expense, and (b) Debt Build FL Schedule interest accrual. It must NOT also appear in the CF Financing payment. Trace the CF Financing FL payment formula to verify it references only the depreciation/principal row.
 
-4. **D&A completeness**: Verify that total D&A on the CF operating section includes FL depreciation. If `FL_IN_PPE=Y`, confirm PP&E Build total D&A includes it. If `FL_IN_PPE=N`, confirm CF pulls D&A from both PP&E Build and Debt Build.
+4. **D&A completeness**: Verify that total D&A on the CF operating section includes FL depreciation. If `FL_IN_PPE=Y`, confirm PP&E Build total D&A includes it. If `FL_IN_PPE=N`, confirm CFS pulls D&A from both PP&E Build and Debt Build.
 
 5. **WC Build disaggregation**: Confirm that "Other Current Liabilities" and "Other Noncurrent Liabilities" on the WC Build have formulas that SUBTRACT the finance lease components in historical periods (to avoid double-counting when projections pull lease items directly from the Debt Build).
 

@@ -5,7 +5,7 @@ description: |
 
   Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
 
-  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CF linkage.
+  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CFS linkage.
 ---
 
 # FC Modeling Conventions
@@ -83,8 +83,11 @@ Assumption values go directly in the **projection columns of the existing metric
 ### No Hardcoded Historicals
 **Every historical value in the model must be a formula linking to a source tab** -- never a hardcoded number. Historical cells reference BAMSEC, Tegus, broker model, or the Historical Data tab via direct cell references. The audit trail must be one click away.
 
+### Mandatory Dual View (IS, BS, CFS)
+Every IS, BS, and CFS tab MUST have both a **Model View** and a **Reported View** -- no exceptions. Even if they would look identical, produce both. The Model View can simplify or collapse lines, but both views must always exist. The Reported View is the audit trail; the Model View is the projection engine.
+
 ### Build-First Rule (HARD STOP)
-**Never populate projection assumptions directly on the IS, BS, or CF tabs.** Assumptions and driver logic live on build tabs. The IS/BS/CF tabs contain only:
+**Never populate projection assumptions directly on the IS, BS, or CFS tabs.** Assumptions and driver logic live on build tabs. The IS/BS/CFS tabs contain only:
 1. **Pull formulas** -- references to build tabs
 2. **Derived computations** -- formulas computed from other cells on the same statement
 
@@ -100,7 +103,7 @@ If any check is non-zero, stop and debug. **Never use a plug, balancing item, or
 When source data contains operating or finance leases (ASC 842), the model must include dedicated lease schedules on the Debt Build tab. Lease detection occurs in Phase 0/1. Key flags tracked on the Task Tracker: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `FL_IN_PPE`, `LEASE_MATERIALITY`, and the full Lease BS Map. The critical rule: **CF Financing finance lease payment = principal only (depreciation amount), NEVER total payment (depreciation + interest).**
 
 ### Iterative Calculation Required
-After Phase 4, the model contains intentional circular references (Capital Allocation waterfall depends on CF, CF depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 4. Without it, the model will show circular reference errors.
+After Phase 4, the model contains intentional circular references (Capital Allocation waterfall depends on CFS, CFS depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 4. Without it, the model will show circular reference errors.
 
 ### ROIC & ROTIC
 Standard in every model. ROIC and ROTIC on the Model Tab. Full formulas provided in the Phase 5 skill.

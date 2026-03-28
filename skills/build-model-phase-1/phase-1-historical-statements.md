@@ -8,13 +8,15 @@
 
 ## What Happens in This Phase
 
-Build the IS, BS, and CF tabs with **historicals only** — no projections yet. This establishes a verified historical foundation that the entire model will build on.
+Build the IS, BS, and CFS tabs with **historicals only** — no projections yet. This establishes a verified historical foundation that the entire model will build on.
 
 The key outputs are:
-1. A **Reported View** on each statement (IS/BS/CF) that mirrors GAAP presentation
+1. A **Reported View** on each statement (IS/BS/CFS) that mirrors GAAP presentation
 2. A **Model View** on each statement that condenses the Reported View into analytical buckets suitable for driving projections
 3. A **BS→CF mapping** proving every balance sheet change has a home on the cash flow statement
 4. All integrity checks passing for every historical period
+
+**MANDATORY DUAL VIEW: Every IS, BS, and CFS tab MUST have both a Model View and a Reported View — no exceptions.** Even if the Model View would be identical to the Reported View (e.g., the company's GAAP presentation is already clean and analytical), produce both views. The Model View can simplify or collapse lines where it makes sense, but both views must exist on the tab. Never skip the Reported View because "it looks the same." The Reported View is the audit trail; the Model View is the projection engine. They serve different purposes and both are required.
 
 ---
 
@@ -39,7 +41,7 @@ The Model View is a condensed, analytical version of the Reported View. It group
 **Model View design principles:**
 - **IS Model View**: Consolidate detailed OpEx lines into analytical categories (COGS, SG&A, R&D, D&A, SBC, Other). Add analytical subtotals not in GAAP: Gross Profit, EBITDA, EBIT. Add margin rows (italic %).
 - **BS Model View**: Group into analytical categories: Cash, Operating Current Assets, PP&E, Goodwill & Intangibles, Other Noncurrent Assets, M&A Assets / Operating Current Liabilities, Debt (current + noncurrent), Other Noncurrent Liabilities, Equity. Each category maps to a build tab. **M&A Assets is a structural placeholder** — set to 0 across all historical periods. It exists so Phase 4 can link cumulative acquisition spend here without touching Goodwill or the organic model (see `references/methodology.md`).
-- **CF Model View**: Organize into CFO (NI + non-cash adjustments + WC changes), CFI (capex + acquisitions + other), CFF (debt + dividends + buybacks + other). Each line should correspond to a BS change.
+- **CFS Model View**: Organize into CFO (NI + non-cash adjustments + WC changes), CFI (capex + acquisitions + other), CFF (debt + dividends + buybacks + other). Each line should correspond to a BS change.
 
 **Model View rules:**
 - Historical periods only at this stage — projection columns are blank (they get populated in Phase 3).
@@ -54,7 +56,7 @@ Between Model View and Reported View on each tab, include a reconciliation row:
 
 - **IS**: `Model View Net Income - Reported View Net Income = 0`
 - **BS**: `Model View Total Assets - Reported View Total Assets = 0`
-- **CF**: `Model View Ending Cash - Reported View Ending Cash = 0`
+- **CFS**: `Model View Ending Cash - Reported View Ending Cash = 0`
 
 Must equal zero for every historical period. This proves the Model View's consolidation didn't lose or double-count anything.
 
@@ -62,7 +64,7 @@ Must equal zero for every historical period. This proves the Model View's consol
 
 ## Step 4: BS→CF Mapping
 
-**CRITICAL:** Before proceeding to Phase 2, map every BS line item to its CF home. The Cash Flow Statement is the mathematical bridge between consecutive Balance Sheets — every BS change must appear somewhere on the CF.
+**CRITICAL:** Before proceeding to Phase 2, map every BS line item to its CF home. The Cash Flow Statement is the mathematical bridge between consecutive Balance Sheets — every BS change must appear somewhere on the CFS.
 
 Create a mapping (on the Task Tracker or as a working section):
 
@@ -129,12 +131,12 @@ All of the following must pass for every historical period before proceeding to 
 
 1. **BS Check = $0** every historical year (Total Assets - Total L&E)
 2. **CF Check = $0** every historical year (Beginning Cash + all CF - Ending Cash)
-3. **NI ties IS→CF**: Net Income on IS = Net Income starting the CF
+3. **NI ties IS→CFS**: Net Income on IS = Net Income starting the CFS
 4. **RE roll-forward**: Beginning RE + NI - Dividends = Ending RE
 5. **CF bridges BS**: For each historical year, Beginning BS + all CF flows ≈ Ending BS
 6. **Reconciliation checks = $0**: Model View totals = Reported View totals for every historical period
 
-If BAMSEC/Tegus CF flows don't perfectly reconcile to BS changes (common due to acquisitions, FX, reclassifications), document the residual as "Historical Reconciliation Difference" — but the structure must ensure that in projections the CF will bridge the BS exactly.
+If BAMSEC/Tegus CF flows don't perfectly reconcile to BS changes (common due to acquisitions, FX, reclassifications), document the residual as "Historical Reconciliation Difference" — but the structure must ensure that in projections the CFS will bridge the BS exactly.
 
 **HARD GATE: If any check fails, STOP and fix it. Do not proceed to Phase 2 with a broken historical foundation.**
 

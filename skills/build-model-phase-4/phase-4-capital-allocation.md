@@ -1,7 +1,7 @@
 # Phase 4 — Capital Allocation
 
 **Reference:** `references/phase-4-capital-allocation.md`
-**Prerequisite:** Phase 3 complete (IS/BS/CF projected, all checks pass, CFO exists).
+**Prerequisite:** Phase 3 complete (IS/BS/CFS projected, all checks pass, CFO exists).
 **Next phase:** Phase 5 (Model Tab) → load `references/phase-5-model-tab.md`
 
 ---
@@ -44,23 +44,23 @@ A 10-line exhaustive waterfall. Every CFS line item must flow through this block
 
 | Row | Label | Historical Formula | Projection Formula | Format |
 |-----|-------|-------------------|-------------------|--------|
-| 1 | Cash From Operations | `=CF!CFO row` | `=CF!CFO row` | Currency, green font |
-| 2 | Capital Expenditures | `=CF!Capex row` | `=CF!Capex row` | Number, green font |
+| 1 | Cash From Operations | `=CFS!CFO row` | `=CFS!CFO row` | Currency, green font |
+| 2 | Capital Expenditures | `=CFS!Capex row` | `=CFS!Capex row` | Number, green font |
 | 3 | Free Cash Flow | `=CFO + Capex` | `=CFO + Capex` | **Major total** (F2F2F2 fill, bold, Currency) |
-| 4 | Proceeds / Divestitures | `=CF!Proceeds + CF!Divestitures` | 0 (blue/yellow assumption) | Currency |
-| 5 | Other Investing | `=CF!Other Investing` | 0 (blue/yellow assumption) | Number |
-| 6 | Net Debt Issuance / (Repayment) | `=CF!Net LT Debt + CF!Net ST Debt` | `='Debt Build'!Net Issuance row` | Currency |
-| 7 | Finance Lease Payments | `=CF!Finance Lease row` | assumption (blue/yellow, e.g. -$7mm) | Number |
-| 8 | Other Financing | `=CF!Other Financing row` | assumption (blue/yellow, e.g. -$2mm) | Number |
-| 9 | Net Change in Cash | `=-CF!Net Change in Cash row` | `=-('Debt Build'!Ending Cash - 'Debt Build'!Beginning Cash)` | Number |
+| 4 | Proceeds / Divestitures | `=CFS!Proceeds + CFS!Divestitures` | 0 (blue/yellow assumption) | Currency |
+| 5 | Other Investing | `=CFS!Other Investing` | 0 (blue/yellow assumption) | Number |
+| 6 | Net Debt Issuance / (Repayment) | `=CFS!Net LT Debt + CFS!Net ST Debt` | `='Debt Build'!Net Issuance row` | Currency |
+| 7 | Finance Lease Payments | `=CFS!Finance Lease row` | assumption (blue/yellow, e.g. -$7mm) | Number |
+| 8 | Other Financing | `=CFS!Other Financing row` | assumption (blue/yellow, e.g. -$2mm) | Number |
+| 9 | Net Change in Cash | `=-CFS!Net Change in Cash row` | `=-('Debt Build'!Ending Cash - 'Debt Build'!Beginning Cash)` | Number |
 | 10 | **Cash Available for Allocation** | `=FCF + rows 4-9` | `=FCF + rows 4-9` | **Major total** (F2F2F2 fill, bold, Currency) |
 
 ### Key Design Decisions
 
 - FCF is an intermediate **major total** (F2F2F2 fill), not just a subtotal
-- Historical cells are ALL green font (cross-sheet pulls from CF tab)
+- Historical cells are ALL green font (cross-sheet pulls from CFS tab)
 - Projection assumptions for Proceeds/Divest, Other Investing, Finance Leases, and Other Financing are blue/yellow with source comments, defaulting to 0 or small amounts
-- **Net Debt Issuance in projections pulls from Debt Build** (NOT CF tab) — the Debt Build is the driver tab
+- **Net Debt Issuance in projections pulls from Debt Build** (NOT CFS tab) — the Debt Build is the driver tab
 - **Net Change in Cash in projections** = negative of the change in the cash balance on the Debt Build. When cash is assumed flat (common), this = 0 and all FCF flows to deployment. When cash increases, this is a use of cash that reduces available capital
 - Cash Available for Allocation = sum of ALL items (FCF + Proceeds + Other Investing + Net Debt + Finance Leases + Other Financing + Net Change in Cash)
 
@@ -72,9 +72,9 @@ Three lines in strict priority order, plus a check row:
 
 | Row | Label | Historical Formula | Projection Formula | Notes |
 |-----|-------|-------------------|-------------------|-------|
-| 1 | Acquisitions, Net | `=CF!Acquisitions row` | `=-Acquisitions assumption (from M&A section below)` | Priority 1 |
-| 2 | Dividends Paid | `=CF!Dividends row` | `=Total Dividends (from Dividend Policy section below)` | Priority 2 |
-| 3 | Gross Share Repurchases | `=CF!Share Repurchases row` | `=-(Cash Available + Acquisitions + Dividends)` | **RESIDUAL SWEEP** |
+| 1 | Acquisitions, Net | `=CFS!Acquisitions row` | `=-Acquisitions assumption (from M&A section below)` | Priority 1 |
+| 2 | Dividends Paid | `=CFS!Dividends row` | `=Total Dividends (from Dividend Policy section below)` | Priority 2 |
+| 3 | Gross Share Repurchases | `=CFS!Share Repurchases row` | `=-(Cash Available + Acquisitions + Dividends)` | **RESIDUAL SWEEP** |
 | 4 | **Waterfall Check** | `=Cash Available + all deployment = 0` | `=Cash Available + all deployment = 0` | Must be 0. Bold. |
 
 ### Buybacks Are the RESIDUAL SWEEP (CRITICAL)
@@ -202,27 +202,27 @@ Seven rows providing a comprehensive view of how earnings are allocated:
 
 | Line Item | Historical Source | Projection Source |
 |-----------|-----------------|-------------------|
-| CFO | CF tab | CF tab |
-| Capex | CF tab | CF tab |
-| Proceeds / Divestitures | CF tab (Proceeds + Divestitures rows) | Assumption (default 0) |
-| Other Investing | CF tab | Assumption (default 0) |
-| Net Debt Issuance | CF tab (LT + ST debt rows) | Debt Build tab (net issuance row) |
-| Finance Lease Payments | CF tab | Assumption |
-| Other Financing | CF tab | Assumption |
-| Net Change in Cash | CF tab (Net Change row, negated) | Debt Build tab (`-(ending cash - beginning cash)`) |
+| CFO | CFS tab | CFS tab |
+| Capex | CFS tab | CFS tab |
+| Proceeds / Divestitures | CFS tab (Proceeds + Divestitures rows) | Assumption (default 0) |
+| Other Investing | CFS tab | Assumption (default 0) |
+| Net Debt Issuance | CFS tab (LT + ST debt rows) | Debt Build tab (net issuance row) |
+| Finance Lease Payments | CFS tab | Assumption |
+| Other Financing | CFS tab | Assumption |
+| Net Change in Cash | CFS tab (Net Change row, negated) | Debt Build tab (`-(ending cash - beginning cash)`) |
 | SBC | IS tab | IS tab (which itself pulls from the SBC assumption here via % * Revenue) |
 | Net Income (for % ratios) | IS tab | IS tab |
 | Revenue (for SBC %) | IS tab | IS tab |
 
 ### What Cap Alloc WRITES to Other Tabs (Outputs)
 
-In projection years, the CF tab pulls these three items FROM Cap Alloc Build:
+In projection years, the CFS tab pulls these three items FROM Cap Alloc Build:
 
-- `CF!Acquisitions` = `Cap Alloc!Acquisitions, Net` (deployment row)
-- `CF!Share Repurchases` = `Cap Alloc!Gross Share Repurchases` (deployment row)
-- `CF!Dividends Paid` = `Cap Alloc!Dividends Paid` (deployment row)
+- `CFS!Acquisitions` = `Cap Alloc!Acquisitions, Net` (deployment row)
+- `CFS!Share Repurchases` = `Cap Alloc!Gross Share Repurchases` (deployment row)
+- `CFS!Dividends Paid` = `Cap Alloc!Dividends Paid` (deployment row)
 
-This is a **ONE-WAY dependency**: Cap Alloc drives CF for discretionary deployment items. The CF tab does NOT drive Cap Alloc for these items. This avoids circular references.
+This is a **ONE-WAY dependency**: Cap Alloc drives CFS for discretionary deployment items. The CFS tab does NOT drive Cap Alloc for these items. This avoids circular references.
 
 ### Dependency Chain
 
@@ -233,7 +233,7 @@ Debt Build (debt schedule, cash balance)
 Capital Allocation Build (reads debt/cash, computes deployment)
     |
     v
-CF Tab (pulls acquisitions, buybacks, dividends from Cap Alloc)
+CFS Tab (pulls acquisitions, buybacks, dividends from Cap Alloc)
     |
     v
 BS Tab (pulls ending cash, debt balances)
@@ -291,14 +291,14 @@ Phase 3 set dividends, acquisitions, share repurchases, and diluted share count 
 
 | Placeholder Location | Link To |
 |---------------------|---------|
-| CF tab → Dividends (CFF) | `='Capital Allocation Build'!Dividends Paid` (deployment row) |
-| CF tab → Share Repurchases (CFF) | `='Capital Allocation Build'!Gross Share Repurchases` (deployment row) |
-| CF tab → Acquisitions (CFI) | `='Capital Allocation Build'!Acquisitions, Net` (deployment row) |
+| CFS tab → Dividends (CFF) | `='Capital Allocation Build'!Dividends Paid` (deployment row) |
+| CFS tab → Share Repurchases (CFF) | `='Capital Allocation Build'!Gross Share Repurchases` (deployment row) |
+| CFS tab → Acquisitions (CFI) | `='Capital Allocation Build'!Acquisitions, Net` (deployment row) |
 | IS tab → Diluted Share Count | `='Capital Allocation Build'!Diluted Shares Outstanding` |
 | PP&E Build → Acquisitions row | `='Capital Allocation Build'!Acquisitions, Net` (sign-flipped) |
 | BS tab → M&A Assets | Cumulative `ABS(acquisitions)` from Capital Allocation Build (= Cumulative M&A Invested Capital row) |
 
-**After re-linking, re-verify all integrity checks** (BS Check = 0, CF Check = 0, NI ties, RE roll-forward) for every projection year. The model is now circular (waterfall depends on CF, CF depends on waterfall) — this is expected and requires iterative calculation enabled in Excel.
+**After re-linking, re-verify all integrity checks** (BS Check = 0, CF Check = 0, NI ties, RE roll-forward) for every projection year. The model is now circular (waterfall depends on CFS, CFS depends on waterfall) — this is expected and requires iterative calculation enabled in Excel.
 
 ---
 
