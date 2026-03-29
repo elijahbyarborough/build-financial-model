@@ -1,55 +1,51 @@
-## PP&E Build
+## PP&E Build — 3-Section Structure
 
-### Sign Convention (CRITICAL)
-On the PP&E Build tab, use the **asset perspective** for all line items:
-- **Capital Expenditures**: POSITIVE (adds to asset base)
-- **Depreciation / Depletion / Amortization**: NEGATIVE (reduces asset base)
-- **Acquisitions**: POSITIVE (adds to asset base) — pulled from Capital Allocation Build
-- **Asset Disposals**: POSITIVE or NEGATIVE depending on direction
+PP&E Build must have exactly 3 sections, each with a Tier-2 header.
 
-The CFS tab negates capex when pulling it: `CFS!Capex = -'PP&E Build'!Capex` to show it as a cash outflow. The PP&E Build itself always uses the asset perspective.
+### Section 1: Capital Expenditures
 
-### Ending PP&E = Organic Roll-Forward (NEVER a Target Ratio)
-Ending Net PP&E is ALWAYS the sum of its components:
+| Row | Label | Notes |
+|-----|-------|-------|
+| 1 | Capital Expenditures | $ amount, bold |
+| 2 | Capex as % of Revenue | Italic, derived |
+| 3 | Revenue from Consolidation | Green font, reference line |
 
-```
-Ending Net PP&E = Beginning Net PP&E + Capex - D&A + Acquisitions + Disposals/Other
-```
+For companies with segment capex reporting: break out by segment with a controlling total = Revenue × Capex%. For single-segment or companies that don't disclose segment capex: single Capex line with blue/yellow for projection assumptions.
 
-NEVER set Ending PP&E = Revenue × target ratio and back-solve for acquisitions as a plug. That approach:
-- Makes acquisitions a mechanical output instead of a capital allocation decision
-- Can produce unrealistic acquisition volumes that exceed available cash
-- Hides the true capital intensity of the business
+Both capex categories are POSITIVE values on this tab (asset additions). The CFS tab negates capex when pulling it: `CFS!Capex = -'PP&E Build'!Capex` to show it as a cash outflow.
 
-### Capex
-Split into two categories:
-- **Maintenance capex**: sustaining existing asset base. Project as % of revenue or % of beginning gross PP&E.
-- **Growth capex**: expansion, new capacity. Project based on management guidance or as % of revenue.
+### Section 2: Depreciation & Amortization
 
-Both are POSITIVE values on this tab (asset additions).
+| Row | Label | Notes |
+|-----|-------|-------|
+| 1 | Depreciation & Amortization | $ amount, bold |
+| 2 | D&A as % of Avg PP&E | Italic, driver assumption — blue/yellow for projections |
+| 3 | D&A as % of Revenue | Italic, derived |
 
-### Depreciation
-- Project as % of revenue or % of beginning Net PP&E — whichever produces more stable historical ratios
-- Stored as NEGATIVE on this tab (asset reduction)
-- **Separate depreciation schedule** at the asset-category or individual-asset level when granularity is available
-- Use straight-line depreciation by default unless the company explicitly uses a different method
-- For each asset category: Beginning Gross PP&E + Capex Additions - Disposals = Ending Gross PP&E
-- Accumulated Depreciation: Beginning + Depreciation Expense - Depreciation on Disposed Assets = Ending
-- Net PP&E = Gross PP&E - Accumulated Depreciation
+**Projection formula**: `D&A = rate × (2 × BegPPE + Capex) / (2 + rate)` where rate = D&A % of Avg PP&E. This solves the circular reference between D&A and Ending PP&E algebraically.
 
-### Acquisitions
-- **Acquisitions do NOT originate on the PP&E Build.** They are a capital allocation decision.
-- PP&E Build row for Acquisitions = pull from Capital Allocation Build (with sign flip if needed)
-- Formula: `='Capital Allocation Build'!Acquisition Budget` (negated, since Cap Alloc stores it as negative cash outflow)
-- The Capital Allocation Build owns the acquisition budget assumption
+For companies with finance leases: add a "Finance Lease Depreciation" line below the main D&A if FL depreciation is material and separately disclosed.
 
-### Disposals / Retirements
-- If the company has a history of asset disposals, model them separately
-- Gain/loss on disposal flows to Other Income on the IS
+D&A is stored as NEGATIVE on this tab (asset reduction).
 
-### Reference Metrics
-Include below the roll-forward:
-- Capex as % of Revenue (= Capex / Revenue, both positive)
-- D&A as % of Revenue
-- D&A as % of Beginning Net PP&E
-- Net PP&E Turnover (Revenue / Average Net PP&E)
+### Section 3: Net PP&E Roll-Forward
+
+| Row | Label | Notes |
+|-----|-------|-------|
+| 1 | Beginning Net PP&E | `=Prior year Ending` |
+| 2 | Plus: Capex | `=Section 1 total` |
+| 3 | Less: D&A | `=Section 2 total` (shown as negative) |
+| 4 | Other (Acquisitions, Disposals, Impairments) | Historical: back-solved from BS; projections: link to Capital Allocation Build acquisitions |
+| 5 | **Ending Net PP&E** | Bold, light gray #F2F2F2 fill, thin top border. Historical: `=BS!col`; projections: sum of roll-forward components |
+
+### Cross-References
+
+- IS tab D&A line → PP&E Build Section 2 D&A $ amount
+- BS tab PP&E line → PP&E Build Section 3 Ending Net PP&E
+- CFS tab Capex line → PP&E Build Section 1 Capex (sign-flipped for CFS convention)
+
+### Key Rules
+
+- Ending Net PP&E is ALWAYS the sum of its components (organic roll-forward). NEVER set Ending PP&E = Revenue × target ratio and back-solve for acquisitions as a plug.
+- Acquisitions do NOT originate on the PP&E Build. They are a capital allocation decision. PP&E Build row for Acquisitions = pull from Capital Allocation Build (with sign flip if needed).
+- PP&E acquisitions in projection years: set to 0 as a placeholder in Phase 2. Phase 4 (Capital Allocation) will overwrite with a live link.
