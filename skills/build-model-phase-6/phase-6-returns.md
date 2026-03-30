@@ -20,11 +20,13 @@ Build the Returns tab — a compact, single-section analysis grid with YEARFRAC 
 
 ## Tab Structure — Layout Overview
 
-The Returns tab has a compact, single-section design with three Tier 1 headers:
+The Returns tab has a compact, single-section design with three Tier 1 headers only:
 
-1. **Company Name — Returns Analysis** (title row)
-2. **Entry & Exit Assumptions** (input section)
-3. **5-Year Forward Valuation & Return Analysis** (the analysis grid)
+1. **Company Name — Returns Analysis** (title row, Tier-1 #1C3553)
+2. **Entry & Exit Assumptions** (Tier-1 #1C3553)
+3. **5-Year Forward Valuation & Return Analysis** (Tier-1 #1C3553)
+
+**The Returns tab does NOT use Tier-2 sub-headers (#C2D5EB).** Unlike the Output tab which has sub-headers for each group, the Returns tab uses only Tier-1 headers. The sub-groups (Valuation, Dividend Income, Cash Flows, IRR Decomposition) are separated by blank spacer rows only — no colored headers. This keeps the tab compact and scannable.
 
 Unlike the build tabs, this tab is NOT organized as a long vertical build. It is a wide grid with columns representing: **Entry, each FY projection year, and Exit**. The analysis flows top-to-bottom within each column.
 
@@ -261,16 +263,55 @@ Only THREE assumptions on this entire tab. Everything else is derived from these
 
 ---
 
-## Formatting Notes (defer to firm-formatting)
+## Font Color Convention
 
-- **EPS-Implied Price**, **Total Price**, **Net Cash Flow**, **IRR**: Major Totals (F2F2F2 fill, bold)
-- **DPS Received**: bold (sub-total level)
-- **M&A Value Per Share**: italic with green font (cross-tab pull that is also a key output)
-- **Entry P/E**: bold (implied/derived, not an assumption)
-- **Exit P/E**: bold, blue/yellow (the key exit assumption)
-- All decomposition rows (EPS CAGR, M&A Value, Dividend Yield, Multiple Change): italic
-- **Core Cash Flow (ex-M&A)** row: gray font (#7C7F88) — helper row, not a primary output
-- **YEARFRAC Weight** row: gray font (#7C7F88) — helper/intermediate
+| Cell Type | Font Color | Bold | Example |
+|-----------|-----------|------|---------|
+| Entry EPS, Entry P/E (calculated/implied) | Black #000000 | P/E bold, EPS not | Entry P/E = Price / EPS |
+| Projection EPS, DPS, M&A Value (cross-tab links) | Green #008000 | Not bold | `='Model Tab'!L35` |
+| Exit EPS, Exit M&A Value (cross-tab links) | Green #008000 | Bold | Exit values stand out |
+| Exit P/E (hardcoded input) | Blue #0000FF on yellow #FFFF00 | Bold | Analyst assumption |
+| Entry Price, Entry Date (hardcoded inputs) | Blue #0000FF on yellow #FFFF00 | Not bold | User-set inputs |
+| DPS Received, Net Cash Flow (calculated totals) | Black #000000 | Bold | Formula results |
+| YEARFRAC Weight, Core CF ex-M&A (memo/helper) | Gray #7C7F88 | Italic | Reference lines |
+| IRR decomposition items (EPS CAGR, M&A, Div Yield, Mult Chg) | Black #000000 | Italic | Components |
+| IRR (total return) | Black #000000 | Bold + italic | Key output |
+
+## Gray Highlight Rows (#F2F2F2 Background)
+
+Apply #F2F2F2 background to these four key output rows:
+- **EPS-Implied Price**
+- **Total Price**
+- **Net Cash Flow**
+- **IRR**
+
+These are the four key outputs a reader scans for. All other rows have white background.
+
+## Core Cash Flow (ex-M&A) Formatting
+
+Core Cash Flow (ex-M&A) is a **gray italic memo line** (#7C7F88, italic, not bold). It shows what the return would be excluding M&A accretion — a reference for decomposition, not a primary output. It does NOT get a gray background fill.
+
+## Border Convention
+
+| Location | Border Type |
+|----------|-------------|
+| Column headers row: bottom | Medium solid #000000 |
+| Date row: top | Medium solid #000000 |
+| Exit P/E row: bottom | Thin solid |
+| EPS-Implied Price row: top | Thin solid |
+| M&A Value row: bottom | Thin solid |
+| Total Price row: top | Thin solid |
+| YEARFRAC row: bottom | Thin solid (starts at first FY column, not Entry) |
+| DPS Received row: top | Thin solid (starts at first FY column) |
+| Row above Net Cash Flow: bottom | Thin solid |
+| Net Cash Flow row: top + bottom | Thin solid |
+| Multiple Change row: bottom | Thin solid |
+| IRR row: top | Thin solid |
+
+**No vertical divider borders on the Returns tab.** Vertical dividers are used only on the Output tab.
+
+## Other Formatting
+
 - Column headers: bold, center-aligned
 - Date row: italic, center-aligned, mm/dd/yy format
 - Per-share values: $#,##0.00 format
@@ -290,6 +331,11 @@ Only THREE assumptions on this entire tab. Everything else is derived from these
 - **Dual cash flow rows**: Net (total) and Core (ex-M&A) enable M&A IRR attribution.
 - **IRR decomposes into 4 components**: EPS CAGR, M&A Value, Dividend Yield, Multiple Change.
 - **Pulls from Model Tab** for EPS and from **Cap Alloc Build** for M&A Value Per Share and DPS.
+- **No Tier-2 sub-headers** — only Tier-1 headers and blank spacer rows for separation.
+- **Entry EPS and Entry P/E use black font** — derived values, not data pulls.
+- **4 gray highlight rows**: EPS-Implied Price, Total Price, Net Cash Flow, IRR.
+- **Core CF (ex-M&A) is a gray italic memo line** — no background fill.
+- **No vertical divider borders** on this tab.
 - **No freeze panes. All formatting defers to `firm-formatting`.**
 
 **STOP. Update Task Tracker. Report XIRR and results. Wait for "continue."**
