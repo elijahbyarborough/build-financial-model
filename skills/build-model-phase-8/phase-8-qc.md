@@ -17,7 +17,7 @@ Run structural and formula QC across the entire model. The audit reads — it do
 
 | Gate | What It Checks | Pass Criteria |
 |------|---------------|---------------|
-| 1. Structural integrity | BS Check = 0, CF Check = 0, NI linkage, RE roll-forward, BS→CF mapping holds | Zero errors, all periods |
+| 1. Structural integrity | BS Check = 0, CF Check = 0, NI linkage, RE roll-forward, BS→CF mapping holds, WC denominator consistency | Zero errors, all periods |
 | 2. Assumption review | All blue-text cells sourced, no stale assumptions (>90 days) | Every assumption sourced and current |
 | 3. Model tab consistency | Summary numbers match underlying tabs | Zero mismatches |
 | 4. Returns sanity | XIRR internally consistent, Returns tab pulls from Model tab correctly, entry price current | IRR plausible |
@@ -27,6 +27,17 @@ Run structural and formula QC across the entire model. The audit reads — it do
 - **Gate 2**: Flag, propose fix, get user confirmation.
 - **Gate 3**: Refresh Model tab.
 - **Gate 4**: Trace upstream to the offending assumption.
+
+---
+
+### WC Denominator Consistency Check
+
+For every projected Working Capital line item (AR, AP, Other CA, Accrued Comp, Accrued Expenses, Rev Share, Deferred Revenue, etc.):
+
+1. **Historical denominator identification**: Read the last historical year's formula to identify the denominator used (e.g., `IS!K7` = Revenue, `ABS(IS!K9)` = Segment OI).
+2. **Projection denominator confirmation**: Read the first projection year's formula and confirm it references the same IS/Consolidation line.
+3. **Mismatch flagging**: Flag any mismatch as **FAIL** with the specific line item, historical denominator, and projection denominator.
+4. **NWC reasonableness**: Compute NWC as % of Revenue in the first projection year and compare to the trailing 3-year average. If it deviates by more than ±200 bps, flag for manual review — likely a denominator mismatch or an unreasonable driver assumption.
 
 ---
 
