@@ -209,6 +209,7 @@ Complete specification for all Excel model formatting. This is the authoritative
 - **Never place a spacer row directly below a section header or subheader.** Data starts immediately.
 - Spacer rows are the same height as all other rows (uniform).
 - Spacer rows are completely empty — no formatting, no fills, no borders.
+- **Tab-specific overrides**: Certain output/summary tabs (e.g., Output) may override uniform spacer row height to create print-ready visual hierarchy. See the relevant phase skill for tab-specific spacing rules. Build tabs, financial statement tabs, and all other tabs retain uniform row heights.
 
 ---
 
@@ -379,6 +380,18 @@ Total Revenue       $17,925  ← subtotal: Currency (has $), bold, thin top bord
 **Never use double-bottom borders.** Not on grand totals, not on check rows, not anywhere.
 
 All borders span from label column through all year/data columns.
+
+### Horizontal Border Extent
+
+All horizontal borders — thin subtotal/separator borders, medium header borders, and the year row bottom border — span the full row from column A through the last data column (typically column R on build/statement tabs, column M on Output/Consensus). Borders are never limited to just the numeric data columns; they always include the label column (A) and any spacer column (B).
+
+This applies to every tab in the model: IS, BS, CF, Model, all builds, Output, and Consensus.
+
+### Vertical Zone Dividers (Output & Consensus Tabs)
+
+Tabs with historical/projection/CAGR column zones (Output, Consensus) use medium solid #808080 vertical borders to separate zones. These dividers are **section-scoped** — they run from each Tier 1 header through the last data row of that section, then stop. Spacer rows between sections have no vertical borders. This prevents a continuous line running the full height of the tab.
+
+Build tabs (IS, BS, CFS, Revenue Build, etc.) and the Model tab do not use vertical zone dividers — they rely on font color (green vs. black) to distinguish historical from projected.
 
 ---
 

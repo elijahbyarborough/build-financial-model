@@ -32,6 +32,16 @@ These are common patterns, not prescriptive rules. Always verify against the act
 | Prepaid Expenses | % of OpEx | Usually small, low volatility |
 | Accrued Liabilities | % of Revenue | Catch-all for accrued comp, taxes, other |
 
+### Denominator Consistency Rule
+
+Before writing any forward WC formula, inspect the historical calculation formula for that line item to identify which denominator it uses (Revenue, COGS, Segment OI, etc.). The forward projection formula must use the identical denominator. Common mappings:
+
+- **AR / DSO**: typically Revenue
+- **AP / DPO**: may use COGS, Segment OI, or Revenue — check the historical formula
+- **Other CA / CL % items**: check whether the historical driver references Revenue or another line
+
+Do not assume all WC items are driven off Revenue. A denominator mismatch (e.g., projecting AP off Revenue when historicals compute DPO off Segment OI) will silently distort NWC as % of Revenue by 2–5x.
+
 ### Methodology
 1. Calculate historical ratios for each WC item using the selected driver
 2. Project driver metrics: hold flat at recent average, or trend based on management commentary

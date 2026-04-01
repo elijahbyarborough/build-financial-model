@@ -24,14 +24,15 @@ The Model Tab is a pure pull-sheet with one exception: the ROIC/ROTIC section co
 The Model Tab has a fixed section hierarchy. The sections always appear in this order:
 
 1. **Title Block & Column Headers** (rows 1-5)
-2. **Summary Income Statement** (Tier 1 header)
-3. **Key Drivers & KPIs** (Tier 1 header)
-4. **Capital Allocation & Returns** (Tier 2 subheader) + **Capital Deployment** (Tier 2 subheader)
-5. **ROIC / ROTIC** (Tier 1 header)
-6. **Summary Balance Sheet** (Tier 1 header)
-7. **Summary Cash Flow Statement** (Tier 1 header)
+2. **Platinum List Indicators** (Tier 1 header)
+3. **Summary Income Statement** (Tier 1 header)
+4. **Key Drivers & KPIs** (Tier 1 header)
+5. **Capital Allocation & Returns** (Tier 2 subheader) + **Capital Deployment** (Tier 2 subheader)
+6. **ROIC / ROTIC** (Tier 1 header)
+7. **Summary Balance Sheet** (Tier 1 header)
+8. **Summary Cash Flow Statement** (Tier 1 header)
 
-This order flows logically: how the company earns (IS) → what drives the earnings (KPIs) → what's done with the cash (Cap Alloc) → how efficiently capital is deployed (ROIC) → the resulting financial position (BS) → the cash flow reconciliation (CFS).
+This order flows logically: key per-share return drivers (Platinum List) → how the company earns (IS) → what drives the earnings (KPIs) → what's done with the cash (Cap Alloc) → how efficiently capital is deployed (ROIC) → the resulting financial position (BS) → the cash flow reconciliation (CFS).
 
 ---
 
@@ -47,7 +48,29 @@ Column layout: Column A for labels, then one column per year spanning ALL histor
 
 ---
 
-## Section 1: Summary Income Statement
+## Section 1: Platinum List Indicators
+
+Immediately below the standard tab header (row 5 spacer), before the Summary Income Statement.
+
+### Tier 1 Header — "Platinum List Indicators"
+
+| Row | Label | Source | Format |
+|-----|-------|--------|--------|
+| | Diluted EPS | Internal reference to the EPS row in Section 2 (Summary IS) below | `$#,##0.00_);($#,##0.00);"-"` |
+| | Dividends Per Share | `='Capital Allocation Build'!DPS row` | `$#,##0.00_);($#,##0.00);"-"` |
+| | M&A Value Per Share | `='Capital Allocation Build'!M&A Value Per Share row` | `$#,##0.00_);($#,##0.00);"-"` |
+
+**Purpose**: These are the three key per-share inputs to the Returns framework — EPS (the primary valuation driver), DPS (dividend income), and M&A Value Per Share (incremental value from acquisitions). Surfacing them at the top of the Model tab provides immediate visibility into the drivers of total return.
+
+**Font color**: Green (#008000) for all data cells (cross-sheet references). Historical and projection columns both use green since all three rows are pulls from other sections/tabs.
+
+**Conditional inclusion**: Dividends Per Share and M&A Value Per Share should always be included even if values are zero — the "-" zero format handles display. The section is standard for every model.
+
+**EPS is always the valuation driver**: For all companies, use Diluted EPS as the key per-share metric. This is the primary driver of the P/E-based exit valuation in the Returns framework.
+
+---
+
+## Section 2: Summary Income Statement
 
 Scan the IS tab and pull every major line item, maintaining the IS tab's own ordering.
 
@@ -75,7 +98,7 @@ Scan the IS tab and pull every major line item, maintaining the IS tab's own ord
 
 ---
 
-## Section 2: Key Drivers & KPIs
+## Section 3: Key Drivers & KPIs
 
 Scan ALL build tabs (revenue builds, segment builds, etc.) and identify the key operating drivers. Each segment or business line gets its own Tier 2 subheader.
 
@@ -110,7 +133,7 @@ Scan ALL build tabs (revenue builds, segment builds, etc.) and identify the key 
 
 ---
 
-## Section 3: Capital Allocation & Returns
+## Section 4: Capital Allocation & Returns
 
 Pull FCF generation and deployment metrics from the Capital Allocation Build tab.
 
@@ -138,6 +161,11 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 | | (blank spacer) | | |
 | | Net Debt / EBITDA | `='Debt Build'!Net Debt / EBITDA` | 0.0"x" |
 | | Interest Coverage | `=EBITDA / ABS(IS!Interest Expense)` | 0.0"x" |
+| | *Acquisition IRR* | `='Capital Allocation Build'!row26` | `0.0%_);(0.0%);"-"`, italic |
+
+**Acquisition IRR**: Pulls from `='Capital Allocation Build'!row26` (the Acquisition IRR assumption). Historical columns show "-" (Cap Alloc Build has no historical IRR values). Projection columns show the assumed IRR (e.g., 10.0%).
+
+**Conditional inclusion**: Only include this row if the model has material acquisition activity (non-zero Acquisitions, Net in the projection period). If no projected acquisitions, omit the row.
 
 ### Flexibility Rules
 
@@ -148,7 +176,7 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 
 ---
 
-## Section 4: ROIC / ROTIC
+## Section 5: ROIC / ROTIC
 
 This is the ONE section with original calculations. The formulas are computed here, not pulled from another tab.
 
@@ -191,7 +219,7 @@ This is the ONE section with original calculations. The formulas are computed he
 
 ---
 
-## Section 5: Summary Balance Sheet
+## Section 6: Summary Balance Sheet
 
 Scan the BS tab and pull major category totals. The goal is a condensed view, not a line-by-line replica.
 
@@ -220,7 +248,7 @@ Scan the BS tab and pull major category totals. The goal is a condensed view, no
 
 ---
 
-## Section 6: Summary Cash Flow Statement
+## Section 7: Summary Cash Flow Statement
 
 Scan the CFS tab and pull major line items, plus the three FCF definitions.
 

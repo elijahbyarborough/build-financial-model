@@ -141,6 +141,12 @@ Key points:
 
 ---
 
+## Year Header Block
+
+The year headers (column header row with "FY 2024A", "FY 2025E", etc.) sit above all sections — not inside any section — with a spacer row below before the first Tier 1 header. Sections do not repeat their own year row.
+
+---
+
 ## Output Column Structure (IS / KPIs / Capital Allocation)
 
 Standard Output column layout for all sections below the Returns Timeline:
@@ -167,11 +173,13 @@ Place medium solid #808080 borders on:
 - Right edge of the last historical column AND left edge of the first projection column
 - Right edge of the terminal year column AND left edge of the CAGR / Δ column
 
-These dividers must run **continuously** from the first section header (Summary Income Statement) through the last data row (ROTIC), with **no gaps**. This includes through Tier-1 headers, Tier-2 sub-headers, and blank spacer rows. The borders create an unbroken visual channel that anchors the reader's eye to the zone boundaries.
+**Section-scoped dividers**: Vertical borders are scoped to each Tier 1 section, running from the section header row through the last data row in that section. They do **not** run continuously across the entire tab. Spacer rows between sections have no vertical dividers, creating clean visual breaks between:
 
-These dividers do **NOT** appear in the Returns Timeline section because the Returns section uses a different column layout (Entry / FY years / Exit).
+- **Summary Income Statement** (header → last IS row)
+- **Key Drivers & KPIs** (header → last KPI row)
+- **Capital Allocation & Returns** (header → ROTIC)
 
-Section Tier-1 headers (#1C3553) and Tier-2 sub-headers (#C2D5EB) should extend across all columns including the CAGR / Δ column.
+These dividers do **NOT** appear in the Returns Timeline section (different column layout) or the Platinum List Indicators section.
 
 ---
 
@@ -275,7 +283,12 @@ FCF Conversion = FCF / Net Income. EBITDA Conversion = FCF / EBITDA. Use em-dash
 | | *Acquisition-Adjusted Payout %* | `='Model Tab'!Adj Payout` | 0.0%, italic |
 | | (blank spacer) | | |
 | | Net Debt / EBITDA | `='Model Tab'!leverage` | 0.0"x" |
-| | Interest Coverage | `='Model Tab'!coverage` | 0.0"x" |
+| | Interest Coverage (x) | `='Model Tab'!coverage` | 0.0"x" |
+| | *Acquisition IRR* | `='Model Tab'!IRR` | 0.0%, italic |
+
+**Acquisition IRR placement**: Below Interest Coverage, immediately before the ROIC / ROTIC subheader. References the Model Tab (not Capital Allocation Build directly), maintaining the two-source-tab rule. Historical columns are blank. Projection columns show the assumed IRR (green font for cross-sheet reference).
+
+**Conditional inclusion**: Only include the Acquisition IRR row if the model includes material acquisition activity (i.e., non-zero Acquisitions, Net in the projection period). If the model has no projected acquisitions, omit this row entirely.
 
 ### Tier 2 Subheader — "ROIC / ROTIC"
 
@@ -310,8 +323,8 @@ The Output tab has exactly TWO source tabs: **Model Tab** and **Returns**. It ne
 
 ### Header Hierarchy
 
-- **Tier 1 headers**: Navy fill (#1C3553), white bold text, span all columns including CAGR / Δ
-- **Tier 2 subheaders**: Light blue fill (#C2D5EB), dark text, span all columns including CAGR / Δ
+- **Tier 1 headers**: Navy fill (#1C3553), white bold text, span all columns including CAGR / Δ. Fill must extend across the entire row from A through the CAGR / Δ column. Do not leave column B or the CAGR / Δ column unfilled.
+- **Tier 2 subheaders**: Bold, non-italic, indentLevel = 1. Light blue fill (#C2D5EB), black text (#000000), Arial 10pt. Fill must extend across the entire row from A through the CAGR / Δ column. Do not leave column B or the CAGR / Δ column unfilled.
 - **Column headers**: Bold, center-aligned, medium bottom border
 
 ### Data Formatting
@@ -325,6 +338,33 @@ All number formats defer to `firm-formatting.md` — use the standard format str
 - Conversion metrics (FCF Conversion, EBITDA Conversion): `0.0%_);(0.0%);"—"` (em-dash zero)
 - Multiples: `0.0"x"_);(0.0"x");"-"`
 - Share counts: `0.0`
+
+### Spacer Row Heights (Output Tab Exception)
+
+The Output tab overrides firm-formatting's uniform row height rule. Because it's a one-page investment summary designed for print and presentation, spacer rows use a 3-tier height system:
+
+| Tier | Height | Placement |
+|------|--------|-----------|
+| Major break | 8pt | Before Tier 1 navy headers (between major sections) |
+| Minor break | 5pt | Before Tier 2 light blue subheaders (between subsections) |
+| Compact break | 3pt | Between data groups within a section (e.g., between Revenue Growth % and EBITDA) |
+
+All data and header rows remain at standard 15pt. Only empty spacer rows are resized.
+
+### Font Consistency
+
+Every cell on the Output tab uses Arial 10pt. No exceptions — including header fills, spacer rows, and the CAGR / Δ column. Do not inherit Calibri or other fonts from template defaults.
+
+### Label Readability
+
+Column A width is fixed at ~154–177pt. All row labels must fit within this width without truncation. If a label is too long, abbreviate:
+
+- "Google Network Members' Properties" → "Google Network Revenue"
+- "Aggregate TAC Rate (% of Ad Revenue)" → "Agg. TAC Rate (% of Ad Rev)"
+- "Interest Coverage (EBITDA / Interest)" → "Interest Coverage (x)"
+- "Subscriptions, Platforms & Devices" → "Subs, Platforms & Devices"
+
+After writing all labels, visually verify none are clipped by the column boundary.
 
 ### Row Formatting Patterns
 

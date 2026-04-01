@@ -72,4 +72,8 @@ If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional 
 - **Validates formatting against `firm-formatting`.**
 - **No freeze panes anywhere.**
 
+### Tab Organization Check
+
+Verify tab order matches firm standard: Task Tracker first, then Output / Consensus / Returns / Model, then IS / BS / CF, then builds, then data/reference tabs last. Verify all tab colors match the Tab Colors table in firm-formatting. Flag any tab that is out of order or has wrong coloring.
+
 **STOP. Update Task Tracker with all findings. Model is complete when all gates pass.**

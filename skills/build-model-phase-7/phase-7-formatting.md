@@ -26,4 +26,8 @@ Apply FC visual hierarchy, number formats, and color coding across every tab.
 
 Format every tab. No tab is exempt.
 
+### Tab Organization
+
+Reorder all tabs to match the firm-standard tab order: Task Tracker → Output → Consensus → Returns → Model → IS → BS → CF → builds → data tabs. Apply tab colors per firm-formatting Tab Colors table. Move any source/reference tabs to the far right with Gray (#7C7F88) coloring.
+
 **STOP. Update Task Tracker. Report formatting complete. Wait for "continue."**

@@ -260,9 +260,18 @@ Bloomberg and FactSet consensus data often stores numbers differently from the m
 ### Borders
 
 - Thin bottom border on rows 4 and 5 (year headers)
-- Gray medium vertical border between last historical and first projection column
 - Light gray thin bottom border on every Delta row (separates KPI triplets)
-- No other borders
+- No other borders (except vertical dividers below)
+
+### Vertical Divider Borders
+
+A single vertical divider separates historical columns from projection columns — medium solid #808080 on the right edge of the last historical column and the left edge of the first projection column.
+
+**Section-scoped dividers**: Vertical borders are scoped to each Tier 1 section, running from the section header row through the last data row (including the final Delta row) in that section. They do not run continuously across the entire tab. Spacer rows between sections have no vertical dividers, creating clean visual breaks between:
+
+- **Summary Income Statement** (header → last Delta row)
+- **Key Drivers & KPIs** (header → last Delta row)
+- **Capital Allocation & Returns** (header → last Delta row)
 
 ### Freeze Panes
 
