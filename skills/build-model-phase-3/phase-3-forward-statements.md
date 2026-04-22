@@ -1,8 +1,6 @@
 # Phase 3 — Forward Statement Build (Model View Projections)
 
-**Reference:** `references/phase-3-forward-statements.md`
 **Prerequisite:** Phase 2 complete (all build tabs populated with historicals + projections, Driver Review passed).
-**Next phase:** Phase 4 (Capital Allocation) → load `references/phase-4-capital-allocation.md`
 
 ---
 
@@ -161,4 +159,40 @@ If any check fails in projections, the most likely cause is a BS item changing w
 
 **No freeze panes. All formatting defers to `firm-formatting`.**
 
-**STOP. Update Task Tracker. Report all check results. Wait for "continue."**
+---
+
+## Tab Completion Verification
+
+Before reporting any tab's forward projections complete, read and paste:
+
+```
+TAB VERIFICATION -- [Tab Name] (Forward Projections):
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  column widths uniform: [yes/no]
+  BS Check (all periods incl projections): [0 or value]
+  CF Check (all periods incl projections): [0 or value]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 3)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 3 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **BS Check = 0** for ALL periods (historical AND projected). Read and report actual values.
+3. **CF Check = 0** for ALL periods (historical AND projected). Read and report actual values.
+4. **NI ties IS→CFS** for all projection periods. Read both cells and confirm match.
+5. **RE roll-forward** holds for all projection periods.
+6. **All build tab deltas wired to CFS**: every BS item with a build tab has its delta flowing through CFS.
+7. **Capital allocation placeholders** in place (dividends=0, buybacks=0, acquisitions=0, shares=flat).
+8. **Tab Completion Verification** output pasted for IS, BS, CFS.
+9. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-4".
+
+If you write "Phase 3 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

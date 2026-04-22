@@ -7,14 +7,33 @@ description: |
 
 # Phase 0 -- Setup
 
-## Before Starting This Phase
-1. Ensure `build-model` and `firm-formatting` skills are loaded
-2. This is the first phase -- no prior state to restore
+## Preflight
 
-## After Completing This Phase
-1. Update Task Tracker: mark Phase 0 complete, record all outputs and state
-2. Clear context (start new conversation)
-3. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-1`
+**PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
+
+```
+Phase: 0 (Setup)
+Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
+Task Tracker read: [check/x] -- current phase per tracker: [N/A - new build OR phase name]
+Firm-formatting color check:
+  Assumption bg = #FFFF00 [check/x]
+  Blue text     = #0000FF [check/x]
+  Navy header   = #1C3553 [check/x]
+  Subheader     = #C2D5EB [check/x]
+  Major total   = #F2F2F2 [check/x]
+Starting scenario: [Fresh BAMSEC+Tegus / Fresh+GS / Rebuild]
+Source tabs identified: [list of source tabs in workbook]
+```
+
+Do not proceed until every field is filled. If any x or blank, stop and load/read.
 
 ## Phase Instructions
+
 See `phase-0-setup.md` for the complete phase reference.
+
+## After Completing This Phase
+
+1. Run Tab Completion Verification (see phase instructions)
+2. Verify Definition of Done (see phase instructions)
+3. Clear context (start new conversation)
+4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-1`

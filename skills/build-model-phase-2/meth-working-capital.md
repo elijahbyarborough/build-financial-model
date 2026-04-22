@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-1/meth-working-capital.md — sync edits there first -->
+
 ## Working Capital
 
 **Do NOT assume a fixed set of WC items or default to DSO/DIO/DPO.** The balance sheet is the source of truth. Use the 4-step discovery protocol below.

@@ -39,6 +39,25 @@ Identify the current phase, then load ONLY that phase's skill. Do not load all p
 
 **Resume protocol:** If a Task Tracker tab exists, you are resuming. Read the tracker. Identify the current phase from the Model State Block. Load ONLY that phase's skill. Do NOT reload Phase 0 content.
 
+### Skill Drift Audit (Resume Sessions Only)
+
+If you are resuming a session and the Task Tracker shows phases already complete, perform this audit BEFORE starting new work:
+
+1. Pick 3 cells at random from completed phases (one from a build tab, one from a statement tab, one from a summary/output tab if available)
+2. For each cell, verify:
+   - Font color matches firm-formatting rules (blue = hardcode, black = formula, green = cross-sheet)
+   - Number format includes `_)` padding
+   - If assumption cell: yellow bg (#FFFF00) present, source comment present
+3. Output the audit results to the user:
+   ```
+   DRIFT AUDIT (3 cells from completed phases):
+   [Tab]![Cell]: font=[color], format=[format string], bg=[color] — [PASS/FAIL]
+   [Tab]![Cell]: font=[color], format=[format string], bg=[color] — [PASS/FAIL]
+   [Tab]![Cell]: font=[color], format=[format string], bg=[color] — [PASS/FAIL]
+   ```
+
+If any cell fails, flag to user: "Drift detected in [tab]![cell]: [issue]. Recommend re-running Phase 7 formatting on affected tabs before proceeding." Do not skip this audit.
+
 **Phase boundaries:** After completing each phase, STOP. Update the Task Tracker. Report status. Wait for "continue."
 
 **Context management:** After completing a phase, the user should start a new conversation and reload: `build-model` + `firm-formatting` + the next phase's skill. This keeps context clean and ensures full phase instructions are available.
@@ -105,5 +124,60 @@ When source data contains operating or finance leases (ASC 842), the model must 
 ### Iterative Calculation Required
 After Phase 4, the model contains intentional circular references (Capital Allocation waterfall depends on CFS, CFS depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 4. Without it, the model will show circular reference errors.
 
+### Subtask Completion Protocol
+
+After completing each subtask (e.g., P2.1, P2.2, P2.3) -- before starting the next:
+1. Write "COMPLETE" to the corresponding Task Tracker row (Status column)
+2. Write a 1-line summary to the Notes column
+3. Output to the user: "Subtask [ID] complete. Tracker updated."
+
+Do NOT batch these updates at phase end. Small, frequent writes during work -- not one big write after. If you complete a subtask and move to the next without updating the tracker, you have made an error. Stop and update.
+
 ### ROIC & ROTIC
 Standard in every model. ROIC and ROTIC on the Model Tab. Full formulas provided in the Phase 5 skill.
+
+---
+
+## Data Standards
+
+### Data Source Hierarchy
+
+Use the highest-ranked available source. Never skip a tier unless the data genuinely doesn't exist there.
+
+1. **Company filings** (10-K, 10-Q, proxy, earnings releases) -- primary, always preferred
+2. **Tegus models & management guidance** -- secondary, especially for forward-looking assumptions
+3. **Equity research & Capital IQ consensus** -- tertiary, for triangulation and sanity-checking only
+4. **Qualitative sources** (transcripts, memos, industry reports) -- context and color, not hard numbers
+
+### SPG() Formula Patterns
+
+Three parameter patterns for S&P Capital IQ formulas:
+
+| Pattern | # Params | Example |
+|---------|----------|---------|
+| Spot market data | 3 (entity, field, date) | `=SPG("NYSE:URI","SP_LASTSALEPRICE",$B$2)` |
+| Period-based market | 4 (entity, field, period, date) | `=SPG("NYSE:URI","SP_MARKETCAP_OUT","LTM",$B$2)` |
+| Fundamental/estimate | 4 (entity, field, period, date) | `=SPG("NYSE:URI","IQ_EBITDA","FY2025",$B$2)` |
+
+**SPG() Rules:**
+- Entity format: Always `Exchange:Ticker` (e.g., NYSE:URI, NASDAQGS:WSC). Never just the ticker.
+- Date parameter: Always an anchored cell reference `$B$2` pointing to a central "As-Of Date" cell. Never hardcode dates in formulas.
+- Ticker reference: Use an anchored cell reference `$B$5` so rows copy easily across peers.
+- Font color: Red text (#FF0000) per firm-formatting color coding.
+
+### Source Comments
+
+Every hardcoded input needs a source comment. No exceptions.
+
+**Format:** `Source: [Document Type], [Date], [Specific Reference]`
+
+**Examples:**
+- `Source: URI 10-K (FY2025), p.47, Segment Revenue Table`
+- `Source: Management guidance, Q4 2025 earnings call`
+- `Source: Capital IQ consensus, retrieved 2026-03-03`
+- `Source: Analyst assumption -- based on 5yr historical average DSO of 42 days`
+
+**Rules:**
+- Only ASCII characters in comments (no em dashes, smart quotes, special characters)
+- If an assumption is your own judgment, say so explicitly: "Source: Analyst assumption -- [rationale]"
+- Update the source comment whenever the value changes

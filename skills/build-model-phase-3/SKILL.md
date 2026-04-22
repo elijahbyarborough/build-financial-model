@@ -5,29 +5,43 @@ description: "Phase 3 -- Forward Statements. Build all forward projections (IS/B
 
 # Phase 3 -- Forward Statements
 
-## Preamble
+## Preflight
 
-Load `build-model` + `firm-formatting` first, then read the Task Tracker before starting work.
+**PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
 
-## Methodology Files Included
+```
+Phase: 3 (Forward Statements)
+Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
+Task Tracker read: [check/x] -- current phase per tracker: [phase name]
+Firm-formatting color check:
+  Assumption bg = #FFFF00 [check/x]
+  Blue text     = #0000FF [check/x]
+  Navy header   = #1C3553 [check/x]
+  Subheader     = #C2D5EB [check/x]
+  Major total   = #F2F2F2 [check/x]
+Phase 2 driver review complete: [check/x]
+  LOW/MEDIUM confidence drivers resolved: [check/x]
+All build tabs populated with historicals + drivers: [list tabs]
+```
 
-This skill bundles the following methodology excerpts (copied verbatim from `references/methodology.md`):
+Do not proceed until every field is filled. If any x or blank, stop and load/read.
 
-- `meth-lease-full.md` -- Full lease accounting (ASC 842): Detection, BS Map, OL Schedule, FL Schedule, FL_IN_PPE, CF Rules, WC Disaggregation, Build Order
-- `meth-ppe-build.md` -- PP&E Build: sign convention, roll-forward, capex, depreciation, acquisitions, disposals, reference metrics
-- `meth-working-capital.md` -- Working Capital: 4-step discovery protocol, driver types, common items, methodology
+## Phase Instructions
+
+See `phase-3-forward-statements.md` for the complete phase reference.
+
+## Methodology References
+
+- `meth-lease-full.md` -- Full lease accounting (ASC 842): detection, BS Map, OL/FL schedules, CF rules, WC disaggregation
+- `meth-ppe-build.md` -- PP&E Build: 3-section structure, roll-forward, FL adjustments
+- `meth-working-capital.md` -- Working Capital: 4-step discovery, driver types, methodology
 - `meth-tax.md` -- Tax: effective tax rate, NOL companies, tax schedule outputs
-- `meth-interest-debt.md` -- Interest Expense & Debt: tranche-by-tranche debt build, interest rate assumptions, cash & equivalents
-- `meth-goodwill.md` -- Goodwill & Intangibles: goodwill carry-forward, intangible amortization schedule, M&A Assets BS row
+- `meth-interest-debt.md` -- Interest expense & debt: tranche-by-tranche build, cash & equivalents
+- `meth-goodwill.md` -- Goodwill & intangibles: carry-forward, amortization, M&A Assets
 
-Also includes the full phase instructions in `phase-3-forward-statements.md`.
+## After Completing This Phase
 
-## Instructions
-
-Read all methodology files and the phase instructions before building. Follow the build order specified in the phase instructions (adjusted for lease flags on the Task Tracker).
-
-## After Completing
-
-1. Update the Task Tracker with phase completion status and all check results.
-2. Clear context -- this phase is complete.
-3. Next phase is Phase 4 (Capital Allocation).
+1. Run Tab Completion Verification (see phase instructions)
+2. Verify Definition of Done (see phase instructions)
+3. Clear context (start new conversation)
+4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-4`

@@ -1,8 +1,6 @@
 # Phase 6 — Returns
 
-**Reference:** `references/phase-6-returns.md`
 **Prerequisite:** Phase 5 complete (Model tab populated).
-**Next phase:** Phase 7 (Formatting) → load `references/phase-7-formatting.md`
 
 ---
 
@@ -338,4 +336,45 @@ Core Cash Flow (ex-M&A) is a **gray italic memo line** (#7C7F88, italic, not bol
 - **No vertical divider borders** on this tab.
 - **No freeze panes. All formatting defers to `firm-formatting`.**
 
-**STOP. Update Task Tracker. Report XIRR and results. Wait for "continue."**
+---
+
+## Tab Completion Verification
+
+Before reporting the Returns tab complete, read and paste:
+
+```
+TAB VERIFICATION -- Returns:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  column widths uniform: [yes/no]
+  tab color: [hex] -- expected: #1C3553
+  Entry Price: [value]
+  Entry EPS (calendarized): [value]
+  Implied Entry P/E: [value]
+  Exit P/E assumption: [value]
+  XIRR (Net CF): [value or error]
+  IRR decomposition: EPS CAGR=[val], M&A=[val], Div Yield=[val], Mult Change=[val]
+  4 gray highlight rows present (EPS-Implied Price, Total Price, Net CF, IRR): [yes/no]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 6)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 6 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **XIRR returns a plausible value** (not #VALUE!, not blank). Read and report the IRR.
+3. **IRR decomposition** has all 4 components populated (EPS CAGR, M&A Value, Dividend Yield, Multiple Change).
+4. **Entry P/E is implied** (calculated, black font) -- NOT a blue/yellow assumption.
+5. **Exit P/E is a blue/yellow assumption** with source comment.
+6. **Only 3 hardcoded assumptions** on tab: Entry Price, Entry Date, Exit P/E.
+7. **Tab Completion Verification** output pasted.
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-7".
+
+If you write "Phase 6 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

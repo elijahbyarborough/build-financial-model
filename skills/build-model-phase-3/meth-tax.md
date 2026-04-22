@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-2/meth-tax.md — sync edits there first -->
+
 ## Tax
 
 ### Default Approach: Effective Tax Rate (Most Companies)

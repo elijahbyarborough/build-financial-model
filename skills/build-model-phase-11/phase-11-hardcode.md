@@ -1,8 +1,6 @@
 # Phase 11 — Hardcode Sources
 
-**Reference:** `references/phase-11-hardcode.md`
-**Prerequisite:** Phase 10 complete (or skipped if no consensus data). All model content finalized.
-**This is the final phase.**
+**Prerequisite:** Phase 10 complete (or skipped if no consensus data). All model content finalized. This is the final phase.
 
 ---
 
@@ -169,4 +167,22 @@ The key distinction: historical hardcodes get **blue text only** (no yellow back
 - **Do not delete source tabs** — that's the user's decision.
 - **Report before and after** — list what will be hardcoded, then confirm results.
 
-**STOP. Update Task Tracker. Report hardcode results. Model build is complete.**
+---
+
+## Definition of Done (Phase 11)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 11 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **All source-tab references replaced**: report total cells hardcoded and tabs affected. Cite counts.
+3. **BS Check = 0** across all historical periods after hardcoding. Read and report.
+4. **CF Check = 0** across all historical periods after hardcoding. Read and report.
+5. **Reconciliation checks = 0** (Model View vs Reported View) after hardcoding.
+6. **All projection formulas still work** (projections unaffected by hardcoding).
+7. **Font colors updated**: all hardcoded cells now have blue font (#0000FF), no yellow bg on historical hardcodes.
+8. **Source tabs preserved** (not deleted -- user's decision).
+9. **Task Tracker Model State Block**: "Last Skill Run" = "build-model-phase-11" + today's date.
+
+If you write "Phase 11 complete" or "Model build complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report results. Model build is complete.**

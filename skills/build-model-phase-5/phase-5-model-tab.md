@@ -1,9 +1,6 @@
 # Phase 5 — Model Tab
 
-**Reference:** `references/phase-5-model-tab.md`
 **Prerequisite:** Phase 4 complete (capital allocation built, share count finalized, IS has final diluted EPS).
-**Next phase:** Phase 6 (Returns) → load `references/phase-6-returns.md`
-**Also load:** `references/methodology.md` (ROIC/ROTIC section).
 
 ---
 
@@ -360,8 +357,47 @@ EBITDA, Net Income, NOPAT, Invested Capital, Tangible IC, Total Assets, Total L&
 
 - **Output/summary layer only** — no assumption inputs. Every cell is a formula (except ROIC/ROTIC calculations).
 - **Scan build tabs dynamically** — don't hardcode specific KPI rows. Mirror whatever the build tabs track.
-- **ROIC/ROTIC formulas**: see `references/methodology.md` for the full specification.
-- **All number formats defer to `firm-formatting.md`** — use standard format strings with `_)` padding.
+- **ROIC/ROTIC formulas**: see `meth-roic.md` (included in this skill) for the full specification.
+- **All number formats defer to `firm-formatting`** — use standard format strings with `_)` padding.
 - **No freeze panes. Gridlines off.**
 
-**STOP. Update Task Tracker. Report status. Wait for "continue."**
+---
+
+## Tab Completion Verification
+
+Before reporting the Model Tab complete, read and paste:
+
+```
+TAB VERIFICATION -- Model Tab:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  column widths uniform: [yes/no]
+  tab color: [hex] -- expected: #1C3553
+  sections present: [count]/8 (Platinum List, Summary IS, Key Drivers, Cap Alloc, Capital Deployment, ROIC/ROTIC, Summary BS, Summary CFS)
+  BS Check on Model Tab: [0 or value]
+  CF Check on Model Tab: [0 or value]
+  ROIC populated: [yes/no]
+  ROTIC populated: [yes/no]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 5)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 5 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **All 8 Model Tab sections populated** with data across full historical + projection time series.
+3. **ROIC and ROTIC rows** have values for every period where Average IC > 0.
+4. **BS Check = 0** on Model Tab for all periods.
+5. **CF Check = 0** on Model Tab for all periods.
+6. **Cross-tab references verified**: spot-check 3 values (e.g., Revenue, EPS, FCF) and confirm Model Tab = source tab.
+7. **Tab Completion Verification** output pasted.
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-6".
+
+If you write "Phase 5 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

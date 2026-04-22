@@ -1,8 +1,6 @@
 # Phase 1 — Historical Statement Build
 
-**Reference:** `references/phase-1-historical-statements.md`
 **Prerequisite:** Phase 0 complete (all tabs created with correct naming, formatting, columns, dates, colors).
-**Next phase:** Phase 2 (Drivers) → load `references/phase-2-drivers.md`
 
 ---
 
@@ -40,7 +38,7 @@ The Model View is a condensed, analytical version of the Reported View. It group
 
 **Model View design principles:**
 - **IS Model View**: Consolidate detailed OpEx lines into analytical categories (COGS, SG&A, R&D, D&A, SBC, Other). Add analytical subtotals not in GAAP: Gross Profit, EBITDA, EBIT. Add margin rows (italic %).
-- **BS Model View**: Group into analytical categories: Cash, Operating Current Assets, PP&E, Goodwill & Intangibles, Other Noncurrent Assets, M&A Assets / Operating Current Liabilities, Debt (current + noncurrent), Other Noncurrent Liabilities, Equity. Each category maps to a build tab. **M&A Assets is a structural placeholder** — set to 0 across all historical periods. It exists so Phase 4 can link cumulative acquisition spend here without touching Goodwill or the organic model (see `references/methodology.md`).
+- **BS Model View**: Group into analytical categories: Cash, Operating Current Assets, PP&E, Goodwill & Intangibles, Other Noncurrent Assets, M&A Assets / Operating Current Liabilities, Debt (current + noncurrent), Other Noncurrent Liabilities, Equity. Each category maps to a build tab. **M&A Assets is a structural placeholder** — set to 0 across all historical periods. It exists so Phase 4 can link cumulative acquisition spend here without touching Goodwill or the organic model (see the methodology files included in this skill).
 - **CFS Model View**: Organize into CFO (NI + non-cash adjustments + WC changes), CFI (capex + acquisitions + other), CFF (debt + dividends + buybacks + other). Each line should correspond to a BS change.
 
 **Model View rules:**
@@ -140,4 +138,44 @@ If BAMSEC/Tegus CF flows don't perfectly reconcile to BS changes (common due to 
 
 **HARD GATE: If any check fails, STOP and fix it. Do not proceed to Phase 2 with a broken historical foundation.**
 
-**STOP. Update Task Tracker with BS→CF mapping and check results. Report status. Wait for "continue."**
+---
+
+## Tab Completion Verification
+
+Before reporting any tab complete (IS, BS, CFS, Debt Build), read and paste:
+
+```
+TAB VERIFICATION -- [Tab Name]:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  column widths uniform: [yes/no]
+  tab color: [hex] -- expected: [hex]
+  Model View present: [yes/no]
+  Reported View present: [yes/no]
+  BS Check (all periods): [0 or value]
+  CF Check (all periods): [0 or value]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 1)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 1 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **BS Check row = 0** for every historical period. Read and report the actual values.
+3. **CF Check row = 0** for every historical period. Read and report the actual values.
+4. **Both Model View and Reported View** exist on IS, BS, and CFS tabs.
+5. **Reconciliation checks = 0** (Model View totals = Reported View totals) for every historical period.
+6. **NI ties IS→CFS**: Read both cells and confirm they match.
+7. **RE roll-forward**: Beginning RE + NI - Dividends = Ending RE for every period.
+8. **BS→CF mapping** documented on the Task Tracker with every BS item assigned a CF home.
+9. **Tab Completion Verification** output pasted for IS, BS, CFS, and Debt Build (if lease schedules built).
+10. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-2".
+
+If you write "Phase 1 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

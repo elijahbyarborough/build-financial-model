@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-1/meth-lease-full.md — sync edits there first -->
+
 ## Lease Accounting (ASC 842)
 
 Leases are projected on the **Debt Build** tab in dedicated schedule sections. Both operating and finance leases follow a roll-forward architecture that feeds the BS, IS, and CFS through the Working Capital Build.

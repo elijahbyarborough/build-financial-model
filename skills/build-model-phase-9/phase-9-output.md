@@ -1,8 +1,6 @@
 # Phase 9 — Output Tab
 
-**Reference:** `references/phase-9-output.md`
 **Prerequisite:** Phase 8 complete (QC passed, all gates clear).
-**Next phase:** Phase 10 (Consensus) → load `references/phase-10-consensus.md`
 
 ---
 
@@ -400,4 +398,42 @@ After writing all labels, visually verify none are clipped by the column boundar
 - **Em-dash "—" zero placeholder** for conversion metrics.
 - **No freeze panes. All formatting defers to `firm-formatting`.**
 
-**STOP. Update Task Tracker. Report status. Model build is complete.**
+---
+
+## Tab Completion Verification
+
+Before reporting the Output tab complete, read and paste:
+
+```
+TAB VERIFICATION -- Output:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  tab color: [hex] -- expected: #1C3553
+  Returns Timeline: Entry + [count] FY columns + Exit = [total] columns
+  Vertical dividers between Historical|Projection|CAGR zones: [present/missing]
+  IRR value: [value]
+  Spot-check: Output Revenue FY1 = Model Tab Revenue FY1: [match/mismatch]
+  Spot-check: Output EPS = Returns EPS: [match/mismatch]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 9)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 9 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **All Output tab sections populated**: Returns Timeline, Summary IS, Key Drivers & KPIs, Capital Allocation & Returns.
+3. **Returns Timeline** has Entry + 6 FY columns + Exit.
+4. **Vertical dividers** present between Historical|Projection|CAGR zones (IS/KPIs/CapAlloc sections).
+5. **CAGR/delta column** correctly populated (CAGR for $ items, delta for margins, blank for growth rates).
+6. **All formulas reference only Model Tab or Returns tab** -- never individual build tabs.
+7. **Tab Completion Verification** output pasted.
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-10".
+
+If you write "Phase 9 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

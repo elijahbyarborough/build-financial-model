@@ -1,8 +1,6 @@
 # Phase 10 — Consensus Comparison
 
-**Reference:** `references/phase-10-consensus.md`
 **Prerequisite:** Phase 9 complete (Output tab built). A consensus data source must exist in the workbook (Bloomberg "Multiple Periods" tab, FactSet dump, Capital IQ export, or user-provided estimates). If none exists, ask the user to provide one or offer to pull via Bloomberg/FactSet formulas.
-**Next phase:** Phase 11 (Hardcode Sources) → load `references/phase-11-hardcode.md`
 
 ---
 
@@ -289,4 +287,40 @@ A single vertical divider separates historical columns from projection columns �
 - **No F2F2F2 fills** — white background on all data rows.
 - **No freeze panes. Gridlines off.**
 
-**STOP. Update Task Tracker. Report consensus comparison results. Wait for "continue."**
+---
+
+## Tab Completion Verification
+
+Before reporting the Consensus tab complete, read and paste:
+
+```
+TAB VERIFICATION -- Consensus:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  tab color: [hex] -- expected: #1C3553
+  KPI triplet count: [count] (Model/Consensus/Delta groups)
+  Historical cross-check (1 year): Model Revenue=[val], Consensus Revenue=[val], match=[yes/no]
+  Conditional formatting applied (green/red on deltas): [yes/no]
+  Vertical divider between historical/projection columns: [present/missing]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 10)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 10 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **All stacked triplets populated** (Model/Consensus/Delta for every overlapping KPI).
+3. **Delta formulas correct by type**: % difference for $ items, bps for margins, absolute turns for multiples.
+4. **Historical cross-check** passed: at least 1 year where Model and Consensus both reflect actuals, with near-zero delta.
+5. **Conditional formatting** applied: green (#006100) for positive deltas, red (#9C0006) for negative.
+6. **Tab Completion Verification** output pasted.
+7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-11".
+
+If you write "Phase 10 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

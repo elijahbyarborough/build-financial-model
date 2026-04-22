@@ -7,18 +7,41 @@ description: |
 
 # Phase 4 -- Capital Allocation
 
-## Before Starting This Phase
-1. Ensure `build-model` and `firm-formatting` skills are loaded
-2. Read the Task Tracker tab to restore model state (current phase, flags, Lease BS Map, etc.)
+## Preflight
 
-## After Completing This Phase
-1. Update Task Tracker: mark Phase 4 complete, record all outputs and state
-2. Clear context (start new conversation)
-3. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-5`
+**PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
+
+```
+Phase: 4 (Capital Allocation)
+Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
+Task Tracker read: [check/x] -- current phase per tracker: [phase name]
+Firm-formatting color check:
+  Assumption bg = #FFFF00 [check/x]
+  Blue text     = #0000FF [check/x]
+  Navy header   = #1C3553 [check/x]
+  Subheader     = #C2D5EB [check/x]
+  Major total   = #F2F2F2 [check/x]
+Iterative calculation enabled in Excel: [check/x]
+Phase 3 integrity checks:
+  BS Check = [0 or value]
+  CF Check = [0 or value]
+Capital allocation placeholders in place on CFS: [check/x]
+```
+
+Do not proceed until every field is filled. If any x or blank, stop and load/read.
 
 ## Phase Instructions
+
 See `phase-4-capital-allocation.md` for the complete phase reference.
 
-## Methodology Excerpts
+## Methodology References
+
 - `meth-interest-debt.md` -- Interest expense, debt build, cash & equivalents
 - `meth-share-count.md` -- Share count logic, diluted shares via treasury stock method
+
+## After Completing This Phase
+
+1. Run Tab Completion Verification (see phase instructions)
+2. Verify Definition of Done (see phase instructions)
+3. Clear context (start new conversation)
+4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-5`

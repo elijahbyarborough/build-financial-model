@@ -3,28 +3,44 @@ name: build-model-phase-1
 description: "Phase 1 -- Historical Statements. Build historical IS, BS, CFS with model view and reported view. Includes lease schedule setup and WC Build disaggregation. Load after build-model and firm-formatting."
 ---
 
-# Phase 1 — Historical Statements
+# Phase 1 -- Historical Statements
 
-## Preamble
+## Preflight
 
-Before starting Phase 1 work, load the following skills first:
-- **build-model** — core model architecture, tab structure, and conventions
-- **firm-formatting** — formatting standards for all model tabs
+**PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
 
-Then read the **Task Tracker** to understand the current model state, completed phases, and any flags set during Phase 0 (especially lease flags: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `LEASE_MATERIALITY`, `FL_IN_PPE`).
+```
+Phase: 1 (Historical Statements)
+Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
+Task Tracker read: [check/x] -- current phase per tracker: [phase name]
+Firm-formatting color check:
+  Assumption bg = #FFFF00 [check/x]
+  Blue text     = #0000FF [check/x]
+  Navy header   = #1C3553 [check/x]
+  Subheader     = #C2D5EB [check/x]
+  Major total   = #F2F2F2 [check/x]
+Lease flags from Phase 0:
+  HAS_OPERATING_LEASES = [Y/N]
+  HAS_FINANCE_LEASES   = [Y/N]
+  FL_IN_PPE            = [Y/N]
+  LEASE_MATERIALITY    = [HIGH/LOW]
+```
 
-## Instructions
+Do not proceed until every field is filled. If any x or blank, stop and load/read.
 
-Follow the detailed steps in `phase-1-historical-statements.md` to build historical IS, BS, and CFS statements with both Reported View and Model View. Ensure all integrity checks pass before completing this phase.
+## Phase Instructions
 
-### Methodology References (included in this skill)
+See `phase-1-historical-statements.md` for the complete phase reference.
 
-- **meth-lease-full.md** — Full lease accounting methodology (ASC 842): detection & classification, Lease BS Map, operating lease schedule, finance lease schedule, FL_IN_PPE placement logic, cash flow rules, Working Capital Build disaggregation, and build order.
-- **meth-working-capital.md** — Working capital 4-step discovery protocol, driver types table, common WC items, and projection methodology.
-- **meth-ppe-signs.md** — PP&E Build sign conventions (asset perspective for capex, D&A, acquisitions, disposals, and the CFS tab sign flip).
+## Methodology References
 
-## After Completing Phase 1
+- `meth-lease-full.md` -- Full lease accounting (ASC 842): detection, classification, Lease BS Map, schedules, CF rules, WC disaggregation
+- `meth-working-capital.md` -- Working capital 4-step discovery protocol, driver types, common WC items
+- `meth-ppe-signs.md` -- PP&E Build sign conventions (asset perspective, CFS sign flip)
 
-1. **Update the Task Tracker** — mark Phase 1 as complete, record BS→CF mapping, record all integrity check results, and note any historical reconciliation differences.
-2. **Clear context** — Phase 1 context can be unloaded after completion.
-3. **Next phase** — Phase 2 (Drivers). Load `build-model-phase-2` skill to continue.
+## After Completing This Phase
+
+1. Run Tab Completion Verification (see phase instructions)
+2. Verify Definition of Done (see phase instructions)
+3. Clear context (start new conversation)
+4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-2`

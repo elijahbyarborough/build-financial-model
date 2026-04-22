@@ -1,16 +1,13 @@
 # Phase 0 — Setup
 
-**Owner:** `build-model` (this phase is executed directly).
-**Next phase:** Phase 1 (Historical Statements) → load `references/phase-1-historical-statements.md`
-
 ---
 
 ## First Contact Protocol
 
-**If resuming (Task Tracker exists):** Read the Task Tracker → identify current phase → load that phase's reference file per the Phase Router. Skip everything below.
+**If resuming (Task Tracker exists):** Read the Task Tracker → identify current phase → load that phase's skill per the Phase Router. Skip everything below.
 
 **If new build:**
-1. **HARD REQUIREMENT:** Load `references/firm-formatting.md` and internalize the **Excel Formatting Standards** section BEFORE creating any tab. Specifically, you must apply on every tab you create: Standard Tab Header (rows 1-6), Year Label Convention, Visual Hierarchy tiers, Display Settings (gridlines off, no freeze panes), Column Structure (uniform widths, no blank columns), Tab Colors, and Spacer Row rules. Do NOT defer formatting to Phase 7 — tabs must be correctly formatted from the moment they are created.
+1. **HARD REQUIREMENT:** The `firm-formatting` skill must be loaded and internalized BEFORE creating any tab. Specifically, you must apply on every tab you create: Standard Tab Header (rows 1-6), Year Label Convention, Visual Hierarchy tiers, Display Settings (gridlines off, no freeze panes), Column Structure (uniform widths, no blank columns), Tab Colors, and Spacer Row rules. Do NOT defer formatting to Phase 7 — tabs must be correctly formatted from the moment they are created.
 2. Read the workbook: scan all tabs, list what exists.
 3. Identify starting scenario (see Starting Scenarios below).
 4. Run sector discovery (see Sector Discovery Framework below).
@@ -22,7 +19,7 @@
 
 ## Tab Creation Requirements
 
-**Every tab must be fully set up before Phase 0 is complete.** All formatting rules come from `references/firm-formatting.md` (loaded in step 1 above). This means:
+**Every tab must be fully set up before Phase 0 is complete.** All formatting rules come from the `firm-formatting` skill (loaded before this phase). This means:
 
 - **Correct tab names** per the Tab Set table below
 - **Correct tab colors** per the Tab Set table below
@@ -354,3 +351,39 @@ Blocker ID, Description, Blocking Tasks, Owner, Status, Resolution.
 
 ### Phased Execution (Universal Rule)
 **No skill attempts to complete its work in one shot.** Read tracker → plan phases → execute one at a time → update tracker → add tasks for other skills to tracker.
+
+---
+
+## Tab Completion Verification
+
+Before reporting Phase 0 complete, read and paste the following for EVERY tab created:
+
+```
+TAB VERIFICATION:
+[Tab Name]:
+  tab exists: [yes/no]
+  tab color: [hex] -- expected: [hex from Tab Set table]
+  tab position: [position] -- expected: [position from Tab Set table]
+  Standard Tab Header (rows 1-6): [present/missing]
+  Year columns: [count] historical + [count] projection
+  Column widths uniform: [yes/no]
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 0)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 0 shows Status = "COMPLETE". Cite the actual cell addresses you checked (e.g., "D5:D12 all = COMPLETE").
+2. **Task Tracker Model State Block**: All fields populated (Company, Ticker, FYE, Historical Years, Projection Years, Tabs Created, BS/CF Check Status, Last Skill Run, Next Skill).
+3. **Lease flags populated**: HAS_OPERATING_LEASES, HAS_FINANCE_LEASES, FL_IN_PPE, LEASE_MATERIALITY, and Lease BS Map all filled.
+4. **All tabs created** per the Tab Set table with correct names, colors, order, and Standard Tab Headers.
+5. **Tab Completion Verification output** pasted above with all tabs passing.
+6. **Task Tracker Model State Block**: "Last Skill Run" = "build-model-phase-0" + today's date, "Next Skill" = "build-model-phase-1".
+
+If you write "Phase 0 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.

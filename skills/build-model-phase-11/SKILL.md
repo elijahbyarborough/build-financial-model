@@ -7,13 +7,31 @@ description: |
 
 # Phase 11 -- Hardcode Sources
 
-## Before Starting This Phase
-1. Ensure `build-model` and `firm-formatting` skills are loaded
-2. Read the Task Tracker tab to restore model state (current phase, flags, Lease BS Map, etc.)
+## Preflight
 
-## After Completing This Phase
-1. Update Task Tracker: mark Phase 11 complete, record all outputs and state
-2. This is the final phase -- model build is complete
+**PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
+
+```
+Phase: 11 (Hardcode Sources)
+Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
+Task Tracker read: [check/x] -- current phase per tracker: [phase name]
+Firm-formatting color check:
+  Assumption bg = #FFFF00 [check/x]
+  Blue text     = #0000FF [check/x]
+  Navy header   = #1C3553 [check/x]
+  Subheader     = #C2D5EB [check/x]
+  Major total   = #F2F2F2 [check/x]
+Consensus tab complete: [check/x]
+Delta formulas verified (% for $, bps for margins, turns for multiples): [check/x]
+```
+
+Do not proceed until every field is filled. If any x or blank, stop and load/read.
 
 ## Phase Instructions
+
 See `phase-11-hardcode.md` for the complete phase reference.
+
+## After Completing This Phase
+
+1. Verify Definition of Done (see phase instructions)
+2. This is the final phase -- model build is complete

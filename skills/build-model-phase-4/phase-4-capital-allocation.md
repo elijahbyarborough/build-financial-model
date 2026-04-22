@@ -1,8 +1,6 @@
 # Phase 4 — Capital Allocation
 
-**Reference:** `references/phase-4-capital-allocation.md`
 **Prerequisite:** Phase 3 complete (IS/BS/CFS projected, all checks pass, CFO exists).
-**Next phase:** Phase 5 (Model Tab) → load `references/phase-5-model-tab.md`
 
 ---
 
@@ -398,4 +396,43 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 
 4. **Waterfall Check ≠ 0 but BS balances**: The informational waterfall is missing a line item. This is cosmetic if the buyback plug formula is used, but should still be fixed for auditability. Common missing items: SBC withholding, FX effects, finance lease principal payments.
 
-**STOP. Update Task Tracker. Report all 6 verification checks. Wait for "continue."**
+---
+
+## Tab Completion Verification
+
+Before reporting the Capital Allocation Build tab complete, read and paste:
+
+```
+TAB VERIFICATION -- Capital Allocation Build:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  column widths uniform: [yes/no]
+  tab color: [hex] -- expected: #5B8FA8
+  BS Check (all periods): [0 or value]
+  CF Check (all periods): [0 or value]
+  NI Check (all periods): [0 or value]
+  Waterfall Check (all periods): [0 or value]
+  CFS End Cash = Debt Build Target (all periods): [match/mismatch]
+  CFS End Cash = BS Cash (all periods): [match/mismatch]
+```
+
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Definition of Done (Phase 4)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 4 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **All 6 verification checks pass** (BS=0, CF=0, NI=0, Waterfall=0, CFS End Cash=Target, CFS End Cash=BS Cash). Read and report actual values for every projection period.
+3. **Phase 3 placeholders re-linked**: Dividends, Buybacks, Acquisitions, Diluted Shares all reference Capital Allocation Build.
+4. **Post-wiring BS equity adjustment** done: RE includes dividends, CSAPIC/Treasury includes buybacks.
+5. **Iterative calculation enabled** and circular refs resolving.
+6. **Tab Completion Verification** output pasted.
+7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-5".
+
+If you write "Phase 4 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-3/meth-interest-debt.md — sync edits there first -->
+
 ## Interest Expense & Debt
 
 ### Debt Build (Tranche-by-Tranche)

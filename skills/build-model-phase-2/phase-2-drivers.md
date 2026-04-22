@@ -1,9 +1,6 @@
 # Phase 2 — Driver Buildout
 
-**Reference:** `references/phase-2-drivers.md`
 **Prerequisite:** Phase 1 complete (historical IS/BS/CFS verified, all checks pass, BS→CF mapping done).
-**Next phase:** Phase 2.5 (Driver Review), then Phase 3 → load `references/phase-3-forward-statements.md`
-**Also load:** `references/methodology.md` for detailed projection rules.
 
 ---
 
@@ -199,22 +196,70 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 - **Revenue is driver-based** — volume × price/rate strongly preferred.
 - **PP&E acquisitions in projection years: set to 0 as a placeholder.** Phase 4 (Capital Allocation) will overwrite with a live link. Never back-solve acquisitions as a plug.
 - **Non-contractual debt changes (optional prepayment, new issuance beyond scheduled amort) in projection years: set to 0 as a placeholder.** Phase 4 will incorporate final debt decisions.
-- **Cash & Equivalents lives on the Debt Build** as a target balance assumption (yellow bg + blue text in projections, green text linking to BS for historicals). The change in cash feeds the Capital Allocation Build -- see `references/methodology.md` for full spec.
+- **Cash & Equivalents lives on the Debt Build** as a target balance assumption (yellow bg + blue text in projections, green text linking to BS for historicals). The change in cash feeds the Capital Allocation Build -- see `meth-debt-build.md` for full spec.
 - **Each build tab outputs both balances (for BS) and deltas (for CFS)** — the statements pull from build tabs in Phase 3.
 - **No freeze panes.**
 
 ---
 
-## Driver Review Checkpoint (Phase 2.5)
+---
 
-Before proceeding to Phase 3, conduct a meta-review of every key driver:
+## Tab Completion Verification
 
-For each driver assumption:
-1. Is this the right driver for this line item?
-2. Does the projected ratio map to historical patterns?
-3. Would a buyside analyst drive it this way?
-4. Confidence level: HIGH / MEDIUM / LOW
+Before reporting any build tab complete, read and paste:
 
-Flag MEDIUM and LOW confidence drivers. Ask the analyst for confirmation before proceeding.
+```
+TAB VERIFICATION -- [Tab Name]:
+  freezePanes: [null -- if not null, STOP and fix]
+  gridlines: [off -- if on, STOP and fix]
+  font: [Arial 10pt -- if not, STOP and fix]
+  column widths uniform: [yes/no]
+  tab color: [hex] -- expected: #5B8FA8
+  historicals linked to source (not hardcoded): [yes/no]
+  assumptions: yellow bg + blue text + source comments: [yes/no]
+```
 
-**STOP. Update Task Tracker. Report driver review results. Wait for "continue."**
+If you do not paste this output, the user cannot verify compliance. No output = not verified.
+
+---
+
+## Driver Review Checkpoint (Phase 2.5) -- Mandatory Output
+
+Do NOT "conduct a review in your head." Write the driver review into the Task Tracker using this exact table schema:
+
+| Tab | Driver | FY_last_E Value | Confidence | Rationale | Flag/Action |
+
+**One row per driver assumption.** Every yellow-bg/blue-text assumption cell on every build tab must appear as a row in this table.
+
+### Completeness Check
+
+After populating the table:
+1. Count yellow/blue assumption cells across all build tabs
+2. Count rows in the driver review table
+3. If rows < assumption cells, Phase 2 is not complete -- find the missing drivers and add them
+
+### Confidence Gate
+
+After populating, count LOW and MEDIUM confidence drivers:
+- **If count >= 1**: STOP. List each LOW/MEDIUM driver with its tab, cell address, current value, and your rationale. Ask the analyst for explicit sign-off on each before proceeding.
+- **If count = 0**: Report "All drivers HIGH confidence" and proceed.
+
+Do NOT write "Driver review complete" without populating this table. The table IS the review.
+
+---
+
+## Definition of Done (Phase 2)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 2 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **Driver Review table populated** on the Task Tracker -- one row per driver assumption. Cite the cell range (e.g., "A166:F189 populated with [count] driver rows").
+3. **Completeness check passed**: driver review row count = yellow/blue assumption cell count.
+4. **LOW/MEDIUM drivers resolved**: either count = 0 or analyst sign-off obtained for each.
+5. **All build tabs have historicals + driver assumptions**: Revenue Build, Costs Build, PP&E Build, Debt Build, Working Capital Build, Tax Schedule.
+6. **Tab Completion Verification** output pasted for every build tab modified in this phase.
+7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-3".
+
+If you write "Phase 2 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**

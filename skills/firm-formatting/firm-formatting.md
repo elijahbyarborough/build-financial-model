@@ -1,9 +1,9 @@
 ---
 name: firm-formatting
 description: |
-  FC firm-wide formatting and visual standards for Excel models, PowerPoint exhibits, and any financial output. This skill is the single source of truth for how every model, spreadsheet, and presentation looks. It enforces a strict visual hierarchy, number formatting with _) alignment padding, color coding, spacing, and a section-by-section workflow with self-checks.
+  FC firm-wide formatting and visual standards for Excel models and any financial output. This skill is the single source of truth for how every model and spreadsheet looks. It enforces a strict visual hierarchy, number formatting with _) alignment padding, color coding, spacing, and a section-by-section workflow with self-checks.
 
-  Triggers on: any Excel model, spreadsheet formatting, financial model reformat, PowerPoint deck, equity research output, valuation output, earnings workbook, returns analysis, or any task where visual consistency of financial outputs matters. Also triggers when the user says "reformat", "clean up this model", "make it look right", "firm format", or "standardize this".
+  Triggers on: any Excel model, spreadsheet formatting, financial model reformat, equity research output, valuation output, earnings workbook, returns analysis, or any task where visual consistency of financial outputs matters. Also triggers when the user says "reformat", "clean up this model", "make it look right", "firm format", or "standardize this".
 
   This skill is formatting and workflow ONLY. It does not contain modeling methodology (SBC treatment, valuation approach, projection rules, etc.) -- those belong in separate skills.
 ---

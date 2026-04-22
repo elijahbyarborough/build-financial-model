@@ -1,9 +1,6 @@
 # Phase 8 — QC (Quality Control)
 
-**Reference:** `references/phase-8-qc.md`
 **Prerequisite:** Phase 7 complete (formatting applied).
-**Also load:** `references/data-quality.md` for the 4 quality gates and formula rules.
-**Next phase:** Phase 9 (Output) → load `references/phase-9-output.md`
 
 ---
 
@@ -76,4 +73,23 @@ If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional 
 
 Verify tab order matches firm standard: Task Tracker first, then Output / Consensus / Returns / Model, then IS / BS / CF, then builds, then data/reference tabs last. Verify all tab colors match the Tab Colors table in firm-formatting. Flag any tab that is out of order or has wrong coloring.
 
-**STOP. Update Task Tracker with all findings. Model is complete when all gates pass.**
+---
+
+## Definition of Done (Phase 8)
+
+A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
+
+1. **Task Tracker**: Every subtask row for Phase 8 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+2. **All 4 QC gates pass**. Read and report each gate's result:
+   - Gate 1 (Structural): BS Check=[val], CF Check=[val], NI linkage=[pass/fail], RE roll-forward=[pass/fail], WC denominator consistency=[pass/fail]
+   - Gate 2 (Assumptions): [count] blue-text cells reviewed, [count] missing sources, [count] stale
+   - Gate 3 (Model Tab): [count] mismatches found
+   - Gate 4 (Returns): XIRR=[val], entry price current=[yes/no]
+3. **Zero CRITICAL findings** remaining. Any CRITICAL findings must be resolved before proceeding.
+4. **All findings logged** to Task Tracker with severity (CRITICAL/WARNING/INFO), responsible skill, and description.
+5. **Tab organization verified**: tab order and colors match firm standard.
+6. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-9".
+
+If you write "Phase 8 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+
+**STOP. Report status. Wait for "continue."**
