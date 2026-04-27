@@ -109,8 +109,8 @@ Same blending logic at exit. The Year Fraction is reused because Entry and Exit 
 
 - Middle FY columns pull from Capital Allocation Build's M&A Value Per Share row (green font)
 - Exit column calendarizes using the same YEARFRAC blend as EPS
-- This represents the per-share value created by the M&A program, additive to the earnings-based valuation
-- Entry column is typically blank or zero (no M&A value accrued yet at entry)
+- This represents the per-share value created by acquisitions made **during the forecast period only** — it reflects the compounding nature of M&A done after entry, NOT pre-forecast-period acquisitions. Historical M&A is already embedded in the Entry Price via current EPS.
+- Entry column is blank (no forecast-period M&A value accrued yet at entry)
 
 ### Total Price = EPS-Implied Price + M&A Value Per Share
 

@@ -111,18 +111,19 @@ Do NOT override CFS!Ending_Cash or CFS!Net_Change_in_Cash to pull directly from 
 
 Turns M&A from a cash black hole into a trackable value creator. Five rows:
 
-| Row | Label | Formula | Format | Notes |
-|-----|-------|---------|--------|-------|
-| 1 | Acquisitions, Net | `=Deployment Acquisitions row (same value, links up)` | Number | Links to deployment for auditability |
-| 2 | Acquisition IRR | assumption (e.g. 15%) | Percentage, italic, blue/yellow | Key thesis assumption |
-| 3 | Cumulative M&A Invested Capital | Year 1: `=ABS(Acquisitions)`. Year N: `=prior + ABS(year N acquisitions)` | Currency | Running total of all M&A capital deployed |
-| 4 | M&A Portfolio Value at Exit | `=prior_value * (1 + IRR) + ABS(current year acquisitions)` | Currency, bold | Compounds entire M&A portfolio at assumed IRR |
-| 5 | M&A Value Per Share ($/share) | `=IF(diluted_shares=0, "", portfolio_value / diluted_shares)` | Per-share, bold | Key output: per-share value from M&A |
+| Row | Label | Historical | Projection Formula | Format | Notes |
+|-----|-------|-----------|-------------------|--------|-------|
+| 1 | Acquisitions, Net | `=Deployment Acquisitions row` | `=Deployment Acquisitions row (same value, links up)` | Number | Links to deployment for auditability |
+| 2 | Acquisition IRR | blank | assumption (e.g. 15%) | Percentage, italic, blue/yellow | Key thesis assumption |
+| 3 | Cumulative M&A Invested Capital | **blank** | FY1: `=ABS(Acquisitions)`. FY N: `=prior + ABS(FY N acquisitions)` | Currency | Running total — **forecast-period acquisitions only** |
+| 4 | M&A Portfolio Value at Exit | **blank** | FY1: `=ABS(Acquisitions)`. FY N: `=prior_value * (1 + IRR) + ABS(current year acquisitions)` | Currency, bold | Compounds at assumed IRR — **forecast-period only** |
+| 5 | M&A Value Per Share ($/share) | **blank** | `=IF(diluted_shares=0, "", portfolio_value / diluted_shares)` | Per-share, bold | Key output: per-share value from M&A |
 
 ### Design Rationale
 
+- **M&A Value tracks only forecast-period acquisitions.** Historical columns for Cumulative M&A Invested Capital, Portfolio Value, and Value Per Share are **blank** — pre-forecast-period acquisitions are NOT included. The M&A Value represents the incremental value created by acquisitions made during the investment holding period, not legacy M&A. This is critical: the investor is paying for historical M&A via the Entry Price (embedded in current EPS). Double-counting historical M&A in the M&A Value would overstate returns.
 - The Acquisition IRR assumption should have a source comment referencing the company's historical M&A track record, management guidance, or analyst judgment
-- Portfolio Value uses a compounding model: existing portfolio appreciates at IRR, new acquisitions are added at cost (`ABS` of negative acquisition cash flow)
+- Portfolio Value uses a compounding model: existing portfolio appreciates at IRR, new acquisitions are added at cost (`ABS` of negative acquisition cash flow). The compounding starts from the **first forecast year**, not from historical acquisitions.
 - Value Per Share uses the diluted share count from the Share Repurchases & Count section below — this creates a cross-reference within the tab
 - Default Acquisition IRR suggestion: 15% (can be calibrated to company history)
 
