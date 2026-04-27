@@ -208,13 +208,9 @@ Place medium solid #808080 borders on:
 - Right edge of the last historical column AND left edge of the first projection column
 - Right edge of the terminal year column AND left edge of the CAGR / Δ column
 
-**Section-scoped dividers**: Vertical borders are scoped to each Tier 1 section, running from the section header row through the last data row in that section. They do **not** run continuously across the entire tab. Spacer rows between sections have no vertical dividers, creating clean visual breaks between:
+**Continuous dividers**: Vertical borders run continuously from the column header row (year labels) through the last data row on the tab, with no breaks at Tier 1 headers, Tier 2 subheaders, or spacer rows.
 
-- **Summary Income Statement** (header → last IS row)
-- **Key Drivers & KPIs** (header → last KPI row)
-- **Capital Allocation & Returns** (header → ROTIC)
-
-These dividers do **NOT** appear in the Returns Timeline section (different column layout) or the Platinum List Indicators section.
+These dividers do **NOT** appear in the Returns Timeline section (different column layout).
 
 ---
 
