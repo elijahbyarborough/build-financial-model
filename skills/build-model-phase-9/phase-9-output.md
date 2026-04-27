@@ -19,21 +19,29 @@ This tab is the model's "front page" for investment committee presentations, dea
 
 ## Column Widths
 
-| Column | Width |
-|--------|-------|
-| A (row labels) | ~177pt |
-| B (spacer) | ~7pt |
-| All data columns (historical, projections, terminal) | 75pt each (uniform) |
-| CAGR / Δ column | ~57pt |
+| Column | Width | Content |
+|--------|-------|---------|
+| A (row labels) | 165pt | All row labels |
+| B (spacer) | 6pt | Empty visual separator |
+| C–L (data columns) | 70pt each (uniform) | Historical, projection, and Returns data |
+| M (CAGR / Δ) | 53pt | Compound growth or directional delta |
 
 ---
 
 ## Tab Structure — Exact Section Order
 
-### Row 1-2: Title Block
+### Title Block (Rows 1-2)
 
-- **Row 1**: Company name + " Investment Summary" — bold, Arial 10pt (per firm-formatting; no oversized fonts)
-- **Row 2**: Units subtitle: "($ in millions, except per share data)"
+| Row | Cell | Content | Font | Size | Weight | Style | Color | Fill | Alignment |
+|-----|------|---------|------|------|--------|-------|-------|------|-----------|
+| 1 | A1 | "{Company Name} ({Ticker}) Investment Summary" | Arial | 10pt | Bold | Normal | #FFFFFF | #1C3553 | Left |
+| 1 | B1:M1 | (empty — carry navy fill) | Arial | 10pt | Bold | Normal | #FFFFFF | #1C3553 | — |
+| 2 | A2 | "($ in millions, except per share data)" | Arial | 10pt | Normal | Italic | #212529 | #FFFFFF | Left |
+| 2 | B2:M2 | (empty) | Arial | 10pt | Normal | Normal | #000000 | #FFFFFF | — |
+
+- Row 1 navy fill **must span the full width** A through M (including empty cells B–M)
+- Row 2 has **no fill** (white background). Subtitle is italic dark (#212529), not gray.
+- **No borders** on rows 1-2.
 
 ### Tier 1 Header — "5-Year Forward Valuation"
 
@@ -77,22 +85,30 @@ The Output tab's Returns section mirrors this layout exactly. The IS/KPIs/CapAll
 
 Note: Row labels in columns A-B. The actual year labels depend on the model's projection period — they are NOT hardcoded.
 
+### Returns Timeline Column Alignment
+
+The Returns Timeline section uses **columns E–L** (8 columns): E = Entry, F–K = 6 FY years, L = Exit. Columns C–D and M are **empty** in the Returns section.
+
+This is intentional — the Returns Timeline has 8 data points (Entry + 6 FY + Exit), which is fewer than the IS/KPIs/CapAlloc sections (10 data columns + CAGR in C–M). Aligning the Returns to E–L centers the 8-column block within the 10-column data area, with C–D empty on the left and M empty on the right. The IS/KPIs/CapAlloc sections use the full C–M range.
+
+**Do NOT left-align the Returns to column C.** The E–L positioning is the standard across all models.
+
 ### Valuation Grid
 
 | Row | Label | Entry | Middle FY Cols | Exit | Format |
 |-----|-------|-------|---------------|------|--------|
 | | Date | `=Returns!Entry Date` | `=Returns!FY dates` | `=Returns!Exit Date` | mm/dd/yy, italic, gray |
-| | Diluted EPS | `=Returns!Entry EPS` | `=Returns!FY EPS` (green font) | `=Returns!Exit EPS` | $#,##0.00, **black font** for Entry |
-| | Exit P/E | `=Returns!Entry P/E` (implied, **black font**) | blank | `=Returns!Exit P/E` (blue, bold) | 0.0"x" |
+| | Diluted EPS | `=Returns!Entry EPS` | `=Returns!FY EPS` | `=Returns!Exit EPS` | $#,##0.00, **black font** |
+| | Exit P/E | `=Returns!Entry P/E` (implied) | blank | `=Returns!Exit P/E` (blue, bold) | 0.0"x" |
 | | EPS-Implied Price | `=Returns!Entry Price` | blank | `=Returns!Exit EPS-Implied Price` | **Major total** (F2F2F2 fill, bold, $#,##0.00) |
-| | M&A Value Per Share | blank | `=Returns!FY M&A Value` (green) | `=Returns!Exit M&A Value` | Italic, green font (#008000), $#,##0.00 |
+| | M&A Value Per Share | blank | `=Returns!FY M&A Value` | `=Returns!Exit M&A Value` | Italic, **black font**, $#,##0.00 |
 | | Total Price | `=Entry Price` | blank | `=Returns!Total Price` | **Major total** (F2F2F2 fill, bold, $#,##0.00) |
 
-**Entry EPS and Entry P/E font color**: Use **black font (#000000)**, not green. These are calculated/implied values from the Returns tab (Entry EPS is a YEARFRAC blend, Entry P/E = Entry Price / Entry EPS), not direct historical data pulls. Green font is reserved for cells that reference other worksheets for historical data.
+**Returns section font color**: ALL data in the Returns Timeline uses **black font (#000000)**, not green — including middle FY columns (EPS, M&A Value, DPS). The only exception is light grey (#7C7F88) for Date and YEARFRAC Weight rows. Green font is used exclusively in the IS/KPIs/CapAlloc sections for historical data columns.
 
 Key points:
 - EPS-Implied Price shows the earnings-only valuation
-- M&A Value Per Share shows incremental value from M&A program — italic green
+- M&A Value Per Share shows incremental value from M&A done **during the forecast period only** — it reflects the compounding nature of acquisitions made after the entry date, NOT pre-forecast-period acquisitions
 - Total Price = EPS-Implied + M&A Value — this is what the investor actually receives
 - Entry column: Total Price = EPS-Implied Price = Entry Price (no M&A value accrued yet)
 - Exit column: Total Price = EPS-Implied Price + M&A Value Per Share
@@ -103,7 +119,7 @@ Key points:
 
 | Row | Label | Entry | Middle FY Cols | Exit | Format |
 |-----|-------|-------|---------------|------|--------|
-| | Annual DPS | blank | `=Returns!FY DPS` (green font) | blank | $#,##0.00, green |
+| | Annual DPS | blank | `=Returns!FY DPS` | blank | $#,##0.00, **black font** |
 | | YEARFRAC Weight | blank | `=Returns!FY weights` | blank | 0.000"x", italic, gray (#7C7F88) |
 | | DPS Received | blank | `=Returns!FY DPS Received` | blank | $#,##0.00, bold |
 
@@ -130,6 +146,19 @@ Key points:
 - Order: EPS CAGR → M&A Value → Dividend Yield → Multiple Change → IRR
 - Bottom border below Multiple Change, top border on IRR
 
+### Returns Timeline Font Colors
+
+The Returns Timeline section uses a **simplified color scheme** — no green font. Green is reserved for the IS/KPIs/CapAlloc sections below (historical columns).
+
+| Element | Font Color |
+|---------|------------|
+| Date row | Light grey #7C7F88, italic |
+| YEARFRAC Weight row | Light grey #7C7F88, italic |
+| All other data (EPS, P/E, Price, M&A Value, DPS, DPS Received, Cash Flow, IRR decomposition) | Black #000000 |
+| Entry column header, FY headers, Exit header | Black #000000, bold |
+
+**No green font (#008000) appears anywhere in the Returns Timeline section.** This differs from the IS/KPIs/CapAlloc sections, which use green for historical data columns.
+
 ### Borders in Returns Section
 
 - Medium solid below column headers and above dates
@@ -141,7 +170,15 @@ Key points:
 
 ## Year Header Block
 
-The year headers (column header row with "FY 2024A", "FY 2025E", etc.) sit above all sections — not inside any section — with a spacer row below before the first Tier 1 header. Sections do not repeat their own year row.
+The year headers are a **standalone block** placed between the Returns Timeline and the Summary Income Statement. They are NOT part of any Tier 1 section.
+
+**Layout (3 rows):**
+
+1. **Year labels**: "FY 2023A", "FY 2024A", "FY 2025A", "FY 2026E", … "FY 2032E", "CAGR / Δ" — bold, center-aligned, text format (@). Medium solid bottom border on this row.
+2. **Fiscal year-end dates**: `=Model!col4` for each year — mm/dd/yy, center-aligned. Medium solid top border on this row.
+3. **Spacer row**: Empty, standard height.
+
+The next row after the spacer is the "Summary Income Statement" Tier 1 navy header. No section repeats its own year row — these shared headers apply to IS, KPIs, and Capital Allocation alike.
 
 ---
 
@@ -325,6 +362,18 @@ The Output tab has exactly TWO source tabs: **Model Tab** and **Returns**. It ne
 - **Tier 2 subheaders**: Bold, non-italic, indentLevel = 1. Light blue fill (#C2D5EB), black text (#000000), Arial 10pt. Fill must extend across the entire row from A through the CAGR / Δ column. Do not leave column B or the CAGR / Δ column unfilled.
 - **Column headers**: Bold, center-aligned, medium bottom border
 
+### Label Indentation (Output Tab)
+
+Use Excel's indent feature (not leading spaces). The Output tab follows the firm-formatting 3-level convention:
+
+| Indent Level | Used For | Examples |
+|---|---|---|
+| **0** | Tier 1/Tier 2 headers, key totals, standalone line items | Section headers, Net Revenue, EBITDA, EBIT, Net Income, Diluted EPS, FCF, Total Capital Deployed, Normalized EBITDA, Normalized EBIT, ROIC, ROTIC |
+| **1** | Sub-items, margin/% rows, growth rates, memo bridge starting points, supporting line items | Y/Y Revenue Growth, OpEx, D&A, Operating Margin %, EBITDA Margin %, Net Income Margin %, FCF Margin %, Diluted Shares, EBITDA (memo in bridge), Interest Coverage, Net Debt/EBITDA |
+| **2** | Addback/detail lines within a reconciliation bridge | + Litigation Provision, + Other / Non-Recurring, + SBC, + M&A Expense |
+
+**Decision rule:** If the row is a dollar total that a reader would scan for (Revenue, EBITDA, NI, FCF, Normalized totals) → indent 0. If the row explains or decomposes a total (margins, growth, sub-expenses, bridge memo items) → indent 1. If the row is a detail line inside a bridge/reconciliation → indent 2. Max depth = 2.
+
 ### Data Formatting
 
 All number formats defer to `firm-formatting.md` — use the standard format strings with `_)` right-padding:
@@ -369,8 +418,8 @@ After writing all labels, visually verify none are clipped by the column boundar
 - Key totals (Revenue, GP, EBIT, EBITDA, NI, FCF, Total Deployed, ROIC, ROTIC): Bold
 - All % rows: Italic
 - Major totals in Returns section: F2F2F2 fill + bold
-- M&A Value Per Share: Italic, green font (#008000)
-- Entry EPS and Entry P/E: Black font (not green — these are derived values)
+- M&A Value Per Share: Italic, black font
+- All Returns Timeline data: Black font (except Date/YEARFRAC Weight rows which are light grey #7C7F88)
 
 ---
 
