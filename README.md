@@ -1,6 +1,6 @@
-# Build Financial Model
+# Financial Modeling Tools
 
-A modular skill system for building institutional-quality Excel financial models with Claude for Excel. The system encodes Frist Capital's modeling methodology as a set of interconnected Claude skills that guide a 13-phase model build (Phases 0–12) from raw source data to a finished, QC'd investment summary — packaged as a single installable Claude plugin (`build-financial-model`).
+A modular skill system for building institutional-quality Excel financial models with Claude for Excel. The system encodes Frist Capital's modeling methodology as a set of interconnected Claude skills that guide a 13-phase model build (Phases 0–12) from raw source data to a finished, QC'd investment summary — packaged as a single installable Claude plugin (**Financial Modeling Tools**, `financial-modeling-tools`).
 
 ## What This Is
 
@@ -78,7 +78,7 @@ The repo is a single-plugin Claude marketplace. In Claude Code:
 
 ```
 /plugin marketplace add elijahbyarborough/build-financial-model
-/plugin install build-financial-model@frist-capital
+/plugin install financial-modeling-tools@frist-capital
 ```
 
 In claude.ai: Settings → Customize → Plugins → Personal plugins → + → Add marketplace → point at this repo.
@@ -128,7 +128,7 @@ Phases must execute in order: 0 → 1 → 2 → … → 12. Each phase has expli
 
 ```
 .claude-plugin/
-  plugin.json               # build-financial-model plugin manifest
+  plugin.json               # financial-modeling-tools plugin manifest
   marketplace.json          # single-plugin marketplace (root as plugin)
 commands/
   build-model.md            # /build-model conductor (Claude Code / Cowork)
