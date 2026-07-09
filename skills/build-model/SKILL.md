@@ -37,6 +37,7 @@ Identify the current phase, then load ONLY that phase's skill. Do not load all p
 | **Phase 10 -- Output** | `read_skill("build-model-phase-10")` |
 | **Phase 11 -- Consensus** | `read_skill("build-model-phase-11")` |
 | **Phase 12 -- Source Hygiene** | `read_skill("build-model-phase-12")` |
+| **Post-build: company reported earnings / new filing** | `read_skill("update-model")` (+ `kpi-tracker`) |
 
 **Resume protocol:** If a Task Tracker tab exists, you are resuming. Read the tracker. Identify the current phase from the Model State Block. Load ONLY that phase's skill. Do NOT reload Phase 0 content.
 

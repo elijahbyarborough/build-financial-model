@@ -421,6 +421,29 @@ Build tabs (Profit Build, BS & CFS Build, Capital Allocation Build), the stateme
 
 ---
 
+## Ad-Hoc / Non-Standard Tabs
+
+Any tab whose name is NOT in the standard tab set above (and is not a recognizable source/data tab) is an **ad-hoc tab** — a scratch analysis, a side calculation, "a few boxes backing into some number." These get the firm LOOK applied to whatever structure exists, without imposing the model scaffolding.
+
+**Apply (the look):**
+- Arial 10pt everywhere; gridlines off; no freeze panes; no merged cells in data areas
+- Number formats by row/cell type detection — `_)` padding, parenthetical negatives, zeros as `"-"`, percentages italic, multiples with `"x"`, per-share `$#,##0.00`. Apply the Section Boundary Rule wherever a discernible monetary block exists; single-value or irregular blocks default to Currency format
+- Font color coding: blue hardcodes, black formulas, green cross-sheet refs, red SPG()
+- Labels left-aligned with the real indent feature; data right-aligned; column headers centered
+- Uniform column widths within each block of data
+- Where structure resembles the hierarchy, format it as such: a title-like row → Tier 1 navy band across the block's width; a total-like row (label contains "Total", or sits under a SUM) → bold + thin top border, Major-Total gray fill if it is the block's punchline. Use judgment — a 5-row box may need only a bold label and a bordered total
+
+**Do NOT require (the scaffolding):**
+- Standard Tab Header rows 1–6
+- Year Label Convention (apply it only if the tab actually has period columns)
+- A tab color from the table (leave as-is, or gray #7C7F88 if the user asks for one)
+- A position in the firm tab order — ad-hoc tabs conventionally park to the right of the model tabs
+- Membership in any QC formatting gate — QC lists ad-hoc tabs as INFO ("non-standard tabs present"), never as a failure
+
+The test: someone glancing at the tab should recognize the firm's hand (fonts, number treatment, alignment discipline) even though the tab is structurally freeform.
+
+---
+
 ## Percentage and Margin Rows
 
 - **Italic** for both the label cell and all data cells

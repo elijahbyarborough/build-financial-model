@@ -90,7 +90,9 @@ If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional 
 
 ### Tab Organization Check
 
-Verify tab order matches firm standard: Task Tracker first, then Output / Consensus / Returns / Model / KPI Tracker, then IS / BS / CFS, then Profit Build / BS & CFS Build / Capital Allocation Build, then Annual Historicals / Quarterly Historicals, then Data Pull and source/reference tabs last. Verify all tab colors match the Tab Colors table in firm-formatting. Flag any tab that is out of order or has wrong coloring.
+Verify tab order matches firm standard: Task Tracker first, then Output / Consensus / Returns / Model / KPI Tracker, then IS / BS / CFS, then Profit Build / BS & CFS Build / Capital Allocation Build, then Annual Historicals / Quarterly Historicals, then Data Pull and source/reference tabs last. Verify all tab colors match the Tab Colors table in firm-formatting. Flag any STANDARD tab that is out of order or has wrong coloring.
+
+**Ad-hoc tabs are tolerated, not failed**: tabs outside the standard set (per firm-formatting's Ad-Hoc / Non-Standard Tabs section) are logged as INFO — "Non-standard tabs present: [names]" — with a note that they are user working material, conventionally parked right of the model tabs, and worth archiving before the model is circulated. They are exempt from the tab-order and tab-color checks and from formatting gates beyond the ad-hoc look (Arial 10, gridlines off, number formats).
 
 ---
 

@@ -4,13 +4,14 @@ A modular skill system for building institutional-quality Excel financial models
 
 ## What This Is
 
-This repo contains 16 Claude skills organized into three foundation/utility skills and 13 phase-specific skills. Together they define:
+This repo contains 17 Claude skills organized into four foundation/utility skills and 13 phase-specific skills. Together they define:
 
 - **Historicals capture** — Annual Historicals and Quarterly Historicals tabs that record *everything the company reports* (the model's single hardcode layer, updated post-earnings and post-filing), with protocols for segment recasts, ASC adoptions, FYE changes, and restatements
 - **Modeling methodology** — how to structure a 3-statement model, build driver-based revenue, handle lease accounting, compute ROIC/ROTIC, and construct a 5-year forward returns framework
 - **Formatting standards** — the firm's complete visual hierarchy for Excel: fonts, colors, borders, number formats, spacer rows, and tab organization
 - **Quality gates** — structural integrity checks, assumption audits, historicals-integrity checks, and consistency validations that every model must pass
 - **KPI tracking** — a quarterly KPI tracker tab (4-year lookback + forward columns) built into every model
+- **Post-earnings maintenance** — a dedicated update workflow that brings a finished model current when the company reports, without touching assumptions
 
 The system is designed for **Claude for Excel** (the Excel add-in), where Claude operates at the cell level. It is not a Python script or a template generator. The skills teach Claude *how to think about* building a model, and Claude executes directly in the workbook.
 
@@ -23,11 +24,12 @@ The system is designed for **Claude for Excel** (the Excel add-in), where Claude
 | `build-model` | Core rules, phase router, and universal conventions (single hardcode layer, capture-everything, projection length, formula construction, balance sheet integrity, lease awareness) |
 | `firm-formatting` | Single source of truth for all Excel formatting: 5-tier visual hierarchy, number formats with `_)` padding, color coding, borders, tab colors, display settings |
 
-### Utility Skill
+### Utility Skills
 
 | Skill | Purpose |
 |-------|---------|
 | `kpi-tracker` | Build or update a quarterly KPI tracker tab. Two modes: plugin-model (pulls live from Quarterly Historicals) and standalone (portable, hardcoded). Loaded by Phase 2; also usable on its own. |
+| `update-model` | Post-earnings / post-filing update for a finished model: capture the new quarter (or FY) onto the Historicals tabs, flip the KPI Tracker column E→A, verify integrity. Never touches drivers, projections, or Returns — those stay deliberate. |
 
 ### Phase Skills (loaded one at a time)
 
@@ -101,7 +103,7 @@ Each phase is a separate conversation to keep context clean:
 
 ### Resuming / Updating Post-Earnings
 
-If a Task Tracker tab exists, Claude reads it to determine the current phase and flags. For a finished model, post-earnings updates land on the Historicals tabs first (new quarter appended to Quarterly Historicals; annual data on 10-K), then flow through live links — the KPI Tracker's update track (`kpi-tracker` Track B) flips the period label and rolls the forecast divider.
+If a Task Tracker tab exists, Claude reads it to determine the current phase and flags. For a finished model, load **`update-model`** when the company reports: it captures the new quarter onto the Historicals tabs (release sections same-day, filing sections when the 10-Q/10-K drops), flips the KPI Tracker column via `kpi-tracker` Track B, and verifies integrity — leaving driver assumptions, horizon, and Returns anchoring as flagged manual follow-ups.
 
 ### Phase Sequencing
 
@@ -134,6 +136,7 @@ skills/
   build-model/              # Core rules + phase router
   firm-formatting/          # Firm-wide formatting standards
   kpi-tracker/              # Quarterly KPI tracker (plugin-model + standalone modes)
+  update-model/             # Post-earnings update (capture -> flip tracker -> verify)
   build-model-phase-0/      # Setup
   build-model-phase-1/      # Annual Historicals & Statements
     meth-historicals.md     #   (canonical) capture hierarchy + edge-case protocols

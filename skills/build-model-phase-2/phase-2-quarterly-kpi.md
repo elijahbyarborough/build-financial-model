@@ -187,7 +187,7 @@ divider, number formats with `_)` padding, source citations, final review checkl
 
 ## Update Mode (post-earnings, after the model is built)
 
-These two tabs are the model's update surface. When a new quarter prints:
+These two tabs are the model's update surface. **The `update-model` skill packages this workflow end-to-end** (identify print type -> capture -> flip tracker -> verify) — load it for post-earnings sessions instead of this phase skill. The mechanics, for reference:
 
 1. **Append a column** to Quarterly Historicals; capture the release (sections 1-6) same-day
    and the 10-Q sections (7-12) when filed. New tie-out cells for a completed fiscal year.
