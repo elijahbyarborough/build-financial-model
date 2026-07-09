@@ -153,7 +153,7 @@ After completing each subtask (e.g., P2.1, P2.2, P2.3) -- before starting the ne
 Do NOT batch these updates at phase end. Small, frequent writes during work -- not one big write after. If you complete a subtask and move to the next without updating the tracker, you have made an error. Stop and update.
 
 ### Credit-Adjusted EBITDA for Leverage Ratios
-On companies with a projected M&A program, leverage ratios (Net Debt/EBITDA, Interest Coverage) must use **Credit-Adjusted EBITDA** = Model EBITDA + Cumulative Acquired EBITDA, where Acquired EBITDA is derived from the acquisition spend and an assumed acquisition EV/EBITDA multiple (a yellow/blue assumption on the Capital Allocation Build). Acquired EBITDA is a MEMO concept: it exists only for the leverage ratios and never flows into the IS, CFS, EPS, or Returns. Without it, acquisition-funded balance sheets divide by organic-only EBITDA and leverage is overstated. Full spec in the Phase 5 skill.
+On companies with a projected M&A program, leverage ratios (Net Debt/EBITDA, Interest Coverage) must use **Credit-Adjusted EBITDA** = Model EBITDA + Cumulative Acquired EBITDA, where Acquired EBITDA is derived from the acquisition spend and an assumed acquisition EV/EBITDA multiple, and the acquired base compounds at an assumed Acquired EBITDA Growth % (both yellow/blue assumptions on the Capital Allocation Build). Acquired EBITDA is a MEMO concept: it exists only for the leverage ratios and never flows into the IS, CFS, EPS, or Returns. Without it, acquisition-funded balance sheets divide by organic-only EBITDA and leverage is overstated. Full spec in the Phase 5 skill.
 
 ---
 

@@ -112,7 +112,7 @@ Do NOT override CFS!Ending_Cash or CFS!Net_Change_in_Cash to pull directly from 
 
 ## Section 3: Acquisitions (M&A Value Build)
 
-Turns M&A from a cash black hole into a trackable value creator. Eight rows:
+Turns M&A from a cash black hole into a trackable value creator. Nine rows:
 
 | Row | Label | Historical | Projection Formula | Format | Notes |
 |-----|-------|-----------|-------------------|--------|-------|
@@ -123,21 +123,22 @@ Turns M&A from a cash black hole into a trackable value creator. Eight rows:
 | 5 | M&A Value Per Share ($/share) | **blank** | `=IF(diluted_shares=0, "", portfolio_value / diluted_shares)` | Per-share, bold | Key output: per-share value from M&A |
 | 6 | Acquisition EV/EBITDA Multiple | blank | assumption (e.g. 12.0x) | Multiple 0.0"x", italic, blue/yellow | What the company pays per dollar of acquired EBITDA — source from management commentary, deal history, or sector norms |
 | 7 | *Acquired EBITDA (Annualized)* | **blank** | `=IF(Multiple=0, 0, ABS(Acquisitions) / Multiple)` | Number, italic | The EBITDA that came with that year's deals. Full-year contribution starting in the acquisition year (matches the annual granularity of the spend assumption) |
-| 8 | *Cumulative Acquired EBITDA* | **blank** | FY1: `=Acquired EBITDA`. FY N: `=prior + FY N Acquired EBITDA` | Number, italic | **MEMO ONLY — feeds the leverage ratios and nothing else.** Never flows into the IS, CFS, EPS, or Returns |
+| 8 | Acquired EBITDA Growth % | blank | assumption (e.g. 3-5%, or mirror the organic EBITDA growth assumption) | Percentage, italic, blue/yellow | How the already-acquired EBITDA base compounds once owned. Source comment states the basis |
+| 9 | *Cumulative Acquired EBITDA* | **blank** | FY1: `=Acquired EBITDA`. FY N: `=prior × (1 + Growth %) + FY N Acquired EBITDA` | Number, italic | Existing acquired base grows at the assumed rate, new deals add at entry EBITDA — same shape as the Portfolio Value roll (row 4). **MEMO ONLY — feeds the leverage ratios and nothing else.** Never flows into the IS, CFS, EPS, or Returns |
 
-### Credit-Adjusted EBITDA (why rows 6-8 exist)
+### Credit-Adjusted EBITDA (why rows 6-9 exist)
 
 Acquisitions bring EBITDA with them, but this model deliberately keeps acquired earnings OUT of the P&L (their value is captured by the Portfolio-at-IRR rows instead). Without an adjustment, Net Debt/EBITDA divides an acquisition-funded balance sheet by organic-only EBITDA — leverage looks progressively, and wrongly, worse the more the company acquires. The fix is a phantom-EBITDA memo:
 
 - **Credit-Adjusted EBITDA** `= Model EBITDA + Cumulative Acquired EBITDA` — computed in the BS & CFS Build's Leverage Metrics sub-block (see the re-wiring step below), which is where the leverage ratios live.
 - ONLY the leverage ratios (Net Debt/EBITDA, Total Obligations/EBITDA, Interest Coverage) consume it. It is invisible everywhere else in the model.
-- When Acquisitions = 0 in all projection years, rows 6-8 may be omitted entirely and the ratios run on plain Model EBITDA.
+- When Acquisitions = 0 in all projection years, rows 6-9 may be omitted entirely and the ratios run on plain Model EBITDA.
 
 ### Re-wire the Leverage Metrics sub-block (required when an M&A program is active)
 
 The BS & CFS Build Debt & Cash section's Leverage Metrics sub-block was built in Phase 3 on plain Model EBITDA (this tab didn't exist yet). Now add/link:
 
-1. *Cumulative Acquired EBITDA* row: `='Capital Allocation Build'!row 8` (green cross-sheet ref, italic memo)
+1. *Cumulative Acquired EBITDA* row: `='Capital Allocation Build'!Cumulative Acquired EBITDA row` (green cross-sheet ref, italic memo)
 2. **Credit-Adjusted EBITDA** row: `=EBITDA + Cumulative Acquired EBITDA`
 3. Re-point Net Debt/EBITDA, Total Obligations/EBITDA, and Interest Coverage denominators/numerators to the Credit-Adjusted row
 4. This is display-layer wiring only — nothing computational depends on leverage ratios, so no circularity is created
