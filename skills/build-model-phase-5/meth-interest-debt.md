@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-3/meth-interest-debt.md — sync edits there first -->
+
 ## Interest Expense & Debt
 
 ### Debt Build (Tranche-by-Tranche)
@@ -25,5 +27,3 @@ This ensures the buyback plug on the Capital Allocation Build automatically adju
 
 ### Debt = Input (Capital Allocation Decision)
 Debt assumptions (contractual amortization, planned issuance, optional prepayment) live on the Debt Build tab. The Capital Allocation Build waterfall (Phase 4) incorporates net debt changes from the Debt Build as an input to the cash waterfall. The Debt Build owns the debt assumptions; the Cap Alloc waterfall passes them through.
-
----

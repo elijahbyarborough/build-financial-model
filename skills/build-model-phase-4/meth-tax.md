@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-2/meth-tax.md — sync edits there first -->
+
 ## Tax
 
 ### Default Approach: Effective Tax Rate (Most Companies)
@@ -33,3 +35,5 @@ The Tax Schedule tab must output these rows for other tabs to reference:
 1. **Income Tax Expense** → IS pulls this
 2. **Net change in DTA/DTL** → CFS pulls this as a CFO non-cash adjustment
 3. **Cash Taxes Paid** (memo) → useful for FCF sanity checks
+
+---

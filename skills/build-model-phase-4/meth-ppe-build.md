@@ -1,3 +1,5 @@
+<!-- CANONICAL COPY: build-model-phase-2/meth-ppe-build.md — sync edits there first -->
+
 ## PP&E Build — 3-Section Structure
 
 PP&E Build must have exactly 3 sections, each with a Tier-2 header.
