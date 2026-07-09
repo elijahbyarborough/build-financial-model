@@ -3,9 +3,9 @@ name: build-model
 description: |
   FC modeling methodology — core rules and phase router. Load this skill at the start of every session. It provides the universal rules that apply across all phases and tells you which phase skill to load next.
 
-  Triggers on: building a financial model, creating projections, 3-statement model, revenue build, debt schedule, PP&E build, returns analysis, valuation, XIRR, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
+  Triggers on: building a financial model, creating projections, 3-statement model, profit build, debt schedule, historicals capture, quarterly KPI tracker, returns analysis, valuation, XIRR, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, updating a model post-earnings, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
 
-  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC standard in every model. Lease-aware: detects and models operating/finance leases with proper BS/IS/CFS linkage.
+  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC standard in every model. All reported data captured on Annual/Quarterly Historicals tabs (the single hardcode layer). Lease-aware: detects and models operating/finance leases with proper BS/IS/CFS linkage.
 ---
 
 # FC Modeling Conventions
@@ -24,18 +24,19 @@ Identify the current phase, then load ONLY that phase's skill. Do not load all p
 |---------------|----------------|
 | **New build** | `read_skill("build-model-phase-0")` |
 | **Resuming** (Task Tracker exists) | Read Task Tracker -> identify current phase -> load that phase's skill below |
-| **Phase 1 -- Historical Statements** | `read_skill("build-model-phase-1")` |
-| **Phase 2 -- Drivers** | `read_skill("build-model-phase-2")` |
-| **Phase 2.5 -- Driver Review** | `read_skill("build-model-phase-2")` (checkpoint section) |
-| **Phase 3 -- Forward Statements** | `read_skill("build-model-phase-3")` |
-| **Phase 4 -- Capital Allocation** | `read_skill("build-model-phase-4")` |
-| **Phase 5 -- Model Tab** | `read_skill("build-model-phase-5")` |
-| **Phase 6 -- Returns** | `read_skill("build-model-phase-6")` |
-| **Phase 7 -- Formatting** | `read_skill("build-model-phase-7")` |
-| **Phase 8 -- QC** | `read_skill("build-model-phase-8")` |
-| **Phase 9 -- Output** | `read_skill("build-model-phase-9")` |
-| **Phase 10 -- Consensus** | `read_skill("build-model-phase-10")` |
-| **Phase 11 -- Hardcode Sources** | `read_skill("build-model-phase-11")` |
+| **Phase 1 -- Annual Historicals & Statements** | `read_skill("build-model-phase-1")` |
+| **Phase 2 -- Quarterly Historicals & KPI Tracker** | `read_skill("build-model-phase-2")` (also loads `kpi-tracker`) |
+| **Phase 3 -- Drivers** | `read_skill("build-model-phase-3")` |
+| **Phase 3.5 -- Driver Review** | `read_skill("build-model-phase-3")` (checkpoint section) |
+| **Phase 4 -- Forward Statements** | `read_skill("build-model-phase-4")` |
+| **Phase 5 -- Capital Allocation** | `read_skill("build-model-phase-5")` |
+| **Phase 6 -- Model Tab** | `read_skill("build-model-phase-6")` |
+| **Phase 7 -- Returns** | `read_skill("build-model-phase-7")` |
+| **Phase 8 -- Formatting** | `read_skill("build-model-phase-8")` |
+| **Phase 9 -- QC** | `read_skill("build-model-phase-9")` |
+| **Phase 10 -- Output** | `read_skill("build-model-phase-10")` |
+| **Phase 11 -- Consensus** | `read_skill("build-model-phase-11")` |
+| **Phase 12 -- Source Hygiene** | `read_skill("build-model-phase-12")` |
 
 **Resume protocol:** If a Task Tracker tab exists, you are resuming. Read the tracker. Identify the current phase from the Model State Block. Load ONLY that phase's skill. Do NOT reload Phase 0 content.
 
@@ -46,7 +47,7 @@ If you are resuming a session and the Task Tracker shows phases already complete
 1. Pick 3 cells at random from completed phases (one from a build tab, one from a statement tab, one from a summary/output tab if available)
 2. For each cell, verify:
    - Font color matches firm-formatting rules (blue = hardcode, black = formula, green = cross-sheet)
-   - Number format includes `_)` padding
+   - Number format includes `_)` padding (Integer-format cells like share counts are exempt -- no parenthetical negatives expected)
    - If assumption cell: yellow bg (#FFFF00) present, source comment present
 3. Output the audit results to the user:
    ```
@@ -56,13 +57,13 @@ If you are resuming a session and the Task Tracker shows phases already complete
    [Tab]![Cell]: font=[color], format=[format string], bg=[color] — [PASS/FAIL]
    ```
 
-If any cell fails, flag to user: "Drift detected in [tab]![cell]: [issue]. Recommend re-running Phase 7 formatting on affected tabs before proceeding." Do not skip this audit.
+If any cell fails, flag to user: "Drift detected in [tab]![cell]: [issue]. Recommend re-running Phase 8 formatting on affected tabs before proceeding." Do not skip this audit.
 
 **Phase boundaries:** After completing each phase, STOP. Update the Task Tracker. Report status. Wait for "continue."
 
 **Context management:** After completing a phase, the user should start a new conversation and reload: `build-model` + `firm-formatting` + the next phase's skill. This keeps context clean and ensures full phase instructions are available.
 
-**Sequencing enforcement:** Each phase must complete before the next begins. Phase 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11. No skipping. Dependencies are specified in each phase's skill.
+**Sequencing enforcement:** Each phase must complete before the next begins. Phase 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12. No skipping. Dependencies are specified in each phase's skill.
 
 All skills are designed for Claude for Excel cell-level operations.
 
@@ -79,7 +80,7 @@ All skills are designed for Claude for Excel cell-level operations.
 ### Historical Periods
 As many years of actuals as available. No fixed minimum -- use what the data gives you.
 
-### Revenue Build Priority
+### Revenue Driver Priority
 1. Unit economics / driver-based (volume x price/rate) -- strongly preferred
 2. Segment-level with identified drivers -- acceptable
 3. Growth rate decomposition -- last resort
@@ -91,7 +92,7 @@ Exit-multiple over DCF. Only build DCF when explicitly requested. Multiple hiera
 
 ### Formula Construction
 - Always use Excel formulas -- never hardcode calculations in Python and paste values
-- **Never embed assumptions as in-cell hardcodes within output/data formulas.** Every assumption must be a clearly identifiable cell with **yellow background (#FFFF00) + blue text (#0000FF)** and a source comment.
+- **Never embed assumptions as in-cell hardcodes within output/data formulas.** Every model driver assumption must be a clearly identifiable cell with **yellow background (#FFFF00) + blue text (#0000FF)** and a source comment. (Exception: KPI Tracker guidance mid-points stay blue text only, per the `kpi-tracker` skill -- yellow is reserved for projection driver assumptions on build tabs and the Returns tab.)
 - Historical totals must also be formulas (`=SUM()` or equivalent)
 - Comment every assumption with rationale and source
 - Only ASCII in comments (no em dashes, smart quotes)
@@ -99,15 +100,18 @@ Exit-multiple over DCF. Only build DCF when explicitly requested. Multiple hiera
 ### Assumption Placement: Same Row, Not Separate
 Assumption values go directly in the **projection columns of the existing metric row** -- the same row that holds the historical values. Do NOT create a separate "assumption" row underneath. One row carries both: historical values (black text) on the left, assumption values (yellow bg + blue text + source comment) on the right.
 
-### No Hardcoded Historicals
-**Every historical value in the model must be a formula linking to a source tab** -- never a hardcoded number. Historical cells reference BAMSEC, Tegus, broker model, or the Historical Data tab via direct cell references. The audit trail must be one click away.
+### Single Hardcode Layer (Historicals Tabs)
+**The Annual Historicals and Quarterly Historicals tabs are the ONLY place hardcoded historical values are allowed** -- entered at capture with blue text (#0000FF) and a source comment citing the filing. Every historical value anywhere else in the model (statements, build tabs, Model Tab, KPI Tracker) must be a formula linking back to a Historicals tab. The audit trail is the source comment, one click away. Raw source tabs (BAMSEC, Tegus, broker) are working material for capture, never live link targets.
 
-### Mandatory Dual View (IS, BS, CFS)
-Every IS, BS, and CFS tab MUST have both a **Model View** and a **Reported View** -- no exceptions. Even if they would look identical, produce both. The Model View can simplify or collapse lines, but both views must always exist. The Reported View is the audit trail; the Model View is the projection engine.
+### Capture Everything
+The Historicals tabs are the "we captured everything the company reports" record. Enter every line the company discloses in each section -- full statement faces, all segment/geographic/operational detail, share data, guidance, footnote schedules. Summarization happens downstream (statements, Model Tab, KPI Tracker), never at capture. Section hierarchy and edge-case protocols (segment recasts, ASC adoptions, FYE changes, restatements) are defined in `meth-historicals.md` (Phases 1-2).
+
+### Single Model View (IS, BS, CFS)
+Each statement tab carries ONE view -- the Model View. Historical columns link to the Annual Historicals tab; projection columns pull from the build tabs. There is no separate Reported View: the Historicals tabs ARE the as-reported record. Each statement keeps a slim reconciliation check (Model NI / Total Assets / Ending Cash = reported value on Annual Historicals) proving the Model View consolidation lost nothing.
 
 ### Build-First Rule (HARD STOP)
-**Never populate projection assumptions directly on the IS, BS, or CFS tabs.** Assumptions and driver logic live on build tabs. The IS/BS/CFS tabs contain only:
-1. **Pull formulas** -- references to build tabs
+**Never populate projection assumptions directly on the IS, BS, or CFS tabs.** Assumptions and driver logic live on the build tabs -- **Profit Build** (revenue, costs, segments, EBITDA, tax), **BS & CFS Build** (PP&E, working capital, debt & cash, leases), and **Capital Allocation Build**. The IS/BS/CFS tabs contain only:
+1. **Pull formulas** -- references to build tabs (projections) and Annual Historicals (historicals)
 2. **Derived computations** -- formulas computed from other cells on the same statement
 
 ### Balance Sheet Integrity
@@ -119,7 +123,7 @@ Always include:
 If any check is non-zero, stop and debug. **Never use a plug, balancing item, or "other" line to force a check to zero.**
 
 ### Lease Awareness
-When source data contains operating or finance leases (ASC 842), the model must include dedicated lease schedules on the Debt Build tab. Lease detection occurs in Phase 0/1. Key flags tracked on the Task Tracker: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `FL_IN_PPE`, `LEASE_MATERIALITY`, and the full Lease BS Map. The critical rule: **CF Financing finance lease payment = principal only (depreciation amount), NEVER total payment (depreciation + interest).**
+When source data contains operating or finance leases (ASC 842), the model must include dedicated lease schedules on the BS & CFS Build tab. Lease detection occurs in Phase 0/1. Key flags tracked on the Task Tracker: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `FL_IN_PPE`, `LEASE_MATERIALITY`, and the full Lease BS Map. The critical rule: **CF Financing finance lease payment = principal only (depreciation amount), NEVER total payment (depreciation + interest).**
 
 ### Iterative Calculation Required
 After Phase 4, the model contains intentional circular references (Capital Allocation waterfall depends on CFS, CFS depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 4. Without it, the model will show circular reference errors.
@@ -142,7 +146,7 @@ Standard in every model. ROIC and ROTIC on the Model Tab. Full formulas provided
 
 ### Data Source Hierarchy
 
-Use the highest-ranked available source. Never skip a tier unless the data genuinely doesn't exist there.
+Use the highest-ranked available source. Never skip a tier unless the data genuinely doesn't exist there. Sources feed CAPTURE onto the Historicals tabs (hardcoded entry + source comment); the model links to the Historicals tabs, never to the sources directly.
 
 1. **Company filings** (10-K, 10-Q, proxy, earnings releases) -- primary, always preferred
 2. **Tegus models & management guidance** -- secondary, especially for forward-looking assumptions

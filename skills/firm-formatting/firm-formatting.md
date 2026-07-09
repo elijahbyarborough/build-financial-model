@@ -12,6 +12,8 @@ description: |
 
 **OVERRIDE PRIORITY: When this skill conflicts with ANY other skill's formatting defaults, this skill wins.** Firm visual standards always override generic plugin or skill defaults.
 
+**One scoped exception — the KPI Tracker tab.** The `kpi-tracker` skill owns that tab's LAYOUT (its own header, spacing rhythm, no-bold/no-border body, column widths, FY gray-fill columns, merged section bands) as deliberate design deviations for a print-ready scorecard. Firm palette, Arial 10pt, number-format strings with `_)` padding, and font color coding still apply there. Everywhere else, this skill wins without exception.
+
 ---
 
 ## FC Color Palette
@@ -101,7 +103,7 @@ If the user doesn't specify, ask.
 - [ ] Uniform column widths for all year/data columns?
 - [ ] Gridlines removed on this tab?
 - [ ] No frozen panes on this tab?
-- [ ] Standard Tab Header (rows 1–6) matches spec? (navy title row, italic unit label, year row, FYE dates, blank spacer, then first section header) — skip for Returns/Tracker tabs.
+- [ ] Standard Tab Header (rows 1–6) matches spec? (navy title row, italic unit label, year row, FYE dates, blank spacer, then first section header) — skip for Returns, Task Tracker, and KPI Tracker tabs.
 - [ ] Year labels follow the Year Label Convention? (`FY 2026E` not `FY2026E`, `2026E`, or `FY 2026`)
 
 ### Agentic Judgment
@@ -127,7 +129,7 @@ Complete specification for all Excel model formatting. This is the authoritative
 
 ## Standard Tab Header (Rows 1–6)
 
-**Applies to every tab EXCEPT Returns and Tracker.** Every qualifying tab opens with this exact 6-row structure:
+**Applies to every tab EXCEPT Returns, Task Tracker, and KPI Tracker** (the KPI Tracker's header is defined by the `kpi-tracker` skill). Every qualifying tab opens with this exact 6-row structure:
 
 | Row | Content | Fill | Font | Alignment | Border |
 |-----|---------|------|------|-----------|--------|
@@ -264,6 +266,8 @@ Maximum indent depth: 2 levels.
 
 **Key assumption cells** (hardcoded inputs that are critical model drivers): Blue text (#0000FF) + yellow background (#FFFF00).
 
+**Historicals-tab derived rows are black** — derived discrete quarters (Qn = YTDn − YTDn−1), derived Q4 (= FY − ΣQ1–Q3), and ΣQ=FY tie-out rows on the Annual/Quarterly Historicals tabs stay black (#212529) even when the formula references the other Historicals tab. They are derivations of the captured record, not model pulls; green is reserved for model tabs pulling FROM the Historicals layer.
+
 ### Assumption Placement: Same Row, Not Separate
 
 Assumption values go directly in the **projection columns of the existing metric row** — the same row that holds the historical values. Do NOT create a separate "assumption" row underneath a metric row. One row carries both: historical values (black text) on the left, assumption values (yellow bg + blue text + source comment) on the right.
@@ -391,7 +395,7 @@ This applies to every tab in the model: IS, BS, CF, Model, all builds, Output, a
 
 Tabs with historical/projection/CAGR column zones (Output, Consensus) use medium solid #808080 vertical borders to separate zones. These dividers are **section-scoped** — they run from each Tier 1 header through the last data row of that section, then stop. Spacer rows between sections have no vertical borders. This prevents a continuous line running the full height of the tab.
 
-Build tabs (IS, BS, CFS, Revenue Build, etc.) and the Model tab do not use vertical zone dividers — they rely on font color (green vs. black) to distinguish historical from projected.
+Build tabs (Profit Build, BS & CFS Build, Capital Allocation Build), the statements (IS, BS, CFS), the Historicals tabs, and the Model tab do not use vertical zone dividers — they rely on font color (green vs. black) to distinguish historical from projected.
 
 ---
 
@@ -408,11 +412,11 @@ Build tabs (IS, BS, CFS, Revenue Build, etc.) and the Model tab do not use verti
 
 | Category | Tabs | Color | Hex |
 |----------|------|-------|-----|
-| Primary output | Output, Returns, Model Tab, Consensus | Dark navy | #1C3553 |
+| Primary output | Output, Returns, Model Tab, Consensus, KPI Tracker | Dark navy | #1C3553 |
 | Financial statements | IS, BS, CFS | Sage green | #6B9E6F |
 | Session management | Task Tracker | Amber/gold | #D4963A |
-| Analytical build | Revenue Build, Costs Build, PP&E Build, Debt Build, WC Build, Capital Allocation Build, Tax Schedule, M&A Build | Steel blue | #5B8FA8 |
-| Data capture | Historical Data | Dark Teal | #436E71 |
+| Analytical build | Profit Build, BS & CFS Build, Capital Allocation Build | Steel blue | #5B8FA8 |
+| Data capture | Annual Historicals, Quarterly Historicals | Dark Teal | #436E71 |
 | Reference/external | BAMSEC, Tegus, broker sources, Data Pull, Data Pull (Values), Source Notes | Gray | #7C7F88 |
 
 ---
