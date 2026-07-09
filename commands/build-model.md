@@ -1,5 +1,5 @@
 ---
-description: Conductor for the FC financial model build. Runs phases 0-11, each in a fresh isolated subagent, checkpointing to the Task Tracker between stages. Pauses after each phase by default; pass "auto" to roll through, pausing only on failures.
+description: Conductor for the FC financial model build. Runs phases 0-12, each in a fresh isolated subagent, checkpointing to the Task Tracker between stages. Pauses after each phase by default; pass "auto" to roll through, pausing only on failures.
 argument-hint: "[auto]   (optional — run continuously, stop only on failures)"
 ---
 
@@ -36,16 +36,17 @@ Check the workbook for a **Task Tracker** tab.
   confirm with the user: ticker, fiscal year-end month, and which tab holds the source
   data. (Always pause for these inputs regardless of mode.)
 
-## Step 2 — Run each phase (loop from start phase through Phase 11)
+## Step 2 — Run each phase (loop from start phase through Phase 12)
 
 For each phase N, spawn ONE fresh subagent with this assignment:
 
 > You are executing Phase N of the FC model build.
 > 1. Load these skills, in order: `build-model`, `firm-formatting`, `build-model-phase-N`.
+>    For Phase 2 only, also load `kpi-tracker` (the phase's KPI Tracker step defers to it).
 > 2. Read the Task Tracker tab to establish current state; resume where it indicates.
 > 3. Execute Phase N exactly as its skill specifies — every preflight check, every step,
 >    all methodology. Obey every Core Rule: assumptions only on build tabs, never a plug,
->    dual views, lease rules, `_)` number padding, firm colors.
+>    single hardcode layer (Historicals tabs), lease rules, `_)` number padding, firm colors.
 > 4. Checkpoint continuously: mark each subtask COMPLETE on the Task Tracker as you finish
 >    it, per the Subtask Completion Protocol — do not batch these at the end.
 > 5. Verify the phase's Definition of Done by READING the actual cell values back out of
@@ -65,7 +66,7 @@ When the subagent returns:
 
 ## Step 3 — Completion
 
-After Phase 11 passes, report "Model build complete," list the phases run this session, and
+After Phase 12 passes, report "Model build complete," list the phases run this session, and
 restate the final integrity checks (BS Check = 0, CF Check = 0) as read back by the last
 phases. Do not declare completion before those values are confirmed.
 
@@ -73,7 +74,7 @@ phases. Do not declare completion before those values are confirmed.
 
 - One phase per subagent. Never run two phases in a single subagent — that defeats the
   context reset that makes this worth doing.
-- Never skip a phase. Order is strict: 0 → 1 → 2 → ... → 11.
+- Never skip a phase. Order is strict: 0 → 1 → 2 → ... → 12.
 - You (the conductor) never touch Excel cells directly. If tempted to "just fix" something,
   spawn a subagent to do it.
 - If a subagent dies or returns nothing, retry it once; if it fails again, STOP and report.
