@@ -85,6 +85,7 @@ If the user doesn't specify, ask.
 
 ### Self-Check Checklist (Run After Every Section)
 - [ ] Every row assigned to exactly one of the 5 tiers?
+- [ ] No numbered labels? (headers/subheaders/row labels carry no "1.", "#7" etc. prefixes)
 - [ ] All fills correct per tier? No stray fills?
 - [ ] All borders correct per tier? No double-bottom borders anywhere?
 - [ ] All text is Arial 10pt? No other fonts or sizes crept in?
@@ -153,6 +154,7 @@ Complete specification for all Excel model formatting. This is the authoritative
 
 ### Tier 1: Section Header
 - **Examples**: "Income Statement", "Balance Sheet", "Cash Flow Statement", "KPI Dashboard"
+- **Never numbered**: header labels carry no numbers or "#" prefixes — `Balance Sheet`, never `7. Balance Sheet`. Any section numbering in skill documentation is for reference only and must not be written into the workbook. Applies equally to Tier 2 subheaders and row labels.
 - **Fill**: #1C3553 (dark navy), full width (label column through all year columns)
 - **Text**: White (#FFFFFF), bold, Arial 10pt, left-aligned in label cell
 - **Border**: None

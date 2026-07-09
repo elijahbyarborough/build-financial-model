@@ -21,6 +21,8 @@ The **Annual Historicals** and **Quarterly Historicals** tabs are the model's ca
 
 Section order follows the analyst's update workflow: **press-release data first** (available the day of earnings), **filing data second** (10-Q/10-K, days later), provenance last. Both tabs share the same hierarchy. **Sections the company does not report are omitted entirely — never left as empty headers.**
 
+**The section numbers below are documentation references ONLY — never write them into the workbook.** The Excel header label is `Balance Sheet`, never `7. Balance Sheet` or `#7 Balance Sheet`; `Guidance`, never `6. Guidance`. The numbers exist so the skills can say "sections 1-6" unambiguously; on the tab, ordering alone carries the hierarchy. This applies to every section header, subheader, and row label anywhere in the model — labels are never numbered.
+
 | # | Section | Typical contents (capture as reported) |
 |---|---------|----------------------------------------|
 | 1 | **Income Statement** | Full IS face: every revenue line, cost line, subtotal, per-share figure as presented |
