@@ -77,7 +77,7 @@ Data Pull | Data Pull (Values) | [source tabs]
 The repo is a single-plugin Claude marketplace. In Claude Code:
 
 ```
-/plugin marketplace add elijahbyarborough/build-financial-model
+/plugin marketplace add elijahbyarborough/financial-modeling-tools
 /plugin install financial-modeling-tools@frist-capital
 ```
 
