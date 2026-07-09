@@ -22,18 +22,18 @@ Identify the current phase, then load ONLY that phase's skill. Do not load all p
 
 | Current Phase | Load This Skill |
 |---------------|----------------|
-| **New build** | `read_skill("build-model-phase-0")` |
+| **New build** | `read_skill("build-model-phase-00")` |
 | **Resuming** (Task Tracker exists) | Read Task Tracker -> identify current phase -> load that phase's skill below |
-| **Phase 1 -- Annual Historicals & Statements** | `read_skill("build-model-phase-1")` |
-| **Phase 2 -- Quarterly Historicals & KPI Tracker** | `read_skill("build-model-phase-2")` (also loads `kpi-tracker`) |
-| **Phase 3 -- Drivers** | `read_skill("build-model-phase-3")` |
-| **Phase 3.5 -- Driver Review** | `read_skill("build-model-phase-3")` (checkpoint section) |
-| **Phase 4 -- Forward Statements** | `read_skill("build-model-phase-4")` |
-| **Phase 5 -- Capital Allocation** | `read_skill("build-model-phase-5")` |
-| **Phase 6 -- Model Tab** | `read_skill("build-model-phase-6")` |
-| **Phase 7 -- Returns** | `read_skill("build-model-phase-7")` |
-| **Phase 8 -- Formatting** | `read_skill("build-model-phase-8")` |
-| **Phase 9 -- QC** | `read_skill("build-model-phase-9")` |
+| **Phase 1 -- Annual Historicals & Statements** | `read_skill("build-model-phase-01")` |
+| **Phase 2 -- Quarterly Historicals & KPI Tracker** | `read_skill("build-model-phase-02")` (also loads `kpi-tracker`) |
+| **Phase 3 -- Drivers** | `read_skill("build-model-phase-03")` |
+| **Phase 3.5 -- Driver Review** | `read_skill("build-model-phase-03")` (checkpoint section) |
+| **Phase 4 -- Forward Statements** | `read_skill("build-model-phase-04")` |
+| **Phase 5 -- Capital Allocation** | `read_skill("build-model-phase-05")` |
+| **Phase 6 -- Model Tab** | `read_skill("build-model-phase-06")` |
+| **Phase 7 -- Returns** | `read_skill("build-model-phase-07")` |
+| **Phase 8 -- Formatting** | `read_skill("build-model-phase-08")` |
+| **Phase 9 -- QC** | `read_skill("build-model-phase-09")` |
 | **Phase 10 -- Output** | `read_skill("build-model-phase-10")` |
 | **Phase 11 -- Consensus** | `read_skill("build-model-phase-11")` |
 | **Phase 12 -- Source Hygiene** | `read_skill("build-model-phase-12")` |

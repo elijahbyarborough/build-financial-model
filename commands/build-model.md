@@ -41,7 +41,8 @@ Check the workbook for a **Task Tracker** tab.
 For each phase N, spawn ONE fresh subagent with this assignment:
 
 > You are executing Phase N of the FC model build.
-> 1. Load these skills, in order: `build-model`, `firm-formatting`, `build-model-phase-N`.
+> 1. Load these skills, in order: `build-model`, `firm-formatting`, `build-model-phase-N`
+>    (N zero-padded to two digits for phases 0-9: `build-model-phase-04`, not `-4`).
 >    For Phase 2 only, also load `kpi-tracker` (the phase's KPI Tracker step defers to it).
 > 2. Read the Task Tracker tab to establish current state; resume where it indicates.
 > 3. Execute Phase N exactly as its skill specifies — every preflight check, every step,

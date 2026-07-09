@@ -35,16 +35,16 @@ The system is designed for **Claude for Excel** (the Excel add-in), where Claude
 
 | Phase | Skill | What It Does |
 |-------|-------|-------------|
-| 0 | `build-model-phase-0` | Setup — create all tabs, build Task Tracker, detect lease exposure, run Sector Discovery (incl. KPI taxonomy selection), set column structure |
-| 1 | `build-model-phase-1` | Annual Historicals & Statements — capture everything the company reports annually, then build Model-View-only IS/BS/CFS linking to it |
-| 2 | `build-model-phase-2` | Quarterly Historicals & KPI Tracker — capture ≥16 quarters of reported data, build the KPI Tracker tab (loads `kpi-tracker`) |
-| 3 | `build-model-phase-3` | Drivers — populate Profit Build (segments → EBITDA → tax) and BS & CFS Build (PP&E, WC, debt & cash, leases) with historicals, drivers, and forward projections |
-| 4 | `build-model-phase-4` | Forward Statements — assemble projected IS, BS, CFS from the build tabs |
-| 5 | `build-model-phase-5` | Capital Allocation — cash waterfall, buybacks, dividends, M&A program, share count (enables circular references) |
-| 6 | `build-model-phase-6` | Model Tab — consolidate all outputs: Platinum List Indicators, Summary IS, KPIs, Capital Allocation, Summary BS, Summary CFS |
-| 7 | `build-model-phase-7` | Returns — XIRR-based 5-year forward returns with EPS CAGR, dividend yield, M&A value, and multiple change decomposition |
-| 8 | `build-model-phase-8` | Formatting — apply firm-standard formatting to every tab, reorder tabs, apply tab colors |
-| 9 | `build-model-phase-9` | QC — run 5 quality gates (structural integrity, assumption review, Model Tab consistency, returns sanity, historicals integrity) |
+| 0 | `build-model-phase-00` | Setup — create all tabs, build Task Tracker, detect lease exposure, run Sector Discovery (incl. KPI taxonomy selection), set column structure |
+| 1 | `build-model-phase-01` | Annual Historicals & Statements — capture everything the company reports annually, then build Model-View-only IS/BS/CFS linking to it |
+| 2 | `build-model-phase-02` | Quarterly Historicals & KPI Tracker — capture ≥16 quarters of reported data, build the KPI Tracker tab (loads `kpi-tracker`) |
+| 3 | `build-model-phase-03` | Drivers — populate Profit Build (segments → EBITDA → tax) and BS & CFS Build (PP&E, WC, debt & cash, leases) with historicals, drivers, and forward projections |
+| 4 | `build-model-phase-04` | Forward Statements — assemble projected IS, BS, CFS from the build tabs |
+| 5 | `build-model-phase-05` | Capital Allocation — cash waterfall, buybacks, dividends, M&A program, share count (enables circular references) |
+| 6 | `build-model-phase-06` | Model Tab — consolidate all outputs: Platinum List Indicators, Summary IS, KPIs, Capital Allocation, Summary BS, Summary CFS |
+| 7 | `build-model-phase-07` | Returns — XIRR-based 5-year forward returns with EPS CAGR, dividend yield, M&A value, and multiple change decomposition |
+| 8 | `build-model-phase-08` | Formatting — apply firm-standard formatting to every tab, reorder tabs, apply tab colors |
+| 9 | `build-model-phase-09` | QC — run 5 quality gates (structural integrity, assumption review, Model Tab consistency, returns sanity, historicals integrity) |
 | 10 | `build-model-phase-10` | Output Tab — one-page investment summary with Returns Timeline, Summary IS, Key Drivers, and Capital Allocation |
 | 11 | `build-model-phase-11` | Consensus — model-vs-street comparison using stacked triplets (Model / Consensus / Delta) with conditional formatting |
 | 12 | `build-model-phase-12` | Source Hygiene — verify the single hardcode layer holds, freeze any stray source references, confirm portability |
@@ -87,7 +87,7 @@ In claude.ai: Settings → Customize → Plugins → Personal plugins → + → 
 
 1. Open the workbook in Excel with Claude for Excel active.
 2. Load the two foundation skills: `read_skill("build-model")` + `read_skill("firm-formatting")`
-3. Load Phase 0: `read_skill("build-model-phase-0")`
+3. Load Phase 0: `read_skill("build-model-phase-00")`
 4. Tell Claude to begin: *"Build a new model for [TICKER]. FYE is [month]. Source data is on the [tab name] tab."*
 
 ### Working Through Phases
@@ -137,23 +137,23 @@ skills/
   firm-formatting/          # Firm-wide formatting standards
   kpi-tracker/              # Quarterly KPI tracker (plugin-model + standalone modes)
   update-model/             # Post-earnings update (capture -> flip tracker -> verify)
-  build-model-phase-0/      # Setup
-  build-model-phase-1/      # Annual Historicals & Statements
+  build-model-phase-00/      # Setup
+  build-model-phase-01/      # Annual Historicals & Statements
     meth-historicals.md     #   (canonical) capture hierarchy + edge-case protocols
     meth-lease-full.md      #   (canonical) ASC 842 methodology
     meth-ppe-signs.md
-  build-model-phase-2/      # Quarterly Historicals & KPI Tracker
-  build-model-phase-3/      # Drivers
+  build-model-phase-02/      # Quarterly Historicals & KPI Tracker
+  build-model-phase-03/      # Drivers
     meth-revenue.md  meth-cost.md  meth-tax.md          # (canonical)
     meth-ppe-build.md  meth-working-capital.md  meth-debt-build.md
-  build-model-phase-4/      # Forward Statements
+  build-model-phase-04/      # Forward Statements
     meth-goodwill.md  meth-interest-debt.md             # (canonical)
-  build-model-phase-5/      # Capital Allocation
+  build-model-phase-05/      # Capital Allocation
     meth-share-count.md
-  build-model-phase-6/      # Model Tab
-  build-model-phase-7/      # Returns (meth-projection-length.md)
-  build-model-phase-8/      # Formatting
-  build-model-phase-9/      # QC
+  build-model-phase-06/      # Model Tab
+  build-model-phase-07/      # Returns (meth-projection-length.md)
+  build-model-phase-08/      # Formatting
+  build-model-phase-09/      # QC
   build-model-phase-10/     # Output Tab
   build-model-phase-11/     # Consensus
   build-model-phase-12/     # Source Hygiene
