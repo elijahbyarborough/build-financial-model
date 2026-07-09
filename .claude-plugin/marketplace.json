@@ -1,0 +1,11 @@
+{
+  "name": "frist-capital",
+  "owner": { "name": "Elijah Yarborough" },
+  "plugins": [
+    {
+      "name": "fc-model-builder",
+      "source": "./",
+      "description": "FC 12-phase financial model build system (skills 0-11 + firm formatting)."
+    }
+  ]
+}
