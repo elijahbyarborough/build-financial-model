@@ -1,20 +1,22 @@
-## Debt Build — Canonical Section Ordering
+<!-- CANONICAL: this file is canonical in build-model-phase-3. Copies elsewhere sync FROM here. -->
 
-The Debt Build tab follows a fixed section order. Every model uses this exact structure. Sections that don't apply (e.g., Finance Leases when HAS_FINANCE_LEASES = N) are omitted entirely — do not leave empty section headers.
+## BS & CFS Build — Debt & Cash Section and Lease Schedules
 
-Row numbers below are illustrative; actual rows depend on header placement (rows 1-5 are standard model headers). The key constraint is **section ordering**, not exact row numbers.
+The **Debt & Cash** section (Tier-2 header) follows a fixed sub-block order, and the two lease schedules are separate Tier-2 sections that follow it. Every model uses this exact structure. Sections/sub-blocks that don't apply (e.g., the Finance Lease Schedule when HAS_FINANCE_LEASES = N) are omitted entirely — do not leave empty headers.
 
-### Section 1: Debt Balances
+Row numbers below are illustrative; actual rows depend on header placement (rows 1-5 are standard model headers). The key constraint is **ordering**, not exact row numbers.
+
+### Sub-Block 1: Debt Balances
 
 | Row | Label | Source |
 |-----|-------|--------|
 | 1 | Short-Term Debt / Current Portion | `=BS!Short-Term Debt` (if applicable) |
 | 2 | Long-Term Debt | `=BS!Long-Term Debt` |
 | 3 | Total Debt | `=SUM(Short-Term + Long-Term)` |
-| 4 | Less: Cash & Equivalents | `=BS!Cash` |
+| 4 | Less: Cash & Equivalents | `=Cash & Equivalents row (Sub-Block 5)` |
 | 5 | Net Debt | `=Total Debt - Cash` |
 
-### Section 2: Debt Roll-Forward
+### Sub-Block 2: Debt Roll-Forward
 
 | Row | Label | Notes |
 |-----|-------|-------|
@@ -22,26 +24,26 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 | 2 | Debt Issuance / (Repayment), Net | Blue assumption in projections. Historicals = `Ending - Beginning`. |
 | 3 | Ending Total Debt | `=Beginning + Net Issuance` |
 
-### Section 3: Interest Expense
+### Sub-Block 3: Interest Expense
 
 | Row | Label | Notes |
 |-----|-------|-------|
-| 1 | Debt Interest Expense | Historicals from Tegus/source. Projections = `Debt Rate × Average Total Debt`. |
+| 1 | Debt Interest Expense | Historicals link to Annual Historicals. Projections = `Debt Rate × Average Total Debt`. |
 | 2 | Finance Lease Interest Expense | `=FL Schedule Interest row` (only if HAS_FINANCE_LEASES = Y) |
-| 3 | Total Interest Expense | `=SUM(Debt Int + FL Int)` — this is what the IS references. |
+| 3 | Total Interest Expense | `=SUM(Debt Int + FL Int)` — this is what the IS and the Profit Build Tax section reference. |
 | 4 | Debt Interest Rate | Historical implied = `Debt Int / Avg Total Debt`. Projection = blue assumption (carry forward). |
 | 5 | Finance Lease Interest Rate | `=FL Schedule Rate row` (only if HAS_FINANCE_LEASES = Y) |
 | 6 | Check (Total Int - Debt Int - FL Int) | Must be 0. Validation row. |
 
-### Section 4: Leverage Metrics
+### Sub-Block 4: Leverage Metrics
 
 | Row | Label | Notes |
 |-----|-------|-------|
-| 1 | EBITDA (from IS) | `=IS!EBITDA` |
-| 2 | Total Debt | Echo from Section 1 |
+| 1 | EBITDA | Green ref to the Profit Build Consolidated P&L Bridge |
+| 2 | Total Debt | Echo from Sub-Block 1 |
 | 3 | Total Finance Leases | `=FL Liability` (if applicable) |
 | 4 | Total Obligations | `=Total Debt + OL Liability + FL Liability` |
-| 5 | Net Debt | Echo from Section 1 |
+| 5 | Net Debt | Echo from Sub-Block 1 |
 | 6 | Net Obligations | `=Net Debt + OL Liability + FL Liability` |
 | 7 | Total Debt / EBITDA | Ratio |
 | 8 | Total Obligations / EBITDA | Ratio |
@@ -49,7 +51,16 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 | 10 | Net Obligations / EBITDA | Ratio |
 | 11 | Interest Coverage (EBITDA / Interest) | `=EBITDA / ABS(Total Interest)` |
 
-### Section 5: Operating Lease Schedule (only if HAS_OPERATING_LEASES = Y)
+### Sub-Block 5: Cash & Equivalents (Target Balance)
+
+| Row | Label | Notes |
+|-----|-------|-------|
+| 1 | Cash & Equivalents | Historicals: `=BS!Cash` (green). Projections: hardcoded target balance assumption — yellow bg + blue text + source comment (e.g., "management minimum cash guidance" or "held flat at current level"). |
+| 2 | Change in Cash (memo) | `=Current − Prior`. Italic. |
+
+**This row is the model's cash authority in projections.** The BS cash line pulls FROM this row in Phase 4 (`BS!Cash = Debt & Cash target`), and the Capital Allocation Build references the change in cash as a use/source in its waterfall (`Net Change in Cash = -(Target − Prior)`; an increase in the cash balance is a use of capital). CFS ending cash stays flow-based and is forced to this target by the Phase 5 buyback plug.
+
+### Operating Lease Schedule (own Tier-2 section; only if HAS_OPERATING_LEASES = Y)
 
 **Sub-section: Drivers**
 
@@ -70,7 +81,7 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 | 4 | Total Operating Lease Liability | `=Beginning + New - Lease Cost` |
 | 5 | Wtd Avg Discount Rate | Blue assumption (carry forward historical) |
 
-### Section 6: Finance Lease Schedule (only if HAS_FINANCE_LEASES = Y)
+### Finance Lease Schedule (own Tier-2 section; only if HAS_FINANCE_LEASES = Y)
 
 **Sub-section: Drivers**
 
@@ -121,9 +132,9 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 ### Key Rules
 
 - **Label prefixes**: Roll-forward addition rows use `"+ "` prefix (text-formatted cell), subtraction rows use `"- "` prefix. These are string literals, not formulas.
-- **Sign convention**: Interest expense and depreciation are stored as positive values in the Drivers section. They are negated with `=-` when they appear as subtractions in roll-forwards or on the IS/CFS.
+- **Sign convention**: Interest expense and depreciation are stored as positive values in the Drivers sub-sections. They are negated with `=-` when they appear as subtractions in roll-forwards or on the IS/CFS.
 - **Circular reference avoidance**: FL Interest = `Rate × Beginning Liability`, never average liability. This breaks the circular dependency (interest → payments → ending liability → average liability → interest).
-- **Historicals link to source** (Tegus Model tab, BS, IS). Projections use blue assumptions with source comments.
-- **Blank separator rows** between each major section (Debt Balances, Roll-Forward, Interest, Leverage, OL Schedule, FL Schedule).
-- **Section headers** (e.g., "Debt Build", "Operating Lease Schedule", "Finance Lease Schedule") are bold, left-aligned, in the label column.
-- **Sub-headers** (e.g., "Drivers", "Balance Sheet Items", "ROU Asset Roll-Forward") are bold italic, indented or left-aligned below their parent section.
+- **Historicals link to Annual Historicals** (Debt Detail and Lease Detail sections) or to same-workbook statement tabs where noted. Projections use blue assumptions with source comments.
+- **Blank separator rows** between each sub-block and section (Debt Balances, Roll-Forward, Interest, Leverage, Cash, OL Schedule, FL Schedule).
+- **Section headers** ("Debt & Cash", "Operating Lease Schedule", "Finance Lease Schedule") are Tier-2 subheaders per firm-formatting (#C2D5EB fill, bold).
+- **Sub-headers** (e.g., "Drivers", "Balance Sheet Items", "ROU Asset Roll-Forward") are bold italic below their parent section.

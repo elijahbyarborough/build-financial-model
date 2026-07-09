@@ -1,12 +1,12 @@
-# Phase 4 — Capital Allocation
+# Phase 5 — Capital Allocation
 
-**Prerequisite:** Phase 3 complete (IS/BS/CFS projected, all checks pass, CFO exists).
+**Prerequisite:** Phase 4 complete (IS/BS/CFS projected, all checks pass, CFO exists).
 
 ---
 
 ## What Happens in This Phase
 
-Build the Capital Allocation Build tab — a continuous cash waterfall from CFO through capital deployment, with full share count mechanics, M&A value tracking, dividend policy, and shareholder returns analysis. Then re-link every placeholder from Phase 3.
+Build the Capital Allocation Build tab — a continuous cash waterfall from CFO through capital deployment, with full share count mechanics, M&A value tracking, dividend policy, and shareholder returns analysis. Then re-link every placeholder from Phase 4.
 
 1. **Cash Available waterfall**: 10-line exhaustive bridge from CFO to deployable cash
 2. **Capital Deployment**: acquisitions, dividends, and buybacks (residual sweep)
@@ -15,7 +15,7 @@ Build the Capital Allocation Build tab — a continuous cash waterfall from CFO 
 5. **Share count roll-forward**: Buyback Price dynamics, buyback accretion, SBC dilution, TSM
 6. **Dividend Policy**: DPS-driven with growth assumption
 7. **Shareholder Returns**: FCF less SBC, % of NI allocation ratios
-8. **Re-link Phase 3 placeholders** (see below)
+8. **Re-link Phase 4 placeholders** (see below)
 9. **Waterfall check**: Cash Available + all deployment = 0
 
 ---
@@ -47,10 +47,10 @@ A 10-line exhaustive waterfall. Every CFS line item must flow through this block
 | 3 | Free Cash Flow | `=CFO + Capex` | `=CFO + Capex` | **Major total** (F2F2F2 fill, bold, Currency) |
 | 4 | Proceeds / Divestitures | `=CFS!Proceeds + CFS!Divestitures` | 0 (blue/yellow assumption) | Currency |
 | 5 | Other Investing | `=CFS!Other Investing` | 0 (blue/yellow assumption) | Number |
-| 6 | Net Debt Issuance / (Repayment) | `=CFS!Net LT Debt + CFS!Net ST Debt` | `='Debt Build'!Net Issuance row` | Currency |
+| 6 | Net Debt Issuance / (Repayment) | `=CFS!Net LT Debt + CFS!Net ST Debt` | `='BS & CFS Build'!Net Issuance row` | Currency |
 | 7 | Finance Lease Payments | `=CFS!Finance Lease row` | assumption (blue/yellow, e.g. -$7mm) | Number |
 | 8 | Other Financing | `=CFS!Other Financing row` | assumption (blue/yellow, e.g. -$2mm) | Number |
-| 9 | Net Change in Cash | `=-CFS!Net Change in Cash row` | `=-('Debt Build'!Ending Cash - 'Debt Build'!Beginning Cash)` | Number |
+| 9 | Net Change in Cash | `=-CFS!Net Change in Cash row` | `=-('BS & CFS Build'!Ending Cash - 'BS & CFS Build'!Beginning Cash)` | Number |
 | 10 | **Cash Available for Allocation** | `=FCF + rows 4-9` | `=FCF + rows 4-9` | **Major total** (F2F2F2 fill, bold, Currency) |
 
 ### Key Design Decisions
@@ -58,8 +58,8 @@ A 10-line exhaustive waterfall. Every CFS line item must flow through this block
 - FCF is an intermediate **major total** (F2F2F2 fill), not just a subtotal
 - Historical cells are ALL green font (cross-sheet pulls from CFS tab)
 - Projection assumptions for Proceeds/Divest, Other Investing, Finance Leases, and Other Financing are blue/yellow with source comments, defaulting to 0 or small amounts
-- **Net Debt Issuance in projections pulls from Debt Build** (NOT CFS tab) — the Debt Build is the driver tab
-- **Net Change in Cash in projections** = negative of the change in the cash balance on the Debt Build. When cash is assumed flat (common), this = 0 and all FCF flows to deployment. When cash increases, this is a use of cash that reduces available capital
+- **Net Debt Issuance in projections pulls from the BS & CFS Build (Debt & Cash section)** (NOT CFS tab) — the BS & CFS Build is the driver tab
+- **Net Change in Cash in projections** = negative of the change in the cash balance on the BS & CFS Build. When cash is assumed flat (common), this = 0 and all FCF flows to deployment. When cash increases, this is a use of cash that reduces available capital
 - Cash Available for Allocation = sum of ALL items (FCF + Proceeds + Other Investing + Net Debt + Finance Leases + Other Financing + Net Change in Cash)
 
 ---
@@ -79,14 +79,14 @@ Three lines in strict priority order, plus a check row:
 
 Buybacks are the residual sweep — they absorb all excess cash after acquisitions, dividends, and every other CF flow. However, do NOT compute buybacks from the Cap Alloc waterfall residual. The waterfall is informational only.
 
-Instead, compute buybacks as a direct plug against the Debt Build cash target. The formula enumerates every CF line item EXCEPT buybacks:
+Instead, compute buybacks as a direct plug against the BS & CFS Build cash target. The formula enumerates every CF line item EXCEPT buybacks:
 
 ```
 Buybacks = Target_Cash - Prior_End_Cash - CFO - CFI - SBC_Withholding - Dividends - Debt_Issuance - Debt_Repayment - Other_Financing - FX
 ```
 
 Where:
-- Target_Cash = Debt Build cash balance for the current period (e.g., `='Debt Build'!L10`)
+- Target_Cash = BS & CFS Build cash balance for the current period (e.g., `='BS & CFS Build'!L10`)
 - Prior_End_Cash = CFS ending cash from the prior period (e.g., `=CFS!K42`)
 - All other terms reference their respective CFS tab rows for the current period
 - Dividends references the Cap Alloc Build dividend row (which flows to CFS)
@@ -103,7 +103,7 @@ CFS End Cash must remain flow-based:
 - `CFS!Ending_Cash = Beginning_Cash + Net_Change_in_Cash`
 - `BS!Cash = CFS!Ending_Cash`
 
-Do NOT override CFS!Ending_Cash or CFS!Net_Change_in_Cash to pull directly from the Debt Build cash target. That disconnects the flow identity (Beg + Flows = End) and causes the BS to break. The buyback plug formula is what forces End Cash to equal the target — the CFS formulas themselves must stay structural.
+Do NOT override CFS!Ending_Cash or CFS!Net_Change_in_Cash to pull directly from the BS & CFS Build cash target. That disconnects the flow identity (Beg + Flows = End) and causes the BS to break. The buyback plug formula is what forces End Cash to equal the target — the CFS formulas themselves must stay structural.
 
 ---
 
@@ -227,10 +227,10 @@ Seven rows providing a comprehensive view of how earnings are allocated:
 | Capex | CFS tab | CFS tab |
 | Proceeds / Divestitures | CFS tab (Proceeds + Divestitures rows) | Assumption (default 0) |
 | Other Investing | CFS tab | Assumption (default 0) |
-| Net Debt Issuance | CFS tab (LT + ST debt rows) | Debt Build tab (net issuance row) |
+| Net Debt Issuance | CFS tab (LT + ST debt rows) | BS & CFS Build tab (net issuance row) |
 | Finance Lease Payments | CFS tab | Assumption |
 | Other Financing | CFS tab | Assumption |
-| Net Change in Cash | CFS tab (Net Change row, negated) | Debt Build tab (`-(ending cash - beginning cash)`) |
+| Net Change in Cash | CFS tab (Net Change row, negated) | BS & CFS Build tab (`-(ending cash - beginning cash)`) |
 | SBC | IS tab | IS tab (which itself pulls from the SBC assumption here via % * Revenue) |
 | Net Income (for % ratios) | IS tab | IS tab |
 | Revenue (for SBC %) | IS tab | IS tab |
@@ -248,7 +248,7 @@ This is a **ONE-WAY dependency**: Cap Alloc drives CFS for discretionary deploym
 ### Dependency Chain
 
 ```
-Debt Build (debt schedule, cash balance)
+BS & CFS Build — Debt & Cash section (debt schedule, cash balance)
     |
     v
 Capital Allocation Build (reads debt/cash, computes deployment)
@@ -281,7 +281,7 @@ Explicit sign conventions for the Capital Allocation Build tab:
 - `= Cash Available (positive) + All Deployment Items (all negative) = 0`
 
 **Buyback plug formula:**
-- Buybacks are computed as a direct plug against the Debt Build cash target (see Buyback Plug Formula above)
+- Buybacks are computed as a direct plug against the BS & CFS Build cash target (see Buyback Plug Formula above)
 - The result is negative (cash deployed outward), consistent with other deployment items
 
 ---
@@ -306,9 +306,9 @@ All assumptions on the Cap Alloc Build tab (blue text #0000FF, yellow background
 
 ---
 
-## Re-Link Phase 3 Placeholders (REQUIRED)
+## Re-Link Phase 4 Placeholders (REQUIRED)
 
-Phase 3 set dividends, acquisitions, share repurchases, and diluted share count to zero/flat placeholders. After completing all sections above, **replace every placeholder with a live formula linking to this tab**:
+Phase 4 set dividends, acquisitions, share repurchases, and diluted share count to zero/flat placeholders. After completing all sections above, **replace every placeholder with a live formula linking to this tab**:
 
 | Placeholder Location | Link To |
 |---------------------|---------|
@@ -316,22 +316,22 @@ Phase 3 set dividends, acquisitions, share repurchases, and diluted share count 
 | CFS tab → Share Repurchases (CFF) | `='Capital Allocation Build'!Gross Share Repurchases` (deployment row) |
 | CFS tab → Acquisitions (CFI) | `='Capital Allocation Build'!Acquisitions, Net` (deployment row) |
 | IS tab → Diluted Share Count | `='Capital Allocation Build'!Diluted Shares Outstanding` |
-| PP&E Build → Acquisitions row | `='Capital Allocation Build'!Acquisitions, Net` (sign-flipped) |
+| BS & CFS Build → PP&E section Acquisitions row | `='Capital Allocation Build'!Acquisitions, Net` (sign-flipped) |
 | BS tab → M&A Assets | Cumulative `ABS(acquisitions)` from Capital Allocation Build (= Cumulative M&A Invested Capital row) |
 
 ---
 
 ## Post-Wiring BS Equity Adjustment (MANDATORY)
 
-Phase 3 builds BS equity projection formulas with zero placeholders for buybacks and dividends. After Phase 4 wires these flows into the CFS tab, the BS equity formulas MUST be patched to reflect them. If you skip this step, the BS will not balance.
+Phase 4 builds BS equity projection formulas with zero placeholders for buybacks and dividends. After Phase 5 wires these flows into the CFS tab, the BS equity formulas MUST be patched to reflect them. If you skip this step, the BS will not balance.
 
 1. **Retained Earnings**: Add dividends (which reduce RE).
    `= Prior_RE + IS!Net_Income + CFS!Dividends_Paid`
-   Dividends are negative on the CFS tab, so adding them reduces RE. Phase 3's formula is `= Prior_RE + IS!Net_Income` which is incomplete once dividends are non-zero.
+   Dividends are negative on the CFS tab, so adding them reduces RE. Phase 4's formula is `= Prior_RE + IS!Net_Income` which is incomplete once dividends are non-zero.
 
 2. **Common Stock & APIC**: Add buybacks (which reduce equity via share retirements).
    `= Prior_CSAPIC - IS!SBC + CFS!SBC_Withholding + CFS!Buybacks`
-   Buybacks are negative on the CFS tab, so adding them reduces CSAPIC. Phase 3's formula is `= Prior_CSAPIC - IS!SBC + CFS!SBC_Withholding` which is incomplete once buybacks are non-zero.
+   Buybacks are negative on the CFS tab, so adding them reduces CSAPIC. Phase 4's formula is `= Prior_CSAPIC - IS!SBC + CFS!SBC_Withholding` which is incomplete once buybacks are non-zero.
 
    Note: Alphabet retires repurchased shares rather than holding treasury stock, so buybacks flow through CSAPIC. For companies that use treasury stock accounting, create a Treasury Stock line on the BS instead: `= Prior_Treasury - CFS!Buybacks` (treasury is a contra-equity, stored as negative).
 
@@ -347,7 +347,7 @@ After ALL wiring is complete (Cap Alloc → CFS → BS → IS), force a full rec
 2. CF Check = $0 all projection years
 3. NI Check = $0 all projection years (IS Net Income ties to CFS)
 4. Waterfall Check = $0 all projection years
-5. CFS End Cash = Debt Build Cash Target all projection years
+5. CFS End Cash = BS & CFS Build Cash Target all projection years
 6. CFS End Cash = BS Cash all projection years (cash tie-out)
 
 If any check fails, diagnose and fix before proceeding. The most common failure mode is: BS Check ≠ 0 because the BS equity formulas were not patched (see Post-Wiring BS Equity Adjustment above).
@@ -375,13 +375,13 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 
 ## Key Rules
 
-- **Buybacks are the residual plug** — computed directly against the Debt Build cash target, not from the waterfall. See Buyback Plug Formula.
-- **Acquisitions are a capital allocation decision** — budget lives HERE, PP&E Build pulls from this.
+- **Buybacks are the residual plug** — computed directly against the BS & CFS Build cash target, not from the waterfall. See Buyback Plug Formula.
+- **Acquisitions are a capital allocation decision** — budget lives HERE, the BS & CFS Build PP&E section pulls from this.
 - **Dividends are DPS-driven** — never a % of NI or FCF.
 - **Buyback Price is hardcoded per year** — drives both buyback share count and SBC dilution. Separate from the investor's Entry Price on the Returns tab.
 - **SBC section is the single source of truth** — feeds dilution and returns analysis.
 - **Post-wiring BS equity patch is mandatory** — RE and CSAPIC/Treasury must be updated after wiring. See Post-Wiring BS Equity Adjustment.
-- **CFS End Cash stays flow-based** — never override with a direct Debt Build pull. See CFS End Cash Architecture.
+- **CFS End Cash stays flow-based** — never override with a direct BS & CFS Build pull. See CFS End Cash Architecture.
 - **All 6 verification checks must pass.** See Verification Gate.
 - **No freeze panes.**
 
@@ -393,7 +393,7 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 
 2. **CFS End Cash diverges from cash target**: Buybacks were computed from the waterfall residual instead of the direct plug formula. A CFS line item (typically SBC withholding) was missing from the waterfall, causing buybacks to be oversized. See Buyback Plug Formula.
 
-3. **CFS End Cash ≠ BS Cash**: CFS!Ending_Cash was overridden to pull from Debt Build instead of being computed as Beg + Net Change. See CFS End Cash Architecture.
+3. **CFS End Cash ≠ BS Cash**: CFS!Ending_Cash was overridden to pull from BS & CFS Build instead of being computed as Beg + Net Change. See CFS End Cash Architecture.
 
 4. **Waterfall Check ≠ 0 but BS balances**: The informational waterfall is missing a line item. This is cosmetic if the buyback plug formula is used, but should still be fixed for auditability. Common missing items: SBC withholding, FX effects, finance lease principal payments.
 
@@ -414,7 +414,7 @@ TAB VERIFICATION -- Capital Allocation Build:
   CF Check (all periods): [0 or value]
   NI Check (all periods): [0 or value]
   Waterfall Check (all periods): [0 or value]
-  CFS End Cash = Debt Build Target (all periods): [match/mismatch]
+  CFS End Cash = BS & CFS Build Target (all periods): [match/mismatch]
   CFS End Cash = BS Cash (all periods): [match/mismatch]
 ```
 
@@ -422,18 +422,18 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 
 ---
 
-## Definition of Done (Phase 4)
+## Definition of Done (Phase 5)
 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
-1. **Task Tracker**: Every subtask row for Phase 4 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+1. **Task Tracker**: Every subtask row for Phase 5 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **All 6 verification checks pass** (BS=0, CF=0, NI=0, Waterfall=0, CFS End Cash=Target, CFS End Cash=BS Cash). Read and report actual values for every projection period.
-3. **Phase 3 placeholders re-linked**: Dividends, Buybacks, Acquisitions, Diluted Shares all reference Capital Allocation Build.
+3. **Phase 4 placeholders re-linked**: Dividends, Buybacks, Acquisitions, Diluted Shares all reference Capital Allocation Build.
 4. **Post-wiring BS equity adjustment** done: RE includes dividends, CSAPIC/Treasury includes buybacks.
 5. **Iterative calculation enabled** and circular refs resolving.
 6. **Tab Completion Verification** output pasted.
-7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-5".
+7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-6".
 
-If you write "Phase 4 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+If you write "Phase 5 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 
 **STOP. Report status. Wait for "continue."**

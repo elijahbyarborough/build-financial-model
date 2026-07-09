@@ -18,9 +18,9 @@ Every Balance Sheet must include an "M&A Assets" row in Noncurrent Assets, posit
 - **Historical periods**: 0 (or link to reported goodwill from acquisitions if available)
 - **Projection periods**: Pull directly from the Capital Allocation Build's **Cumulative M&A Invested Capital** row:
   - `='Capital Allocation Build'!Cumulative_M&A_Invested_Capital` for each projection year
-  - This is the running total of all acquisition spend (Phase 4, Section 3, Row 3)
+  - This is the running total of all acquisition spend (Phase 5, Section 3, Row 3)
 - This line offsets the cash outflow from acquisitions on the CFS/BS so the balance sheet stays balanced without touching Goodwill or the organic model
 - **Total Assets SUM range must include this row**
-- The Phase 4 Re-Link step explicitly maps: `BS!M&A Assets = Cap Alloc!Cumulative M&A Invested Capital`
+- The Phase 5 Re-Link step explicitly maps: `BS!M&A Assets = Cap Alloc!Cumulative M&A Invested Capital`
 
 ---

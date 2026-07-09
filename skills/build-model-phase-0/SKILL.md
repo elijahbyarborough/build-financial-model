@@ -1,7 +1,7 @@
 ---
 name: build-model-phase-0
 description: |
-  Phase 0 -- Setup. Ingests source data, creates tabs, builds the Task Tracker, and detects lease exposure.
+  Phase 0 -- Setup. Ingests source data, creates the v2 tab set (including Annual/Quarterly Historicals and KPI Tracker), builds the Task Tracker, runs sector discovery (incl. KPI taxonomy), and detects lease exposure.
   Load after `build-model` and `firm-formatting` are already in context.
 ---
 

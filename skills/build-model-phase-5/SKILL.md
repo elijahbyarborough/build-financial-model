@@ -1,18 +1,18 @@
 ---
-name: build-model-phase-4
+name: build-model-phase-5
 description: |
-  Phase 4 -- Capital Allocation. Builds the capital allocation waterfall, debt build, share count, and buyback plug.
+  Phase 5 -- Capital Allocation. Builds the capital allocation waterfall, share count, and buyback plug on the Capital Allocation Build tab.
   Load after `build-model` and `firm-formatting` are already in context.
 ---
 
-# Phase 4 -- Capital Allocation
+# Phase 5 -- Capital Allocation
 
 ## Preflight
 
 **PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
 
 ```
-Phase: 4 (Capital Allocation)
+Phase: 5 (Capital Allocation)
 Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
 Task Tracker read: [check/x] -- current phase per tracker: [phase name]
 Firm-formatting color check:
@@ -22,7 +22,7 @@ Firm-formatting color check:
   Subheader     = #C2D5EB [check/x]
   Major total   = #F2F2F2 [check/x]
 Iterative calculation enabled in Excel: [check/x]
-Phase 3 integrity checks:
+Phase 4 integrity checks:
   BS Check = [0 or value]
   CF Check = [0 or value]
 Capital allocation placeholders in place on CFS: [check/x]
@@ -32,7 +32,7 @@ Do not proceed until every field is filled. If any x or blank, stop and load/rea
 
 ## Phase Instructions
 
-See `phase-4-capital-allocation.md` for the complete phase reference.
+See `phase-5-capital-allocation.md` for the complete phase reference.
 
 ## Methodology References
 
@@ -44,4 +44,4 @@ See `phase-4-capital-allocation.md` for the complete phase reference.
 1. Run Tab Completion Verification (see phase instructions)
 2. Verify Definition of Done (see phase instructions)
 3. Clear context (start new conversation)
-4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-5`
+4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-6`

@@ -1,99 +1,70 @@
-# Phase 3 — Forward Statement Build (Model View Projections)
+# Phase 4 — Forward Statement Build (Model View Projections)
 
-**Prerequisite:** Phase 2 complete (all build tabs populated with historicals + projections, Driver Review passed).
+**Prerequisite:** Phase 3 complete (Profit Build and BS & CFS Build populated with historicals + drivers, Driver Review passed).
 
 ---
 
 ## What Happens in This Phase
 
-Project the Model View forward on the IS, BS, and CFS tabs by linking to the build tabs populated in Phase 2. The Reported View stays historical-only — its projection columns remain blank.
+Project the Model View forward on the IS, BS, and CFS tabs by linking to the two build tabs populated in Phase 3. The statements carry the Model View only — historical columns link to Annual Historicals (done in Phase 1); this phase fills the projection columns.
 
-1. **IS Model View projections**: Pull revenue from Revenue Build, costs from Costs Build, D&A from PP&E Build, interest from Debt Build, tax from Tax Schedule. Compute EBITDA, EBIT, EBT, NI, EPS, margins.
-2. **BS Model View projections**: Pull PP&E from PP&E Build, debt from Debt Build, WC items from Working Capital Build. Compute totals and BS Check.
-3. **CFS Model View projections**: Pull NI from IS, D&A from PP&E Build, WC deltas from WC Build, noncurrent operating deltas from WC Build, DTL changes from Tax Schedule, capex from PP&E Build, debt changes from Debt Build. Compute CFO, CFI, CFF, ending cash, CF Check.
+1. **IS projections**: Pull revenue, costs, and EBITDA detail from the Profit Build. Pull D&A from the BS & CFS Build (PP&E & Capex section). Pull interest from the BS & CFS Build (Debt & Cash section). Pull tax from the Profit Build (Tax section). Compute EBITDA, EBIT, EBT, NI, EPS, margins.
+2. **BS projections**: Pull PP&E from the BS & CFS Build (PP&E & Capex section), debt and cash from the BS & CFS Build (Debt & Cash section), WC items from the BS & CFS Build (Working Capital section). Compute totals and BS Check.
+3. **CFS projections**: Pull NI from IS, D&A from the BS & CFS Build, WC deltas and noncurrent operating deltas from the BS & CFS Build (Working Capital section), DTL changes from the Profit Build (Tax section), capex from the BS & CFS Build, debt changes from the BS & CFS Build. Compute CFO, CFI, CFF, ending cash, CF Check.
 
 ---
 
-### Build Order (Updated for Leases)
+### Step 0 — Verify Build Tabs Complete (Phase 3 Owns Them)
 
-When lease flags are set on the Task Tracker (`HAS_OPERATING_LEASES=Y` or `HAS_FINANCE_LEASES=Y`), the build order is:
+**Phase 3 built ALL forward projections on the build tabs** — revenue/costs, Debt & Cash (incl. lease schedules), PP&E & Capex (incl. FL adjustments), Working Capital, and Tax. This phase does NOT build or modify build-tab projections; it assembles the statements from them. Full build-tab methodology lives in Phase 3's meth files (`meth-debt-build.md`, `meth-ppe-build.md`, `meth-working-capital.md`, `meth-tax.md`, and `meth-lease-full.md` here).
 
-1. Revenue Build
-2. Costs Build (including operating lease cost as an OpEx line item)
-3. **Debt Build -- including Operating Lease Schedule and Finance Lease Schedule projections**
-4. PP&E Build (requires Debt Build FL data if `FL_IN_PPE=Y`)
-5. Working Capital Build (requires Debt Build lease balances, uses Lease BS Map for disaggregation)
-6. Tax Schedule
-7. Income Statement assembly
-8. Balance Sheet assembly
-9. Cash Flow Statement assembly
+Before assembling any statement, read and confirm on the build tabs (stop and return to Phase 3 if any fails):
 
-**Dependency**: Debt Build (step 3) must complete before PP&E Build (step 4) starts, because PP&E Build needs:
-- New FL additions for the "Other" capex line (if `FL_IN_PPE=Y`)
-- FL depreciation amount to exclude from the D&A % driver calculation (if `FL_IN_PPE=Y`)
+1. Profit Build: every segment section projected through the terminal year; Consolidated P&L Bridge totals = SUM of segments
+2. BS & CFS Build: Debt & Cash projected (incl. OL/FL schedules when lease flags set); PP&E & Capex projected (FL adjustments applied if `FL_IN_PPE=Y`); Working Capital projected for every mapped BS item
+3. Profit Build Tax section: projected, with the Memo Pre-Tax Income row (= EBIT − Total Interest) populated
+
+**Assembly order:** Income Statement → Balance Sheet → Cash Flow Statement.
 
 ---
 
 ## The CFS is the BS Bridge
 
-In projections, every CFS line item is a delta from a BS item or build tab. The assembly rule:
+In projections, every CFS line item is a delta from a BS item or a build-tab section. The assembly rule:
 
-- **CFO non-cash items** = deltas from build tabs (ΔWC from WC Build, ΔDTL from Tax Schedule, ΔARO from WC Build noncurrent section, D&A from PP&E Build)
-- **CFI** = negated capex from PP&E Build + acquisitions (set to 0 — placeholder for Phase 4)
-- **CFF** = debt changes from Debt Build + dividends (0 placeholder) + buybacks (0 placeholder) — Phase 4 will re-link these
+- **CFO non-cash items** = deltas from build-tab sections (ΔWC from the Working Capital section, ΔDTL from the Profit Build Tax section, ΔARO from the Working Capital section's noncurrent items, D&A from the PP&E & Capex section)
+- **CFI** = negated capex from the PP&E & Capex section + acquisitions (set to 0 — placeholder for Phase 5)
+- **CFF** = debt changes from the Debt & Cash section + dividends (0 placeholder) + buybacks (0 placeholder) — Phase 5 will re-link these
 - **Cash = plug** (beginning + all flows = ending)
 
 **If any BS item changes in projections and has no CF flow, the model is broken.** Consult the BS→CF mapping from Phase 1. Every mapped item must have its delta flowing through the CFS.
 
 ---
 
-### Operating Lease Projections (Debt Build)
+### Lease & PP&E Projection Verification (built in Phase 3 — verify, don't rebuild)
 
-Project the operating lease schedule using drivers from Phase 2:
-- **New Operating Leases**: Flat dollar assumption (yellow/blue), hardcoded per year
-- **Lease Cost**: `= Prior Year Total Liability / Implied Useful Life`
-- **ROU Asset**: `= Prior ROU + New Leases - Lease Cost`
-- **Total Liability**: `= Prior Liability + New Leases - Lease Cost`
-- **Current Liability**: Formula-driven: `=MIN(Total_Liability, Next_Year_Lease_Cost)` or use historical current/total ratio
-- **Noncurrent Liability**: `= Total - Current`
+When lease flags are set, spot-verify the Phase 3 build-tab projections before wiring statements (methodology: `meth-lease-full.md` here, `meth-ppe-build.md` / `meth-debt-build.md` in Phase 3):
 
-### Finance Lease Projections (Debt Build)
-
-Project the finance lease schedule:
-- **New FL Additions**: Flat dollar assumption (yellow/blue). Set to zero if winding down.
-- **Gross ROU**: `= Prior Gross + New Additions`
-- **Depreciation**: `= Prior Net ROU / Useful Life` (straight-line)
-- **Net ROU**: `= Prior Net - Depreciation` (or via accumulated depreciation roll)
-- **Interest**: `= Beginning Liability * Implicit Rate`
-- **Cash Payment (total)**: `= Depreciation + Interest`
-- **Liability**: `= Prior Liability + New Additions + Interest - Cash Payment`
-- **Current / Noncurrent**: Formula-driven, same approach as operating leases
-
-### PP&E Build -- Finance Lease Adjustments
-
-**Only applies when `FL_IN_PPE = Y`.**
-
-- **"Other" Capex line**: `='Debt Build'!New_FL_Additions` -- pulls new finance lease additions as a non-cash capex item
-- **D&A % of Revenue driver (CRITICAL)**: The historical D&A-as-%-of-revenue must be calculated EXCLUDING finance lease depreciation:
-  D&A % = (Total D&A - FL Depreciation) / Revenue
-  If FL depreciation is not excluded, the driver overstates D&A in projection years.
-- **D&A allocation in projections**: Total projected D&A from the % driver represents operating D&A only. Finance lease depreciation is added separately from the Debt Build:
-  Total D&A on PP&E Build = Operating D&A (from % driver) + FL Depreciation (from Debt Build)
-  Or equivalently, if using segment allocation: each segment's D&A is computed from the ex-FL D&A pool, and FL depreciation is shown as a separate line.
-
-**When `FL_IN_PPE = N`**: No adjustments needed. PP&E Build is clean. FL depreciation lives entirely on the Debt Build and is pulled separately to the CFS tab.
+- OL schedule: ROU and Total Liability roll-forwards formula-driven; Current Liability formula-driven (never a static carry-forward)
+- FL schedule: Interest = Beginning Liability × Implicit Rate (beginning, never average); Cash Payment = Depreciation + Interest; Liability roll ties
+- PP&E & Capex if `FL_IN_PPE=Y`: "Other" capex references New FL Additions (same tab); D&A % driver EXCLUDES FL depreciation historically; projected Total D&A = Operating D&A + FL Depreciation
+- If `FL_IN_PPE=N`: PP&E section clean; FL depreciation pulled separately to the CFS from the Finance Lease Schedule
 
 ---
 
-## Reported View: Historical Only
+## Reconciliation Checks: Historical Only
 
-The Reported View on IS, BS, and CFS contains historical periods only. Projection columns are blank. The Reported View's job is auditability — proving the model ties to GAAP for the periods where GAAP data exists.
+The statements carry the Model View only. The as-reported record lives on the Annual Historicals tab, so the reconciliation checks prove the Model View consolidation lost nothing:
 
-The reconciliation check (Model View Total = Reported View Total) applies to **historical periods only**, since the Reported View has no projections to compare against.
+- **IS**: Model NI = Annual Historicals reported NI
+- **BS**: Model Total Assets = Annual Historicals reported Total Assets
+- **CFS**: Model Ending Cash = Annual Historicals reported ending cash
+
+These checks apply to **historical periods only** — Annual Historicals has no projections to compare against. All must equal $0 difference.
 
 ---
 
-## Capital Allocation Placeholders (Phase 4 Will Overwrite)
+## Capital Allocation Placeholders (Phase 5 Will Overwrite)
 
 This phase uses zero/flat placeholders for all items that depend on the Capital Allocation Build, which does not exist yet:
 
@@ -102,40 +73,36 @@ This phase uses zero/flat placeholders for all items that depend on the Capital 
 - **Acquisitions (CFI)**: set to 0 in all projection years
 - **Diluted Share Count**: hold flat at most recent historical diluted share count
 
-Phase 4 (Capital Allocation) will overwrite all of these with live formulas linking to the Capital Allocation Build tab. EPS, CFS, and BS update automatically once the links are in place.
+Phase 5 (Capital Allocation) will overwrite all of these with live formulas linking to the Capital Allocation Build tab. EPS, CFS, and BS update automatically once the links are in place.
 
 ---
 
-### IS -- Lease Expense Flows
+### IS — Lease Expense Flows
 
 - **Operating lease cost**: Flows to operating expenses (inside SG&A, COGS, or as a separate "Lease Expense" line, matching the company's reported presentation)
-- **Finance lease depreciation**: Included in total D&A expense. If `FL_IN_PPE=Y`, this is already inside PP&E Build D&A. If `FL_IN_PPE=N`, pull separately: `Total IS D&A = PP&E Build D&A + Debt Build FL Depreciation`
-- **Finance lease interest**: Included in total interest expense. Pull from Debt Build: `='Debt Build'!FL_Interest`. Add to any other interest (term loan, revolver, etc.) for total interest expense.
+- **Finance lease depreciation**: Included in total D&A expense. If `FL_IN_PPE=Y`, this is already inside the PP&E & Capex section's D&A. If `FL_IN_PPE=N`, pull separately: `Total IS D&A = PP&E section D&A + FL Depreciation from the Finance Lease Schedule`
+- **Finance lease interest**: Included in total interest expense. Pull from the Debt & Cash section: `='BS & CFS Build'!FL_Interest`. Add to any other interest (term loan, revolver, etc.) for total interest expense.
 
-### BS -- Lease Line Items
+### BS — Lease Line Items
 
 **Assets**:
-- **Operating Lease ROU Assets**: From WC Build (sourced from Debt Build OL ROU). Placed per
-  Lease BS Map OL_ROU_ASSET_NC.
-- **Finance Lease ROU Assets**: If FL_IN_PPE=Y, already inside Net PP&E. If FL_IN_PPE=N,
-  placed per Lease BS Map FL_ROU_ASSET_NC (own line or through WC Build into host line).
-- **Net PP&E**: From PP&E Build. Includes FL ROU only if `FL_IN_PPE=Y`.
+- **Operating Lease ROU Assets**: From the Working Capital section (sourced from the Operating Lease Schedule on the same tab). Placed per Lease BS Map OL_ROU_ASSET_NC.
+- **Finance Lease ROU Assets**: If FL_IN_PPE=Y, already inside Net PP&E. If FL_IN_PPE=N, placed per Lease BS Map FL_ROU_ASSET_NC (own line or through the Working Capital section into host line).
+- **Net PP&E**: From the PP&E & Capex section. Includes FL ROU only if `FL_IN_PPE=Y`.
 
 **Liabilities**:
-- **Finance Lease Current Liability**: Per Lease BS Map FL_LIAB_C — either its own BS line or
-  embedded in the mapped host line via WC Build disaggregation.
-- **Finance Lease Noncurrent Liability**: Per Lease BS Map FL_LIAB_NC — either its own BS line
-  or embedded in the mapped host line via WC Build disaggregation.
-- **Operating Lease Liabilities**: Per Lease BS Map OL_LIAB_C and OL_LIAB_NC — typically their own dedicated BS lines, sourced from WC Build (which pulls from Debt Build).
+- **Finance Lease Current Liability**: Per Lease BS Map FL_LIAB_C — either its own BS line or embedded in the mapped host line via Working Capital section disaggregation.
+- **Finance Lease Noncurrent Liability**: Per Lease BS Map FL_LIAB_NC — either its own BS line or embedded in the mapped host line via Working Capital section disaggregation.
+- **Operating Lease Liabilities**: Per Lease BS Map OL_LIAB_C and OL_LIAB_NC — typically their own dedicated BS lines, sourced from the Working Capital section (which pulls from the Operating Lease Schedule).
 
-### CFS -- Lease Cash Flow Rules (HARD STOP)
+### CFS — Lease Cash Flow Rules (HARD STOP)
 
 **CF from Operating Activities**:
-- **D&A add-back**: Includes finance lease depreciation. If `FL_IN_PPE=Y`, this is automatic (FL dep is inside PP&E Build D&A). If `FL_IN_PPE=N`, pull separately and add: `D&A addback = -'PP&E Build'!Total_D&A + -'Debt Build'!FL_Depreciation`.
-- **Working capital changes**: Include the net change in operating lease balances (Change in OL ROU - Change in OL Liability). Also include changes in FL current/noncurrent liabilities as they flow through the WC Build's noncurrent operating items.
+- **D&A add-back**: Includes finance lease depreciation. If `FL_IN_PPE=Y`, this is automatic (FL dep is inside the PP&E & Capex section's D&A). If `FL_IN_PPE=N`, pull separately and add: `D&A addback = -'BS & CFS Build'!Total_D&A + -'BS & CFS Build'!FL_Depreciation`.
+- **Working capital changes**: Include the net change in operating lease balances (Change in OL ROU - Change in OL Liability). Also include changes in FL current/noncurrent liabilities as they flow through the Working Capital section's noncurrent operating items.
 
 **CF from Financing Activities**:
-- **Finance lease payment**: `= -'Debt Build'!FL_Depreciation` (the DEPRECIATION row, which equals the principal portion)
+- **Finance lease payment**: `= -'BS & CFS Build'!FL_Depreciation` (the DEPRECIATION row, which equals the principal portion)
 - **NEVER pull from the total payment row** (Depreciation + Interest). The interest component is already inside Net Income, which flows through CFO. Pulling total payment double-counts interest as a cash outflow.
 - **This is the #1 lease modeling error.** If the BS check is non-zero by approximately the amount of FL interest expense, check this line first.
 
@@ -154,6 +121,7 @@ All checks must pass for **every period** (historical AND projected):
 2. **CF Check = $0**: Beginning Cash + all CF - Ending Cash = 0
 3. **NI ties IS→CFS**: Net Income on IS = Net Income on CFS
 4. **RE roll-forward**: Beginning RE + NI - Dividends = Ending RE
+5. **EBT wiring check**: IS EBT = Profit Build Memo Pre-Tax Income (the Tax section computed tax off its memo EBT; if the assembled IS EBT diverges, the tax line is stale — re-check interest wiring)
 
 If any check fails in projections, the most likely cause is a BS item changing without a corresponding CF flow. Use the BS→CF mapping to diagnose — find the BS line that changed and trace whether its delta appears on the CFS.
 
@@ -179,20 +147,21 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 
 ---
 
-## Definition of Done (Phase 3)
+## Definition of Done (Phase 4)
 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
-1. **Task Tracker**: Every subtask row for Phase 3 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+1. **Task Tracker**: Every subtask row for Phase 4 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **BS Check = 0** for ALL periods (historical AND projected). Read and report actual values.
 3. **CF Check = 0** for ALL periods (historical AND projected). Read and report actual values.
 4. **NI ties IS→CFS** for all projection periods. Read both cells and confirm match.
 5. **RE roll-forward** holds for all projection periods.
-6. **All build tab deltas wired to CFS**: every BS item with a build tab has its delta flowing through CFS.
-7. **Capital allocation placeholders** in place (dividends=0, buybacks=0, acquisitions=0, shares=flat).
+6. **All build-tab deltas wired to CFS**: every BS item with a build-tab section has its delta flowing through CFS.
+7. **EBT wiring check passes**: IS EBT = Profit Build Memo Pre-Tax Income for all projection periods. Read both rows and confirm.
+8. **Capital allocation placeholders** in place (dividends=0, buybacks=0, acquisitions=0, shares=flat).
 8. **Tab Completion Verification** output pasted for IS, BS, CFS.
-9. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-4".
+9. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-5".
 
-If you write "Phase 3 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+If you write "Phase 4 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 
 **STOP. Report status. Wait for "continue."**

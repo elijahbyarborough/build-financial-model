@@ -1,18 +1,18 @@
 ---
-name: build-model-phase-6
+name: build-model-phase-7
 description: |
-  Phase 6 -- Returns. Builds the Returns tab with entry/exit pricing, XIRR, and multiple-based returns.
+  Phase 7 -- Returns. Builds the Returns tab with entry/exit pricing, XIRR, and multiple-based returns.
   Load after `build-model` and `firm-formatting` are already in context.
 ---
 
-# Phase 6 -- Returns
+# Phase 7 -- Returns
 
 ## Preflight
 
 **PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
 
 ```
-Phase: 6 (Returns)
+Phase: 7 (Returns)
 Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
 Task Tracker read: [check/x] -- current phase per tracker: [phase name]
 Firm-formatting color check:
@@ -29,7 +29,7 @@ Do not proceed until every field is filled. If any x or blank, stop and load/rea
 
 ## Phase Instructions
 
-See `phase-6-returns.md` for the complete phase reference.
+See `phase-7-returns.md` for the complete phase reference.
 
 ## Methodology References
 
@@ -40,4 +40,4 @@ See `phase-6-returns.md` for the complete phase reference.
 1. Run Tab Completion Verification (see phase instructions)
 2. Verify Definition of Done (see phase instructions)
 3. Clear context (start new conversation)
-4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-7`
+4. Next phase: load `build-model` + `firm-formatting` + `build-model-phase-8`

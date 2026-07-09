@@ -1,6 +1,6 @@
-# Phase 6 — Returns
+# Phase 7 — Returns
 
-**Prerequisite:** Phase 5 complete (Model tab populated).
+**Prerequisite:** Phase 6 complete (Model tab populated).
 
 ---
 
@@ -362,19 +362,19 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 
 ---
 
-## Definition of Done (Phase 6)
+## Definition of Done (Phase 7)
 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
-1. **Task Tracker**: Every subtask row for Phase 6 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+1. **Task Tracker**: Every subtask row for Phase 7 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **XIRR returns a plausible value** (not #VALUE!, not blank). Read and report the IRR.
 3. **IRR decomposition** has all 4 components populated (EPS CAGR, M&A Value, Dividend Yield, Multiple Change).
 4. **Entry P/E is implied** (calculated, black font) -- NOT a blue/yellow assumption.
 5. **Exit P/E is a blue/yellow assumption** with source comment.
 6. **Only 3 hardcoded assumptions** on tab: Entry Price, Entry Date, Exit P/E.
 7. **Tab Completion Verification** output pasted.
-8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-7".
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-8".
 
-If you write "Phase 6 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+If you write "Phase 7 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 
 **STOP. Report status. Wait for "continue."**

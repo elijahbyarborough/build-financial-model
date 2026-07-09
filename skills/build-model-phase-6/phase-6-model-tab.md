@@ -1,6 +1,6 @@
-# Phase 5 — Model Tab
+# Phase 6 — Model Tab
 
-**Prerequisite:** Phase 4 complete (capital allocation built, share count finalized, IS has final diluted EPS).
+**Prerequisite:** Phase 5 complete (capital allocation built, share count finalized, IS has final diluted EPS).
 
 ---
 
@@ -97,13 +97,13 @@ Scan the IS tab and pull every major line item, maintaining the IS tab's own ord
 
 ## Section 3: Key Drivers & KPIs
 
-Scan ALL build tabs (revenue builds, segment builds, etc.) and identify the key operating drivers. Each segment or business line gets its own Tier 2 subheader.
+Scan the Profit Build tab and identify the key operating drivers. Each segment section on the Profit Build gets its own Tier 2 subheader here.
 
 ### How to Determine What to Pull
 
-- Look at every Build tab in the model (anything with "Build" in the name that drives revenue or segment economics)
-- For each segment/build, identify: volume/quantity metrics, pricing metrics, growth rates, segment revenue, segment profitability, unit economics, margins
-- Mirror those metrics here in the same order they appear on the build tab
+- Look at every segment section on the Profit Build tab (the tab that drives revenue and segment economics)
+- For each segment section, identify: volume/quantity metrics, pricing metrics, growth rates, segment revenue, segment profitability, unit economics, margins
+- Mirror those metrics here in the same order they appear on the Profit Build
 
 ### Structural Pattern per Segment
 
@@ -124,8 +124,8 @@ Scan ALL build tabs (revenue builds, segment builds, etc.) and identify the key 
   - **Retail**: Store count, same-store sales, revenue per sqft, average ticket
   - **Financial services**: AUM, fee rate, NIM, loan growth
   - **Healthcare**: Patient volumes, reimbursement rates, payor mix
-- The skill should identify what the Build tabs track and mirror it — don't force metrics that don't exist in the model
-- If there's a Consolidation tab that aggregates segments, its totals can appear after all segment blocks
+- The skill should identify what the Profit Build tracks and mirror it — don't force metrics that don't exist in the model
+- The Profit Build's consolidated P&L bridge totals can appear after all segment blocks
 - Blank spacer row between segments
 
 ---
@@ -156,7 +156,7 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 | | *Payout %* | `=ABS(Dividends + Buybacks) / IS!Net Income` | 0.0%, italic |
 | | *Acquisition-Adjusted Payout %* | `=ABS(All Deployed) / IS!Net Income` | 0.0%, italic |
 | | (blank spacer) | | |
-| | Net Debt / EBITDA | `='Debt Build'!Net Debt / EBITDA` | 0.0"x" |
+| | Net Debt / EBITDA | `='BS & CFS Build'!Net Debt / EBITDA` | 0.0"x" |
 | | Interest Coverage | `=EBITDA / ABS(IS!Interest Expense)` | 0.0"x" |
 | | *Acquisition IRR* | `='Capital Allocation Build'!row26` | `0.0%_);(0.0%);"-"`, italic |
 
@@ -192,8 +192,8 @@ This is the ONE section with original calculations. The formulas are computed he
 | Row | Label | Formula | Format |
 |-----|-------|---------|--------|
 | | Total Equity | `=BS!Total Equity` | Currency, green font |
-| | Total Debt | `='Debt Build'!Total Debt` | Currency, green font |
-| | Cash & Equivalents | `=-'Debt Build'!Cash` | Number (negated — subtracted from IC) |
+| | Total Debt | `='BS & CFS Build'!Total Debt` | Currency, green font |
+| | Cash & Equivalents | `=-'BS & CFS Build'!Cash` | Number (negated — subtracted from IC) |
 | | **Invested Capital** | `=Equity + Debt - Cash` | **Major Total** (F2F2F2 fill, bold, Currency) |
 | | *Average Invested Capital* | `=(Current IC + Prior IC) / 2` | Currency, italic |
 | | **ROIC** | `=IF(Avg IC=0, "", NOPAT / Avg IC)` | 0.0%, bold |
@@ -297,9 +297,9 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 | Section | Source Tab(s) |
 |---------|--------------|
 | Summary IS | IS tab |
-| Key Drivers & KPIs | Individual Build tabs (whatever exists) |
-| Capital Allocation | Capital Allocation Build, Debt Build |
-| ROIC / ROTIC | IS (EBIT, Tax Rate), BS (Equity, Goodwill, Intangibles), Debt Build (Debt, Cash) |
+| Key Drivers & KPIs | Profit Build (segment sections) |
+| Capital Allocation | Capital Allocation Build, BS & CFS Build |
+| ROIC / ROTIC | IS (EBIT, Tax Rate), BS (Equity, Goodwill, Intangibles), BS & CFS Build (Debt & Cash section) |
 | Summary BS | BS tab |
 | Summary CF | CFS tab |
 
@@ -356,7 +356,7 @@ EBITDA, Net Income, NOPAT, Invested Capital, Tangible IC, Total Assets, Total L&
 ## Key Rules
 
 - **Output/summary layer only** — no assumption inputs. Every cell is a formula (except ROIC/ROTIC calculations).
-- **Scan build tabs dynamically** — don't hardcode specific KPI rows. Mirror whatever the build tabs track.
+- **Scan the Profit Build dynamically** — don't hardcode specific KPI rows. Mirror whatever its segment sections track.
 - **ROIC/ROTIC formulas**: see `meth-roic.md` (included in this skill) for the full specification.
 - **All number formats defer to `firm-formatting`** — use standard format strings with `_)` padding.
 - **No freeze panes. Gridlines off.**
@@ -385,19 +385,19 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 
 ---
 
-## Definition of Done (Phase 5)
+## Definition of Done (Phase 6)
 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
-1. **Task Tracker**: Every subtask row for Phase 5 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+1. **Task Tracker**: Every subtask row for Phase 6 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **All 8 Model Tab sections populated** with data across full historical + projection time series.
 3. **ROIC and ROTIC rows** have values for every period where Average IC > 0.
 4. **BS Check = 0** on Model Tab for all periods.
 5. **CF Check = 0** on Model Tab for all periods.
 6. **Cross-tab references verified**: spot-check 3 values (e.g., Revenue, EPS, FCF) and confirm Model Tab = source tab.
 7. **Tab Completion Verification** output pasted.
-8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-6".
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-7".
 
-If you write "Phase 5 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+If you write "Phase 6 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 
 **STOP. Report status. Wait for "continue."**

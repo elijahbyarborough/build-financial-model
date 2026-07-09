@@ -1,18 +1,18 @@
 ---
-name: build-model-phase-11
+name: build-model-phase-12
 description: |
-  Phase 11 -- Hardcode Sources. Replaces all live data-feed formulas with hardcoded values for portability.
+  Phase 12 -- Source Hygiene. Verifies the single-hardcode-layer rule, freezes any stray live source-tab references, and confirms Data Pull snapshot discipline. Final phase.
   Load after `build-model` and `firm-formatting` are already in context.
 ---
 
-# Phase 11 -- Hardcode Sources
+# Phase 12 -- Source Hygiene
 
 ## Preflight
 
 **PREFLIGHT -- Do not skip. Output this block to the user before any other work.**
 
 ```
-Phase: 11 (Hardcode Sources)
+Phase: 12 (Source Hygiene)
 Foundation skills loaded: build-model [check/x], firm-formatting [check/x]
 Task Tracker read: [check/x] -- current phase per tracker: [phase name]
 Firm-formatting color check:
@@ -21,15 +21,15 @@ Firm-formatting color check:
   Navy header   = #1C3553 [check/x]
   Subheader     = #C2D5EB [check/x]
   Major total   = #F2F2F2 [check/x]
-Consensus tab complete: [check/x]
-Delta formulas verified (% for $, bps for margins, turns for multiples): [check/x]
+Consensus tab complete (or explicitly skipped): [check/x/skipped]
+All model content finalized: [check/x]
 ```
 
 Do not proceed until every field is filled. If any x or blank, stop and load/read.
 
 ## Phase Instructions
 
-See `phase-11-hardcode.md` for the complete phase reference.
+See `phase-12-source-hygiene.md` for the complete phase reference.
 
 ## After Completing This Phase
 

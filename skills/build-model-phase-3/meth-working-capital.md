@@ -1,8 +1,8 @@
-<!-- CANONICAL COPY: build-model-phase-1/meth-working-capital.md — sync edits there first -->
+<!-- CANONICAL: this file is canonical in build-model-phase-3. Copies elsewhere sync FROM here. -->
 
-## Working Capital
+## BS & CFS Build — Working Capital Section
 
-**Do NOT assume a fixed set of WC items or default to DSO/DIO/DPO.** The balance sheet is the source of truth. Use the 4-step discovery protocol below.
+**Do NOT assume a fixed set of WC items or default to DSO/DIO/DPO.** The balance sheet is the source of truth. Use the 4-step discovery protocol below. Working capital lives in the Working Capital section (Tier-2 header) of the BS & CFS Build tab.
 
 ### 4-Step Discovery Protocol
 
@@ -44,7 +44,18 @@ Before writing any forward WC formula, inspect the historical calculation formul
 
 Do not assume all WC items are driven off Revenue. A denominator mismatch (e.g., projecting AP off Revenue when historicals compute DPO off Segment OI) will silently distort NWC as % of Revenue by 2–5x.
 
+### Ex-Lease Disaggregation
+
+When the Lease BS Map shows a lease component embedded inside a broader reported BS line (e.g., finance lease liabilities inside "Other Noncurrent Liabilities"), the Working Capital section models the **ex-lease** version of that line:
+
+- Historical rows (built in Phase 1): `[Reported line] (ex-[component]) = reported balance − lease schedule component balance` (same tab)
+- Projections: drive the ex-lease balance with a WC driver; the lease component is projected by its lease schedule
+- The BS line in Phase 4 recombines them: `= ex-lease projection + lease schedule component`
+- NEVER project an embedded lease balance with a revenue-based WC driver — lease balances follow their schedules
+
+Lease components with dedicated BS lines need no disaggregation — the BS references the lease schedule directly.
+
 ### Methodology
-1. Calculate historical ratios for each WC item using the selected driver
+1. Calculate historical ratios for each WC item using the selected driver (historical balances link to Annual Historicals — green cross-sheet refs)
 2. Project driver metrics: hold flat at recent average, or trend based on management commentary
 3. Change in Working Capital on the CF statement = ending WC - beginning WC (increase in WC asset is a cash outflow, increase in WC liability is a cash inflow)

@@ -1,10 +1,12 @@
+<!-- CANONICAL COPY: build-model-phase-1/meth-lease-full.md. If editing, sync edits there first. -->
+
 ## Lease Accounting (ASC 842)
 
-Leases are projected on the **Debt Build** tab in dedicated schedule sections. Both operating and finance leases follow a roll-forward architecture that feeds the BS, IS, and CFS through the Working Capital Build.
+Leases are projected on the **BS & CFS Build** tab in dedicated schedule sections (Operating Lease Schedule and Finance Lease Schedule). Both operating and finance leases follow a roll-forward architecture that feeds the BS, IS, and CFS through the Working Capital section of the same tab.
 
 ### Detection & Classification (Phase 0 / Phase 1)
 
-When scanning source data (BAMSEC, Tegus, Historical Data), look for lease indicators before building any tabs.
+When scanning source data (BAMSEC, Tegus, filings) for capture, look for lease indicators before building any schedules. The captured footnote data lives in the Lease Detail section of the Annual Historicals tab.
 
 **Balance Sheet signals**: "Operating Lease ROU", "Right-of-use", "Finance Lease", "Capital Lease", "ROU Asset"
 **Income Statement signals**: "Operating lease cost", "Finance lease depreciation", "Finance lease interest", "Lease expense"
@@ -22,7 +24,7 @@ Set the following flags on the Task Tracker Model State Block:
 
 Companies present lease items on the balance sheet in different ways. Some give leases their own dedicated BS lines; others embed them inside broader line items like PP&E, "Accrued expenses," or "Other liabilities." The Lease BS Map captures exactly where each component lives for the specific company being modeled.
 
-**Why this matters**: The Working Capital Build must strip lease items out of whatever reported BS lines they sit in, so those "Other" lines can be projected using their own drivers (% of revenue, flat, etc.) while the lease items are projected by the Debt Build schedule. If you get the mapping wrong, you'll either double-count lease balances or leave them stranded in a generic line that gets projected with the wrong driver.
+**Why this matters**: The Working Capital section must strip lease items out of whatever reported BS lines they sit in, so those "Other" lines can be projected using their own drivers (% of revenue, flat, etc.) while the lease items are projected by the lease schedules. If you get the mapping wrong, you'll either double-count lease balances or leave them stranded in a generic line that gets projected with the wrong driver.
 
 Populate the following map on the Task Tracker during Phase 0/1 by reading the lease accounting policy footnote and cross-referencing against the face of the balance sheet and the PP&E footnote detail:
 
@@ -87,12 +89,12 @@ FL_ROU_ASSET_NC:     "Other assets"                                (embedded)
 
 **Current vs. noncurrent ROU assets**: Most companies report only the net (noncurrent) ROU asset on the BS. However, some companies separate a current portion into "Prepaid expenses and other current assets" or a similar line. If the BS or footnotes show a current portion of ROU assets, map it. If not (the majority of cases), set `_C` to "N/A."
 
-**Derived flag for PP&E Build logic**: After populating the map, set:
-- `FL_IN_PPE`: Y if `FL_ROU_ASSET_NC` maps to "Property and equipment, net" (or equivalent PP&E line); N otherwise. This flag drives the PP&E Build and D&A driver calculation, same as before.
+**Derived flag for PP&E logic**: After populating the map, set:
+- `FL_IN_PPE`: Y if `FL_ROU_ASSET_NC` maps to "Property and equipment, net" (or equivalent PP&E line); N otherwise. This flag drives the PP&E & Capex section structure and D&A driver calculation.
 
 ### Operating Lease Schedule
 
-Built on the **Debt Build** tab in a dedicated "Operating Lease Schedule" section.
+Built on the **BS & CFS Build** tab in a dedicated "Operating Lease Schedule" section.
 
 **Drivers (assumption rows, yellow bg + blue text)**:
 - New Operating Leases (noncash ROU addition): flat dollar amount based on trailing 3-year average
@@ -120,7 +122,7 @@ Noncurrent = Total - Current.
 
 ### Finance Lease Schedule
 
-Built on the **Debt Build** tab in a dedicated "Finance Lease Schedule" section, below the Operating Lease Schedule.
+Built on the **BS & CFS Build** tab in a dedicated "Finance Lease Schedule" section, below the Operating Lease Schedule.
 
 **Drivers (assumption rows, yellow bg + blue text)**:
 - New Finance Lease Additions: flat dollar amount (or zero if portfolio is winding down)
@@ -148,28 +150,28 @@ Where Cash Payment = Depreciation + Interest (total lease cost). The liability r
 **Current / Noncurrent split**: Same rules as operating leases -- formula-driven, never hardcoded. Use `=MIN(Total_Liability, Next_Year_Principal_Payment)` or historical ratio.
 
 **IS linkage**:
-- FL Depreciation: included in D&A (inside PP&E Build D&A if `FL_IN_PPE=Y`, or as a separate component if `FL_IN_PPE=N`)
+- FL Depreciation: included in D&A (inside the PP&E & Capex section's D&A if `FL_IN_PPE=Y`, or as a separate component if `FL_IN_PPE=N`)
 - FL Interest: included in total interest expense
 
 ### Finance Lease ROU Asset Placement (FL_IN_PPE)
 
-This is a derived flag from the Lease BS Map. If `FL_ROU_ASSET_NC` maps to a PP&E line, then `FL_IN_PPE = Y`. This drives the PP&E Build structure and D&A driver calculation.
+This is a derived flag from the Lease BS Map. If `FL_ROU_ASSET_NC` maps to a PP&E line, then `FL_IN_PPE = Y`. This drives the PP&E & Capex section structure and D&A driver calculation.
 
 #### FL_IN_PPE = Y (finance lease ROU inside PP&E)
 
-- **PP&E Build**: New FL additions flow through an "Other" capex line: `='Debt Build'!New_FL_Additions`. FL depreciation is embedded in total D&A.
+- **PP&E & Capex section**: New FL additions flow through an "Other" capex line pulling from the Finance Lease Schedule's New Additions row (same tab). FL depreciation is embedded in total D&A.
 - **D&A driver calculation (CRITICAL)**: The D&A-as-%-of-revenue driver must be calculated EXCLUDING finance lease depreciation. Otherwise the FL portion inflates the %, leading to over-projection of D&A. Historical driver formula: `=(Total D&A - FL Depreciation) / Revenue`. Projection D&A allocation formula must subtract FL depreciation before applying the segment/corporate split.
 - **BS**: Single "Net PP&E" line that includes FL ROU. No separate BS line for FL ROU asset.
-- **CFS**: Total D&A add-back on CFS already includes FL depreciation (it is inside PP&E Build D&A).
+- **CFS**: Total D&A add-back on CFS already includes FL depreciation (it is inside the PP&E & Capex section's D&A).
 
 #### FL_IN_PPE = N (finance lease ROU NOT inside PP&E)
 
-When `FL_ROU_ASSET_NC` maps to something other than PP&E (e.g., "Other assets," "Finance lease right-of-use assets, net"), the FL ROU asset is tracked entirely on the Debt Build:
+When `FL_ROU_ASSET_NC` maps to something other than PP&E (e.g., "Other assets," "Finance lease right-of-use assets, net"), the FL ROU asset is tracked entirely in the Finance Lease Schedule:
 
-- **PP&E Build**: Clean -- no FL items at all. D&A is purely operating D&A. No complex allocation needed.
-- **Debt Build**: Tracks the full FL ROU asset roll-forward (in addition to the liability roll).
-- **BS**: The FL ROU asset gets its own line (or flows through the WC Build into whatever "Other" line the map specifies), pulling from `='Debt Build'!FL_ROU_Net`.
-- **CFS**: Total D&A add-back = PP&E Build D&A + Debt Build FL Depreciation (two separate pulls).
+- **PP&E & Capex section**: Clean -- no FL items at all. D&A is purely operating D&A. No complex allocation needed.
+- **Finance Lease Schedule**: Tracks the full FL ROU asset roll-forward (in addition to the liability roll).
+- **BS**: The FL ROU asset gets its own line (or flows through the Working Capital section into whatever "Other" line the map specifies), pulling from the Finance Lease Schedule's FL ROU Net row on the BS & CFS Build.
+- **CFS**: Total D&A add-back = PP&E & Capex section D&A + Finance Lease Schedule FL Depreciation (two separate pulls from the BS & CFS Build).
 
 ### Cash Flow Rules for Leases (HARD STOP)
 
@@ -182,56 +184,58 @@ When `FL_ROU_ASSET_NC` maps to something other than PP&E (e.g., "Other assets," 
 
 **CF Financing**:
 - Finance lease payment in CF Financing = **PRINCIPAL ONLY** = the depreciation amount
-- Pull from: `=-'Debt Build'!FL_Depreciation` (the depreciation row, NOT the total payment row)
+- Pull from: `=-'BS & CFS Build'!FL_Depreciation` (the depreciation row, NOT the total payment row)
 - **NEVER** pull from the total payment row (Depreciation + Interest). The interest component is already inside Net Income, which flows through CFO. Pulling the total payment double-counts the interest as a cash outflow.
 
 **Verification**: After building, confirm that `Total CF from Financing` includes only the FL principal (depreciation) amount, not dep + interest. If the BS check is non-zero by roughly the amount of FL interest expense, this is almost certainly the cause.
 
-### Working Capital Build Disaggregation
+### Working Capital Disaggregation
 
-The Working Capital Build is the bridge between the Debt Build (where leases are projected) and the BS/CFS. Lease items MUST be disaggregated from whatever reported BS lines they are embedded in. The Lease BS Map determines which lines need disaggregation.
+The Working Capital section of the BS & CFS Build is the bridge between the lease schedules (same tab) and the BS/CFS. Lease items MUST be disaggregated from whatever reported BS lines they are embedded in. The Lease BS Map determines which lines need disaggregation.
 
-**Required WC Build rows for leases** (one row per mapped component):
-- Operating Lease ROU Assets (noncurrent): pull from Debt Build OL ROU
-- Operating Lease ROU Assets (current): pull from Debt Build, only if `OL_ROU_ASSET_C` is mapped (not N/A)
-- Operating Lease Liability — Current: pull from Debt Build OL Liability Current
-- Operating Lease Liability — Noncurrent: pull from Debt Build OL Liability Noncurrent
-- Finance Lease Liability — Current: pull from Debt Build FL Current
-- Finance Lease Liability — Noncurrent: pull from Debt Build FL Noncurrent
-- Finance Lease ROU Assets (noncurrent): pull from Debt Build FL ROU Net, only if `FL_IN_PPE = N`
+**Required Working Capital rows for leases** (one row per mapped component):
+- Operating Lease ROU Assets (noncurrent): pull from OL Schedule ROU
+- Operating Lease ROU Assets (current): pull from OL Schedule, only if `OL_ROU_ASSET_C` is mapped (not N/A)
+- Operating Lease Liability — Current: pull from OL Schedule Liability Current
+- Operating Lease Liability — Noncurrent: pull from OL Schedule Liability Noncurrent
+- Finance Lease Liability — Current: pull from FL Schedule Current
+- Finance Lease Liability — Noncurrent: pull from FL Schedule Noncurrent
+- Finance Lease ROU Assets (noncurrent): pull from FL Schedule ROU Net, only if `FL_IN_PPE = N`
+
+All pulls are same-tab references (the schedules and the Working Capital section both live on the BS & CFS Build).
 
 **Disaggregation formula pattern**: For each lease component that is embedded inside a broader reported BS line (i.e., NOT its own dedicated BS line), create an "ex-lease" version of that reported line:
 
 ```
-[Reported BS line] (ex-[lease component]) = BS![Reported line as reported] - 'Debt Build'![lease component]
+[Reported BS line] (ex-[lease component]) = BS![Reported line as reported] - [lease schedule ending balance, same tab]
 ```
 
 The Lease BS Map tells you exactly which reported lines need this treatment. For example:
 
 If `FL_LIAB_C` maps to "Accrued expenses and other current liabilities":
-- WC Build gets: "Other CL (ex-FL Current)" = `BS!Accrued_Exp_Reported - 'Debt Build'!FL_Current`
+- Working Capital section gets: "Other CL (ex-FL Current)" = `BS!Accrued_Exp_Reported - FL_Current (same tab)`
 
 If `FL_LIAB_NC` maps to "Other liabilities":
-- WC Build gets: "Other NCL (ex-FL Noncurrent)" = `BS!Other_Liab_Reported - 'Debt Build'!FL_Noncurrent`
+- Working Capital section gets: "Other NCL (ex-FL Noncurrent)" = `BS!Other_Liab_Reported - FL_Noncurrent (same tab)`
 
 If `FL_LIAB_C` maps to "Current portion of long-term debt":
-- WC Build gets: "Current LTD (ex-FL Current)" = `BS!Current_LTD_Reported - 'Debt Build'!FL_Current`
-- The Debt Build may also need to disaggregate FL from corporate debt on that same line.
+- Working Capital section gets: "Current LTD (ex-FL Current)" = `BS!Current_LTD_Reported - FL_Current (same tab)`
+- The Debt & Cash section may also need to disaggregate FL from corporate debt on that same line.
 
-If a lease component has its own dedicated BS line (e.g., "Operating lease liabilities, current"), no disaggregation is needed for that component — the WC Build row simply references it directly.
+If a lease component has its own dedicated BS line (e.g., "Operating lease liabilities, current"), no disaggregation is needed for that component — the Working Capital row simply references it directly.
 
-**Projection formula pattern**: In projection years, each lease row pulls directly from the Debt Build. The "ex-lease" lines use their own drivers (% of revenue, flat, etc.) and do NOT include any lease amounts.
+**Projection formula pattern**: In projection years, each lease row pulls directly from the lease schedules. The "ex-lease" lines use their own drivers (% of revenue, flat, etc.) and do NOT include any lease amounts.
 
 **Edge case — multiple lease components in the same reported line**: If both FL current liability AND another lease item are embedded in the same reported BS line, disaggregate both. For example, if both FL current liability and OL current liability are inside "Accrued expenses":
-- "Accrued Expenses (ex-OL Current, ex-FL Current)" = `BS!Accrued_Reported - 'Debt Build'!OL_Current - 'Debt Build'!FL_Current`
+- "Accrued Expenses (ex-OL Current, ex-FL Current)" = `BS!Accrued_Reported - OL_Current - FL_Current (same tab)`
 
 ### Build Order (Updated for Leases)
 
-When leases are present, the build order for Phase 3 (Forward Statements) is:
+When leases are present, the build order for Phase 4 (Forward Statements) is:
 
-1. Revenue Build
-2. Costs Build (operating expenses, including OL lease cost)
-3. **Debt Build (including Operating Lease Schedule and Finance Lease Schedule)**
-4. PP&E Build (needs FL additions and depreciation from Debt Build if `FL_IN_PPE=Y`)
-5. Working Capital Build (needs lease balances from Debt Build, uses Lease BS Map for disaggregation)
-6. Tax Schedule
+1. Profit Build — revenue sections
+2. Profit Build — cost sections (operating expenses, including OL lease cost)
+3. **BS & CFS Build — Debt & Cash section plus Operating Lease Schedule and Finance Lease Schedule**
+4. BS & CFS Build — PP&E & Capex section (needs FL additions and depreciation from the lease schedules if `FL_IN_PPE=Y`)
+5. BS & CFS Build — Working Capital section (needs lease balances from the schedules, uses Lease BS Map for disaggregation)
+6. Profit Build — Tax section

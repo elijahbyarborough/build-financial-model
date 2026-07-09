@@ -1,6 +1,6 @@
-# Phase 9 — Output Tab
+# Phase 10 — Output Tab
 
-**Prerequisite:** Phase 8 complete (QC passed, all gates clear).
+**Prerequisite:** Phase 9 complete (QC passed, all gates clear).
 
 ---
 
@@ -466,19 +466,19 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 
 ---
 
-## Definition of Done (Phase 9)
+## Definition of Done (Phase 10)
 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
-1. **Task Tracker**: Every subtask row for Phase 9 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+1. **Task Tracker**: Every subtask row for Phase 10 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **All Output tab sections populated**: Returns Timeline, Summary IS, Key Drivers & KPIs, Capital Allocation & Returns.
 3. **Returns Timeline** has Entry + 6 FY columns + Exit.
 4. **Vertical dividers** present between Historical|Projection|CAGR zones (IS/KPIs/CapAlloc sections).
 5. **CAGR/delta column** correctly populated (CAGR for $ items, delta for margins, blank for growth rates).
 6. **All formulas reference only Model Tab or Returns tab** -- never individual build tabs.
 7. **Tab Completion Verification** output pasted.
-8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-10".
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-11".
 
-If you write "Phase 9 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+If you write "Phase 10 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 
 **STOP. Report status. Wait for "continue."**

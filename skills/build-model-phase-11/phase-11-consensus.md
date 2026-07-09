@@ -1,6 +1,6 @@
-# Phase 10 — Consensus Comparison
+# Phase 11 — Consensus Comparison
 
-**Prerequisite:** Phase 9 complete (Output tab built). A consensus data source must exist in the workbook (Bloomberg "Multiple Periods" tab, FactSet dump, Capital IQ export, or user-provided estimates). If none exists, ask the user to provide one or offer to pull via Bloomberg/FactSet formulas.
+**Prerequisite:** Phase 10 complete (Output tab built). A consensus data source must exist in the workbook (Bloomberg "Multiple Periods" tab, FactSet dump, Capital IQ export, or user-provided estimates). If none exists, ask the user to provide one or offer to pull via Bloomberg/FactSet formulas.
 
 ---
 
@@ -309,18 +309,18 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 
 ---
 
-## Definition of Done (Phase 10)
+## Definition of Done (Phase 11)
 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
-1. **Task Tracker**: Every subtask row for Phase 10 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
+1. **Task Tracker**: Every subtask row for Phase 11 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **All stacked triplets populated** (Model/Consensus/Delta for every overlapping KPI).
 3. **Delta formulas correct by type**: % difference for $ items, bps for margins, absolute turns for multiples.
 4. **Historical cross-check** passed: at least 1 year where Model and Consensus both reflect actuals, with near-zero delta.
 5. **Conditional formatting** applied: green (#006100) for positive deltas, red (#9C0006) for negative.
 6. **Tab Completion Verification** output pasted.
-7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-11".
+7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-12".
 
-If you write "Phase 10 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
+If you write "Phase 11 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 
 **STOP. Report status. Wait for "continue."**

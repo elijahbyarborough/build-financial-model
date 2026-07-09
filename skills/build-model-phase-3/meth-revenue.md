@@ -1,6 +1,10 @@
-## Revenue Build
+<!-- CANONICAL: this file is canonical in build-model-phase-3. Copies elsewhere sync FROM here. -->
 
-**This is the most important tab. Invest maximum effort.**
+## Profit Build — Revenue Sections
+
+**Revenue is the most important part of the model. Invest maximum effort.**
+
+Revenue lives on the **Profit Build** tab: one Tier-2 section per reportable segment (volume/price drivers → segment revenue), or a single consolidated "Revenue" section for single-segment companies.
 
 ### Approach Hierarchy
 1. **Unit economics / driver-based** (strongly preferred): volume × price/rate
@@ -10,8 +14,9 @@
 3. **Growth rate decomposition** (last resort): only when no driver data exists
 
 ### Rules
-- Each revenue segment gets its own block with clearly labeled drivers
+- Each revenue segment gets its own Tier-2 section with clearly labeled drivers
 - Driver assumptions are yellow background (#FFFF00) + blue text (#0000FF) with source comments
-- Build from the bottom up — total revenue should be a `=SUM()` of segments, never a hardcoded number
+- Historical driver and revenue values link to Annual Historicals (green cross-sheet refs) — segment revenue history lives in its Segment Data section, volume/pricing history in its Operational/KPI Data section
+- Build from the bottom up — Total Revenue on the Consolidated P&L Bridge is a `=SUM()` of the segment revenue rows, never a hardcoded number
 - Include year-over-year growth rates as italic percentage rows below each segment total
 - If a company reports non-GAAP revenue adjustments, show both GAAP and adjusted
