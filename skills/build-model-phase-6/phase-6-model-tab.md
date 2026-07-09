@@ -10,9 +10,9 @@ Populate the Model tab — the master consolidation sheet where all model output
 
 The Model Tab serves two purposes:
 1. **Internal reference** — one place to see every key metric across the full historical + projection time series
-2. **Feed for Output and Returns tabs** — the Output tab pulls from the Model Tab (for IS, KPIs, Cap Alloc, ROIC) and the Returns tab (for the returns timeline). The Returns tab pulls Diluted EPS from the Model Tab and DPS/M&A Value from the Capital Allocation Build.
+2. **Feed for Output and Returns tabs** — the Output tab pulls from the Model Tab (for IS, KPIs, Cap Alloc) and the Returns tab (for the returns timeline). The Returns tab pulls Diluted EPS from the Model Tab and DPS/M&A Value from the Capital Allocation Build.
 
-The Model Tab is a pure pull-sheet with one exception: the ROIC/ROTIC section contains original calculations (NOPAT, Invested Capital, returns). Everything else is a one-cell formula referencing another tab.
+The Model Tab is a pure pull-sheet: every cell is a one-cell formula referencing another tab. No original calculations, no assumptions.
 
 ---
 
@@ -25,11 +25,10 @@ The Model Tab has a fixed section hierarchy. The sections always appear in this 
 3. **Summary Income Statement** (Tier 1 header)
 4. **Key Drivers & KPIs** (Tier 1 header)
 5. **Capital Allocation & Returns** (Tier 2 subheader) + **Capital Deployment** (Tier 2 subheader)
-6. **ROIC / ROTIC** (Tier 1 header)
-7. **Summary Balance Sheet** (Tier 1 header)
-8. **Summary Cash Flow Statement** (Tier 1 header)
+6. **Summary Balance Sheet** (Tier 1 header)
+7. **Summary Cash Flow Statement** (Tier 1 header)
 
-This order flows logically: key per-share return drivers (Platinum List) → how the company earns (IS) → what drives the earnings (KPIs) → what's done with the cash (Cap Alloc) → how efficiently capital is deployed (ROIC) → the resulting financial position (BS) → the cash flow reconciliation (CFS).
+This order flows logically: key per-share return drivers (Platinum List) → how the company earns (IS) → what drives the earnings (KPIs) → what's done with the cash (Cap Alloc) → the resulting financial position (BS) → the cash flow reconciliation (CFS).
 
 ---
 
@@ -156,8 +155,9 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 | | *Payout %* | `=ABS(Dividends + Buybacks) / IS!Net Income` | 0.0%, italic |
 | | *Acquisition-Adjusted Payout %* | `=ABS(All Deployed) / IS!Net Income` | 0.0%, italic |
 | | (blank spacer) | | |
-| | Net Debt / EBITDA | `='BS & CFS Build'!Net Debt / EBITDA` | 0.0"x" |
-| | Interest Coverage | `=EBITDA / ABS(IS!Interest Expense)` | 0.0"x" |
+| | *Acquired EBITDA (Cumulative, memo)* | `='Capital Allocation Build'!Cumulative Acquired EBITDA` | Number, italic — include only when an M&A program is active |
+| | Net Debt / EBITDA | `='BS & CFS Build'!Net Debt / EBITDA` (computed there on Credit-Adjusted EBITDA when M&A active) | 0.0"x" |
+| | Interest Coverage | `='BS & CFS Build'!Interest Coverage` (Credit-Adjusted EBITDA basis) | 0.0"x" |
 | | *Acquisition IRR* | `='Capital Allocation Build'!` Acquisition IRR row | `0.0%_);(0.0%);"-"`, italic |
 
 **Acquisition IRR**: Pulls from the Acquisition IRR assumption row in the Capital Allocation Build's M&A section — **locate it by label** (row positions vary by build; never assume a fixed row number) and cite the actual cell address in the Task Tracker. Historical columns show "-" (Cap Alloc Build has no historical IRR values). Projection columns show the assumed IRR (e.g., 10.0%).
@@ -173,50 +173,7 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 
 ---
 
-## Section 5: ROIC / ROTIC
-
-This is the ONE section with original calculations. The formulas are computed here, not pulled from another tab.
-
-### Tier 1 Header — "ROIC / ROTIC"
-
-**NOPAT Calculation:**
-
-| Row | Label | Formula | Format |
-|-----|-------|---------|--------|
-| | EBIT | `=IS!EBIT` | Currency, green font |
-| | *Effective Tax Rate* | `=ABS(IS!Tax / IS!EBT)` | 0.0%, italic |
-| | **NOPAT** | `=EBIT * (1 - Effective Tax Rate)` | **Major Total** (F2F2F2 fill, bold, Currency) |
-
-**Invested Capital:**
-
-| Row | Label | Formula | Format |
-|-----|-------|---------|--------|
-| | Total Equity | `=BS!Total Equity` | Currency, green font |
-| | Total Debt | `='BS & CFS Build'!Total Debt` | Currency, green font |
-| | Less: Cash & Equivalents | `=-'BS & CFS Build'!Cash` | Number (stored negated — displays as a deduction) |
-| | **Invested Capital** | `=Equity + Debt + Cash_row` | **Major Total** (F2F2F2 fill, bold, Currency). The Cash row is ALREADY negated, so the total SUMS all three rows — subtracting the pre-negated row would double-negate and overstate IC |
-| | *Average Invested Capital* | `=(Current IC + Prior IC) / 2` | Currency, italic |
-| | **ROIC** | `=IF(Avg IC=0, "", NOPAT / Avg IC)` | 0.0%, bold |
-
-**Tangible Invested Capital:**
-
-| Row | Label | Formula | Format |
-|-----|-------|---------|--------|
-| | Less: Goodwill | `=-BS!Goodwill` | Number (stored negated — displays as a deduction) |
-| | Less: Intangible Assets | `=-BS!Intangibles` | Number (stored negated — displays as a deduction) |
-| | **Tangible Invested Capital** | `=IC + Goodwill_row + Intangibles_row` | **Major Total** (F2F2F2 fill, bold, Currency). Goodwill and Intangibles rows are ALREADY negated, so the total SUMS them — subtracting the pre-negated rows would double-negate and overstate Tangible IC |
-| | *Average Tangible IC* | `=(Current + Prior) / 2` | Currency, italic |
-| | **ROTIC** | `=IF(Avg Tangible IC=0, "", NOPAT / Avg Tangible IC)` | 0.0%, bold |
-
-### Flexibility Rules
-
-- If the company has no goodwill/intangibles (rare), the Tangible IC section can be omitted or will equal IC
-- All return % rows use IF guards: `=IF(denominator=0, "", NOPAT/IC)`
-- If the BS doesn't separately break out Goodwill and Intangibles, use whatever intangible asset lines exist
-
----
-
-## Section 6: Summary Balance Sheet
+## Section 5: Summary Balance Sheet
 
 Scan the BS tab and pull major category totals. The goal is a condensed view, not a line-by-line replica.
 
@@ -240,12 +197,12 @@ Scan the BS tab and pull major category totals. The goal is a condensed view, no
 ### Flexibility Rules
 
 - The level of detail depends on what the BS tab tracks — if it breaks out 10 current asset lines, the Model Tab can consolidate to 3-4 major categories
-- Always show Goodwill and Intangibles separately (needed for ROTIC calculation above)
+- Always show Goodwill and Intangibles separately (keeps acquisition intensity visible on the summary BS)
 - BS Check is mandatory — it's a core model integrity check
 
 ---
 
-## Section 7: Summary Cash Flow Statement
+## Section 6: Summary Cash Flow Statement
 
 Scan the CFS tab and pull major line items, plus the three FCF definitions.
 
@@ -299,7 +256,6 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 | Summary IS | IS tab |
 | Key Drivers & KPIs | Profit Build (segment sections) |
 | Capital Allocation | Capital Allocation Build, BS & CFS Build |
-| ROIC / ROTIC | IS (EBIT, Tax Rate), BS (Equity, Goodwill, Intangibles), BS & CFS Build (Debt & Cash section) |
 | Summary BS | BS tab |
 | Summary CF | CFS tab |
 
@@ -307,7 +263,7 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 
 | Consumer | What it pulls |
 |----------|--------------|
-| Output tab | IS summary, KPIs, Cap Alloc metrics, ROIC/ROTIC (Output also pulls returns timeline from Returns tab) |
+| Output tab | IS summary, KPIs, Cap Alloc metrics (Output also pulls returns timeline from Returns tab) |
 | Returns tab | Diluted EPS (Returns also pulls DPS and M&A Value Per Share from Capital Allocation Build) |
 
 ---
@@ -316,7 +272,7 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 
 ### Headers
 
-- **Tier 1** (IS, KPIs, ROIC, BS, CFS): Navy fill (#1C3553), white bold text
+- **Tier 1** (IS, KPIs, BS, CFS): Navy fill (#1C3553), white bold text
 - **Tier 2** (Cap Alloc, Deployment, each segment): Light blue fill (#C2D5EB)
 
 ### Data
@@ -331,7 +287,7 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 
 ### Major Totals (F2F2F2 fill, bold, thin top border)
 
-EBITDA, Net Income, NOPAT, Invested Capital, Tangible IC, Total Assets, Total L&E, uFCF, LFCF, FCFE
+EBITDA, Net Income, Total Assets, Total L&E, uFCF, LFCF, FCFE
 
 ### Borders
 
@@ -345,19 +301,17 @@ EBITDA, Net Income, NOPAT, Invested Capital, Tangible IC, Total Assets, Total L&
 
 1. **Scan, don't hardcode** — The skill should scan whatever tabs exist and assemble the Model Tab dynamically. Different companies = different segments = different KPIs = different BS/CFS structures.
 2. **Consolidation hub** — Every key metric lives here. The Output and Returns tabs pull from Model Tab, not from individual build tabs.
-3. **One original calculation section** — ROIC/ROTIC is the only section with formulas that aren't simple pulls. Everything else is `=OtherTab!cell`.
-4. **Full time series** — Spans all historical AND projection years.
-5. **Two mandatory checks** — BS Check and CF Check, both must = 0.
-6. **Faithful to source** — Don't invent metrics that aren't on the source tabs. Mirror what exists, condensed where appropriate.
-7. **Section order is fixed, contents are flexible** — IS always comes first, then KPIs, then Cap Alloc, then ROIC, then BS, then CFS. Within each section, the specific rows depend on the company.
+3. **Full time series** — Spans all historical AND projection years.
+4. **Two mandatory checks** — BS Check and CF Check, both must = 0.
+5. **Faithful to source** — Don't invent metrics that aren't on the source tabs. Mirror what exists, condensed where appropriate.
+6. **Section order is fixed, contents are flexible** — IS always comes first, then KPIs, then Cap Alloc, then BS, then CFS. Within each section, the specific rows depend on the company.
 
 ---
 
 ## Key Rules
 
-- **Output/summary layer only** — no assumption inputs. Every cell is a formula (except ROIC/ROTIC calculations).
+- **Output/summary layer only** — no assumption inputs. Every cell is a formula pull.
 - **Scan the Profit Build dynamically** — don't hardcode specific KPI rows. Mirror whatever its segment sections track.
-- **ROIC/ROTIC formulas**: see `meth-roic.md` (included in this skill) for the full specification.
 - **All number formats defer to `firm-formatting`** — use standard format strings with `_)` padding.
 - **No freeze panes. Gridlines off.**
 
@@ -374,11 +328,9 @@ TAB VERIFICATION -- Model Tab:
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]
   tab color: [hex] -- expected: #1C3553
-  sections present: [count]/8 (Platinum List, Summary IS, Key Drivers, Cap Alloc, Capital Deployment, ROIC/ROTIC, Summary BS, Summary CFS)
+  sections present: [count]/7 (Platinum List, Summary IS, Key Drivers, Cap Alloc, Capital Deployment, Summary BS, Summary CFS)
   BS Check on Model Tab: [0 or value]
   CF Check on Model Tab: [0 or value]
-  ROIC populated: [yes/no]
-  ROTIC populated: [yes/no]
 ```
 
 If you do not paste this output, the user cannot verify compliance. No output = not verified.
@@ -390,13 +342,12 @@ If you do not paste this output, the user cannot verify compliance. No output = 
 A phase is complete if and only if ALL of the following are true. Report completion by reading these values back to the user -- not by summarizing in prose.
 
 1. **Task Tracker**: Every subtask row for Phase 6 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
-2. **All 8 Model Tab sections populated** with data across full historical + projection time series.
-3. **ROIC and ROTIC rows** have values for every period where Average IC > 0.
-4. **BS Check = 0** on Model Tab for all periods.
-5. **CF Check = 0** on Model Tab for all periods.
-6. **Cross-tab references verified**: spot-check 3 values (e.g., Revenue, EPS, FCF) and confirm Model Tab = source tab.
-7. **Tab Completion Verification** output pasted.
-8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-7".
+2. **All 7 Model Tab sections populated** with data across full historical + projection time series.
+3. **BS Check = 0** on Model Tab for all periods.
+4. **CF Check = 0** on Model Tab for all periods.
+5. **Cross-tab references verified**: spot-check 3 values (e.g., Revenue, EPS, FCF) and confirm Model Tab = source tab.
+6. **Tab Completion Verification** output pasted.
+7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-7".
 
 If you write "Phase 6 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 

@@ -1,6 +1,6 @@
 {
   "name": "fc-model-builder",
   "version": "0.2.0",
-  "description": "Frist Capital financial model build system for Claude for Excel: foundation skills (core rules + firm formatting), a quarterly KPI tracker, and a 13-phase pipeline (phases 0-12) that captures everything a company reports onto Annual/Quarterly Historicals tabs and builds an institutional 3-statement model with driver-based revenue, ASC 842 leases, ROIC/ROTIC, and XIRR returns.",
+  "description": "Frist Capital financial model build system for Claude for Excel: foundation skills (core rules + firm formatting), a quarterly KPI tracker, and a 13-phase pipeline (phases 0-12) that captures everything a company reports onto Annual/Quarterly Historicals tabs and builds an institutional 3-statement model with driver-based revenue, ASC 842 leases, credit-adjusted leverage, and XIRR returns.",
   "author": { "name": "Elijah Yarborough" }
 }

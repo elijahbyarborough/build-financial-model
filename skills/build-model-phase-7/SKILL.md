@@ -22,7 +22,6 @@ Firm-formatting color check:
   Subheader     = #C2D5EB [check/x]
   Major total   = #F2F2F2 [check/x]
 Model Tab sections complete: [count]/8
-ROIC/ROTIC populated: [check/x]
 ```
 
 Do not proceed until every field is filled. If any x or blank, stop and load/read.

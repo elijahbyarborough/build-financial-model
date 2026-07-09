@@ -7,7 +7,7 @@ A modular skill system for building institutional-quality Excel financial models
 This repo contains 17 Claude skills organized into four foundation/utility skills and 13 phase-specific skills. Together they define:
 
 - **Historicals capture** — Annual Historicals and Quarterly Historicals tabs that record *everything the company reports* (the model's single hardcode layer, updated post-earnings and post-filing), with protocols for segment recasts, ASC adoptions, FYE changes, and restatements
-- **Modeling methodology** — how to structure a 3-statement model, build driver-based revenue, handle lease accounting, compute ROIC/ROTIC, and construct a 5-year forward returns framework
+- **Modeling methodology** — how to structure a 3-statement model, build driver-based revenue, handle lease accounting, size leverage with credit-adjusted EBITDA, and construct a 5-year forward returns framework
 - **Formatting standards** — the firm's complete visual hierarchy for Excel: fonts, colors, borders, number formats, spacer rows, and tab organization
 - **Quality gates** — structural integrity checks, assumption audits, historicals-integrity checks, and consistency validations that every model must pass
 - **KPI tracking** — a quarterly KPI tracker tab (4-year lookback + forward columns) built into every model
@@ -41,11 +41,11 @@ The system is designed for **Claude for Excel** (the Excel add-in), where Claude
 | 3 | `build-model-phase-3` | Drivers — populate Profit Build (segments → EBITDA → tax) and BS & CFS Build (PP&E, WC, debt & cash, leases) with historicals, drivers, and forward projections |
 | 4 | `build-model-phase-4` | Forward Statements — assemble projected IS, BS, CFS from the build tabs |
 | 5 | `build-model-phase-5` | Capital Allocation — cash waterfall, buybacks, dividends, M&A program, share count (enables circular references) |
-| 6 | `build-model-phase-6` | Model Tab — consolidate all outputs: Platinum List Indicators, Summary IS, KPIs, Capital Allocation, ROIC/ROTIC, Summary BS, Summary CFS |
+| 6 | `build-model-phase-6` | Model Tab — consolidate all outputs: Platinum List Indicators, Summary IS, KPIs, Capital Allocation, Summary BS, Summary CFS |
 | 7 | `build-model-phase-7` | Returns — XIRR-based 5-year forward returns with EPS CAGR, dividend yield, M&A value, and multiple change decomposition |
 | 8 | `build-model-phase-8` | Formatting — apply firm-standard formatting to every tab, reorder tabs, apply tab colors |
 | 9 | `build-model-phase-9` | QC — run 5 quality gates (structural integrity, assumption review, Model Tab consistency, returns sanity, historicals integrity) |
-| 10 | `build-model-phase-10` | Output Tab — one-page investment summary with Returns Timeline, Summary IS, Key Drivers, Capital Allocation, and ROIC |
+| 10 | `build-model-phase-10` | Output Tab — one-page investment summary with Returns Timeline, Summary IS, Key Drivers, and Capital Allocation |
 | 11 | `build-model-phase-11` | Consensus — model-vs-street comparison using stacked triplets (Model / Consensus / Delta) with conditional formatting |
 | 12 | `build-model-phase-12` | Source Hygiene — verify the single hardcode layer holds, freeze any stray source references, confirm portability |
 
@@ -116,7 +116,7 @@ Phases must execute in order: 0 → 1 → 2 → … → 12. Each phase has expli
 - **Exit-multiple preferred** over DCF (FCF > P/E > EBIT > EBITDA)
 - **7 projection years** (5-year hold + NTM exit window)
 - **Driver-based revenue** — never growth rates without decomposition
-- **ROIC/ROTIC standard** in every model
+- **Credit-adjusted EBITDA for leverage ratios** — acquisitive companies get phantom acquired EBITDA (spend ÷ assumed EV/EBITDA multiple) in Net Debt/EBITDA and coverage; memo-only, never in the P&L
 - **Single Model View** — IS/BS/CFS each carry one view; the Historicals tabs are the as-reported record
 - **Assumptions in-row** — yellow bg + blue text in projection columns of the same row as historicals
 - **YEARFRAC calendarization** for entry/exit EPS blending
@@ -150,7 +150,7 @@ skills/
     meth-goodwill.md  meth-interest-debt.md             # (canonical)
   build-model-phase-5/      # Capital Allocation
     meth-share-count.md
-  build-model-phase-6/      # Model Tab (meth-roic.md)
+  build-model-phase-6/      # Model Tab
   build-model-phase-7/      # Returns (meth-projection-length.md)
   build-model-phase-8/      # Formatting
   build-model-phase-9/      # QC

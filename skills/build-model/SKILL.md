@@ -5,7 +5,7 @@ description: |
 
   Triggers on: building a financial model, creating projections, 3-statement model, profit build, debt schedule, historicals capture, quarterly KPI tracker, returns analysis, valuation, XIRR, ingesting BAMSEC/Tegus/GS data, rebuilding an existing model, updating a model post-earnings, lease accounting, ASC 842 leases, operating leases, finance leases, or any model architecture decision.
 
-  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization, ROIC/ROTIC standard in every model. All reported data captured on Annual/Quarterly Historicals tabs (the single hardcode layer). Lease-aware: detects and models operating/finance leases with proper BS/IS/CFS linkage.
+  Core rules: exit-multiple preferred over DCF, 7 projection years, driver-based revenue, XIRR returns, YEARFRAC calendarization. All reported data captured on Annual/Quarterly Historicals tabs (the single hardcode layer). Credit-adjusted EBITDA for leverage ratios on acquisitive companies. Lease-aware: detects and models operating/finance leases with proper BS/IS/CFS linkage.
 ---
 
 # FC Modeling Conventions
@@ -152,8 +152,8 @@ After completing each subtask (e.g., P2.1, P2.2, P2.3) -- before starting the ne
 
 Do NOT batch these updates at phase end. Small, frequent writes during work -- not one big write after. If you complete a subtask and move to the next without updating the tracker, you have made an error. Stop and update.
 
-### ROIC & ROTIC
-Standard in every model. ROIC and ROTIC on the Model Tab. Full formulas provided in the Phase 6 skill (`meth-roic.md`).
+### Credit-Adjusted EBITDA for Leverage Ratios
+On companies with a projected M&A program, leverage ratios (Net Debt/EBITDA, Interest Coverage) must use **Credit-Adjusted EBITDA** = Model EBITDA + Cumulative Acquired EBITDA, where Acquired EBITDA is derived from the acquisition spend and an assumed acquisition EV/EBITDA multiple (a yellow/blue assumption on the Capital Allocation Build). Acquired EBITDA is a MEMO concept: it exists only for the leverage ratios and never flows into the IS, CFS, EPS, or Returns. Without it, acquisition-funded balance sheets divide by organic-only EBITDA and leverage is overstated. Full spec in the Phase 5 skill.
 
 ---
 

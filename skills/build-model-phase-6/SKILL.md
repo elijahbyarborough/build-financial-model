@@ -1,7 +1,7 @@
 ---
 name: build-model-phase-6
 description: |
-  Phase 6 -- Model Tab. Consolidates key outputs onto the Model tab including valuation multiples, ROIC/ROTIC, and summary metrics.
+  Phase 6 -- Model Tab. Consolidates key outputs onto the Model tab including the Platinum List, summary statements, KPIs, and capital allocation metrics.
   Load after `build-model` and `firm-formatting` are already in context.
 ---
 
@@ -39,7 +39,6 @@ See `phase-6-model-tab.md` for the complete phase reference.
 
 ## Methodology References
 
-- `meth-roic.md` -- ROIC & ROTIC analysis formulas and presentation
 
 ## After Completing This Phase
 

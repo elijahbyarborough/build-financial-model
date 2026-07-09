@@ -112,7 +112,7 @@ Do NOT override CFS!Ending_Cash or CFS!Net_Change_in_Cash to pull directly from 
 
 ## Section 3: Acquisitions (M&A Value Build)
 
-Turns M&A from a cash black hole into a trackable value creator. Five rows:
+Turns M&A from a cash black hole into a trackable value creator. Eight rows:
 
 | Row | Label | Historical | Projection Formula | Format | Notes |
 |-----|-------|-----------|-------------------|--------|-------|
@@ -121,6 +121,26 @@ Turns M&A from a cash black hole into a trackable value creator. Five rows:
 | 3 | Cumulative M&A Invested Capital | **blank** | FY1: `=ABS(Acquisitions)`. FY N: `=prior + ABS(FY N acquisitions)` | Currency | Running total — **forecast-period acquisitions only** |
 | 4 | M&A Portfolio Value at Exit | **blank** | FY1: `=ABS(Acquisitions)`. FY N: `=prior_value * (1 + IRR) + ABS(current year acquisitions)` | Currency, bold | Compounds at assumed IRR — **forecast-period only** |
 | 5 | M&A Value Per Share ($/share) | **blank** | `=IF(diluted_shares=0, "", portfolio_value / diluted_shares)` | Per-share, bold | Key output: per-share value from M&A |
+| 6 | Acquisition EV/EBITDA Multiple | blank | assumption (e.g. 12.0x) | Multiple 0.0"x", italic, blue/yellow | What the company pays per dollar of acquired EBITDA — source from management commentary, deal history, or sector norms |
+| 7 | *Acquired EBITDA (Annualized)* | **blank** | `=IF(Multiple=0, 0, ABS(Acquisitions) / Multiple)` | Number, italic | The EBITDA that came with that year's deals. Full-year contribution starting in the acquisition year (matches the annual granularity of the spend assumption) |
+| 8 | *Cumulative Acquired EBITDA* | **blank** | FY1: `=Acquired EBITDA`. FY N: `=prior + FY N Acquired EBITDA` | Number, italic | **MEMO ONLY — feeds the leverage ratios and nothing else.** Never flows into the IS, CFS, EPS, or Returns |
+
+### Credit-Adjusted EBITDA (why rows 6-8 exist)
+
+Acquisitions bring EBITDA with them, but this model deliberately keeps acquired earnings OUT of the P&L (their value is captured by the Portfolio-at-IRR rows instead). Without an adjustment, Net Debt/EBITDA divides an acquisition-funded balance sheet by organic-only EBITDA — leverage looks progressively, and wrongly, worse the more the company acquires. The fix is a phantom-EBITDA memo:
+
+- **Credit-Adjusted EBITDA** `= Model EBITDA + Cumulative Acquired EBITDA` — computed in the BS & CFS Build's Leverage Metrics sub-block (see the re-wiring step below), which is where the leverage ratios live.
+- ONLY the leverage ratios (Net Debt/EBITDA, Total Obligations/EBITDA, Interest Coverage) consume it. It is invisible everywhere else in the model.
+- When Acquisitions = 0 in all projection years, rows 6-8 may be omitted entirely and the ratios run on plain Model EBITDA.
+
+### Re-wire the Leverage Metrics sub-block (required when an M&A program is active)
+
+The BS & CFS Build Debt & Cash section's Leverage Metrics sub-block was built in Phase 3 on plain Model EBITDA (this tab didn't exist yet). Now add/link:
+
+1. *Cumulative Acquired EBITDA* row: `='Capital Allocation Build'!row 8` (green cross-sheet ref, italic memo)
+2. **Credit-Adjusted EBITDA** row: `=EBITDA + Cumulative Acquired EBITDA`
+3. Re-point Net Debt/EBITDA, Total Obligations/EBITDA, and Interest Coverage denominators/numerators to the Credit-Adjusted row
+4. This is display-layer wiring only — nothing computational depends on leverage ratios, so no circularity is created
 
 ### Design Rationale
 
@@ -433,9 +453,10 @@ A phase is complete if and only if ALL of the following are true. Report complet
 2. **All 6 verification checks pass** (BS=0, CF=0, NI=0, Waterfall=0, CFS End Cash=Target, CFS End Cash=BS Cash). Read and report actual values for every projection period.
 3. **Phase 4 placeholders re-linked — all 6**: CFS Dividends, CFS Buybacks, CFS Acquisitions, IS Diluted Shares, BS & CFS Build PP&E-section Acquisitions row, and BS!M&A Assets all reference Capital Allocation Build. Read each cell and confirm the live link.
 4. **Post-wiring BS equity adjustment** done: RE includes dividends, CSAPIC/Treasury includes buybacks.
-5. **Iterative calculation enabled** and circular refs resolving.
-6. **Tab Completion Verification** output pasted.
-7. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-6".
+5. **Leverage ratios re-wired to Credit-Adjusted EBITDA** (when an M&A program is active): the BS & CFS Build Leverage Metrics sub-block links Cumulative Acquired EBITDA and every ratio uses the Credit-Adjusted row. Read the Net Debt/EBITDA formula and confirm. (Skip if Acquisitions = 0 all years — report that instead.)
+6. **Iterative calculation enabled** and circular refs resolving.
+7. **Tab Completion Verification** output pasted.
+8. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-6".
 
 If you write "Phase 5 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 

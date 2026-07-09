@@ -43,16 +43,20 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 | Row | Label | Notes |
 |-----|-------|-------|
 | 1 | EBITDA | Green ref to the Profit Build Consolidated P&L Bridge |
-| 2 | Total Debt | Echo from Sub-Block 1 |
-| 3 | Total Finance Leases | `=FL Liability` (if applicable) |
-| 4 | Total Obligations | `=Total Debt + OL Liability + FL Liability` |
-| 5 | Net Debt | Echo from Sub-Block 1 |
-| 6 | Net Obligations | `=Net Debt + OL Liability + FL Liability` |
-| 7 | Total Debt / EBITDA | Ratio |
-| 8 | Total Obligations / EBITDA | Ratio |
-| 9 | Net Debt / EBITDA | Ratio |
-| 10 | Net Obligations / EBITDA | Ratio |
-| 11 | Interest Coverage (EBITDA / Interest) | `=EBITDA / ABS(Total Interest)` |
+| 2 | *Cumulative Acquired EBITDA (memo)* | Added by Phase 5 when an M&A program exists: `='Capital Allocation Build'!Cumulative Acquired EBITDA` (green, italic). Blank/omitted until then |
+| 3 | **Credit-Adjusted EBITDA** | `=EBITDA + Cumulative Acquired EBITDA`. Equals plain EBITDA when no M&A program. **All ratios below use THIS row** — acquired businesses bring EBITDA that lenders count, and dividing acquisition-funded debt by organic-only EBITDA overstates leverage. Memo concept only: never feeds the IS/CFS/EPS/Returns |
+| 4 | Total Debt | Echo from Sub-Block 1 |
+| 5 | Total Finance Leases | `=FL Liability` (if applicable) |
+| 6 | Total Obligations | `=Total Debt + OL Liability + FL Liability` |
+| 7 | Net Debt | Echo from Sub-Block 1 |
+| 8 | Net Obligations | `=Net Debt + OL Liability + FL Liability` |
+| 9 | Total Debt / EBITDA | Ratio (Credit-Adjusted EBITDA denominator) |
+| 10 | Total Obligations / EBITDA | Ratio (Credit-Adjusted EBITDA denominator) |
+| 11 | Net Debt / EBITDA | Ratio (Credit-Adjusted EBITDA denominator) |
+| 12 | Net Obligations / EBITDA | Ratio (Credit-Adjusted EBITDA denominator) |
+| 13 | Interest Coverage (EBITDA / Interest) | `=Credit-Adjusted EBITDA / ABS(Total Interest)` |
+
+In Phase 3, build rows 2-3 with Credit-Adjusted = plain EBITDA (the Capital Allocation Build doesn't exist yet); Phase 5 links row 2 when it sets up the M&A program. Display-layer only — nothing computational depends on these ratios, so the cross-tab reference creates no circularity.
 
 ### Sub-Block 5: Cash & Equivalents (Target Balance)
 

@@ -46,7 +46,7 @@ Tab order in the workbook (left to right):
 | Output | Single-page investment summary. **Blank until Phase 10.** | Navy (#1C3553) |
 | Consensus | Model vs. street comparison. **Blank until Phase 11.** | Navy (#1C3553) |
 | Returns | XIRR, IRR decomposition. **Blank until Phase 7.** | Navy (#1C3553) |
-| Model Tab | Summary IS, key drivers, KPIs, ROIC/ROTIC. **Blank until Phase 6.** | Navy (#1C3553) |
+| Model Tab | Summary IS, key drivers, KPIs, capital allocation. **Blank until Phase 6.** | Navy (#1C3553) |
 | KPI Tracker | Quarterly KPI dashboard, 4-year lookback + forward. **Blank until Phase 2.** | Navy (#1C3553) |
 | IS | Income Statement — Model View (historicals link to Annual Historicals) | Sage green (#6B9E6F) |
 | BS | Balance Sheet — Model View | Sage green (#6B9E6F) |

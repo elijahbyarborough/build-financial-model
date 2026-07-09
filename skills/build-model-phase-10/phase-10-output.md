@@ -13,7 +13,7 @@ This tab is the model's "front page" for investment committee presentations, dea
 1. **Returns Timeline** — condensed replica of the Returns tab analysis (Entry → 6 FY years → Exit)
 2. **Summary Income Statement** — condensed P&L with margins and CAGR / Δ
 3. **Key Drivers & KPIs** — major segment/business-level drivers
-4. **Capital Allocation & Returns** — FCF, deployment, leverage, ROIC
+4. **Capital Allocation & Returns** — FCF, deployment, leverage
 
 ---
 
@@ -219,7 +219,7 @@ These dividers do **NOT** appear in the Returns Timeline section (different colu
 Thin black borders to delineate groups and totals:
 
 - Bottom thin border on the last row of each sub-group (above a subtotal or before a new group starts)
-- Top thin border on subtotal/total rows (EBITDA, EBIT, NI, EPS, FCF, Total Deployed, ROIC, ROTIC)
+- Top thin border on subtotal/total rows (EBITDA, EBIT, NI, EPS, FCF, Total Deployed)
 - Both top + bottom thin borders on segment revenue totals
 
 ---
@@ -234,13 +234,13 @@ Thin black borders to delineate groups and totals:
 
 | Row Type | Treatment | Format | Style |
 |----------|-----------|--------|-------|
-| Dollar-denominated lines (Revenue, EBITDA, EBIT, NI, EPS, CFO, FCF, Capex, Total Deployed, NOPAT, segment revenues, TAC, ex-TAC) | CAGR: `=(Terminal/Entry)^(1/N)-1` | `0.0%_);(0.0%);"-"` | Bold + italic |
-| Margin / ratio lines (EBITDA Margin, Op Margin, NI Margin, FCF Margin, TAC Rate, OI Margin, ROIC, ROTIC, Payout %, FCF Conversion, EBITDA Conversion) | Delta: `=Terminal-Entry` | `+0.0%;-0.0%;"-"` (directional sign) | Italic only |
+| Dollar-denominated lines (Revenue, EBITDA, EBIT, NI, EPS, CFO, FCF, Capex, Total Deployed, segment revenues, TAC, ex-TAC) | CAGR: `=(Terminal/Entry)^(1/N)-1` | `0.0%_);(0.0%);"-"` | Bold + italic |
+| Margin / ratio lines (EBITDA Margin, Op Margin, NI Margin, FCF Margin, TAC Rate, OI Margin, Payout %, FCF Conversion, EBITDA Conversion) | Delta: `=Terminal-Entry` | `+0.0%;-0.0%;"-"` (directional sign) | Italic only |
 | Revenue mix % lines (Services %, Cloud %, Other Bets %) | Delta: `=Terminal-Entry` | `+0.0%;-0.0%;"-"` (directional sign) | Italic only |
 | Growth rate lines (Y/Y Revenue Growth, Y/Y segment growth, Volume Growth %, Price Growth %, etc.) | **Leave blank** — a delta of a growth rate is noise | — | — |
 | Share count, leverage multiples, interest coverage | **Leave blank** — not meaningful as CAGR or delta | — | — |
 
-**Decision rule**: If the line is a level measured in dollars, show its CAGR. If the line is a rate or ratio (margin, conversion, ROIC), show the directional delta. If the line is already a rate of change (growth %), leave it blank.
+**Decision rule**: If the line is a level measured in dollars, show its CAGR. If the line is a rate or ratio (margin, conversion, payout), show the directional delta. If the line is already a rate of change (growth %), leave it blank.
 
 ---
 
@@ -313,23 +313,14 @@ FCF Conversion = FCF / Net Income. EBITDA Conversion = FCF / EBITDA. Use em-dash
 | | **Total Capital Deployed** | `='Model Tab'!Total Deployed` | $#,##0, bold |
 | | *Acquisition-Adjusted Payout %* | `='Model Tab'!Adj Payout` | 0.0%, italic |
 | | (blank spacer) | | |
-| | Net Debt / EBITDA | `='Model Tab'!leverage` | 0.0"x" |
-| | Interest Coverage (x) | `='Model Tab'!coverage` | 0.0"x" |
+| | Net Debt / EBITDA | `='Model Tab'!leverage` | 0.0"x" — pulls the CREDIT-ADJUSTED ratio when an M&A program is active (see below) |
+| | *Acquired EBITDA (Cumulative, memo)* | `='Model Tab'!acquired EBITDA` | Number, italic — include only when an M&A program is active |
+| | Interest Coverage (x) | `='Model Tab'!coverage` | 0.0"x" — credit-adjusted basis when M&A active |
 | | *Acquisition IRR* | `='Model Tab'!IRR` | 0.0%, italic |
 
-**Acquisition IRR placement**: Below Interest Coverage, immediately before the ROIC / ROTIC subheader. References the Model Tab (not Capital Allocation Build directly), maintaining the two-source-tab rule. Historical columns are blank. Projection columns show the assumed IRR in default dark #212529 (projection-zone color per the Output color exception — green is historical-only on this tab).
+**Acquisition IRR placement**: Below Interest Coverage, the last row of the section. References the Model Tab (not Capital Allocation Build directly), maintaining the two-source-tab rule. Historical columns are blank. Projection columns show the assumed IRR in default dark #212529 (projection-zone color per the Output color exception — green is historical-only on this tab).
 
-**Conditional inclusion**: Only include the Acquisition IRR row if the model includes material acquisition activity (i.e., non-zero Acquisitions, Net in the projection period). If the model has no projected acquisitions, omit this row entirely.
-
-### Tier 2 Subheader — "ROIC / ROTIC"
-
-| Row | Label | Source | Format |
-|-----|-------|--------|--------|
-| | NOPAT | `='Model Tab'!NOPAT` | $#,##0 |
-| | Invested Capital | `='Model Tab'!IC` | $#,##0 |
-| | **ROIC** | `='Model Tab'!ROIC` | 0.0%, bold |
-| | Tangible Invested Capital | `='Model Tab'!Tangible IC` | $#,##0 |
-| | **ROTIC** | `='Model Tab'!ROTIC` | 0.0%, bold |
+**Conditional inclusion**: Only include the Acquisition IRR and Acquired EBITDA rows if the model includes material acquisition activity (i.e., non-zero Acquisitions, Net in the projection period). If the model has no projected acquisitions, omit both rows entirely and the leverage ratios are on plain Model EBITDA.
 
 ---
 
@@ -364,7 +355,7 @@ Use Excel's indent feature (not leading spaces). The Output tab follows the firm
 
 | Indent Level | Used For | Examples |
 |---|---|---|
-| **0** | Tier 1/Tier 2 headers, key totals, standalone line items | Section headers, Net Revenue, EBITDA, EBIT, Net Income, Diluted EPS, FCF, Total Capital Deployed, Normalized EBITDA, Normalized EBIT, ROIC, ROTIC |
+| **0** | Tier 1/Tier 2 headers, key totals, standalone line items | Section headers, Net Revenue, EBITDA, EBIT, Net Income, Diluted EPS, FCF, Total Capital Deployed, Normalized EBITDA, Normalized EBIT |
 | **1** | Sub-items, margin/% rows, growth rates, memo bridge starting points, supporting line items | Y/Y Revenue Growth, OpEx, D&A, Operating Margin %, EBITDA Margin %, Net Income Margin %, FCF Margin %, Diluted Shares, EBITDA (memo in bridge), Interest Coverage, Net Debt/EBITDA |
 | **2** | Addback/detail lines within a reconciliation bridge | + Litigation Provision, + Other / Non-Recurring, + SBC, + M&A Expense |
 
@@ -411,7 +402,7 @@ After writing all labels, visually verify none are clipped by the column boundar
 
 ### Row Formatting Patterns
 
-- Key totals (Revenue, GP, EBIT, EBITDA, NI, FCF, Total Deployed, ROIC, ROTIC): Bold
+- Key totals (Revenue, GP, EBIT, EBITDA, NI, FCF, Total Deployed): Bold
 - All % rows: Italic
 - Major totals in Returns section: F2F2F2 fill + bold
 - M&A Value Per Share: Italic, black font
