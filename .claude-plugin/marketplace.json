@@ -3,7 +3,8 @@
   "owner": { "name": "Elijah Yarborough" },
   "plugins": [
     {
-      "name": "build-financial-model",
+      "name": "financial-modeling-tools",
+      "displayName": "Financial Modeling Tools",
       "source": "./",
       "description": "FC 13-phase financial model build system (phases 0-12): historicals capture, driver-based 3-statement model, KPI tracker, XIRR returns, post-earnings updates."
     }
