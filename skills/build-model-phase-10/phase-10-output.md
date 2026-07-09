@@ -6,7 +6,7 @@
 
 ## What Happens in This Phase
 
-Build the Output tab — a single-page investment summary that consolidates the entire model onto one printable sheet. The Returns Timeline section pulls from the **Returns tab**. Everything below (IS, KPIs, Capital Allocation) pulls from the **Model Tab**. Contains ZERO hardcoded values except the Exit P/E assumption (which mirrors the Returns tab input).
+Build the Output tab — a single-page investment summary that consolidates the entire model onto one printable sheet. The Returns Timeline section pulls from the **Returns tab**. Everything below (IS, KPIs, Capital Allocation) pulls from the **Model Tab**. Contains ZERO hardcoded values — even the Exit P/E cell is a formula (`=Returns!Exit P/E`), displayed in blue as an assumption cue (a registered Hardcode Registry exception mirroring the Returns tab input).
 
 This tab is the model's "front page" for investment committee presentations, deal memos, or quick reference.
 
@@ -21,7 +21,7 @@ This tab is the model's "front page" for investment committee presentations, dea
 
 | Column | Width | Content |
 |--------|-------|---------|
-| A (row labels) | 165pt | All row labels |
+| A (row labels) | ~165pt (within the 154–177pt range) | All row labels |
 | B (spacer) | 6pt | Empty visual separator |
 | C–L (data columns) | 70pt each (uniform) | Historical, projection, and Returns data |
 | M (CAGR / Δ) | 53pt | Compound growth or directional delta |
@@ -175,7 +175,7 @@ The year headers are a **standalone block** placed between the Returns Timeline 
 **Layout (3 rows):**
 
 1. **Year labels**: "FY 2023A", "FY 2024A", "FY 2025A", "FY 2026E", … "FY 2032E", "CAGR / Δ" — bold, center-aligned, text format (@). Medium solid bottom border on this row.
-2. **Fiscal year-end dates**: `=Model!col4` for each year — mm/dd/yy, center-aligned. Medium solid top border on this row.
+2. **Fiscal year-end dates**: `='Model Tab'!col4` for each year — mm/dd/yy, center-aligned. Medium solid top border on this row.
 3. **Spacer row**: Empty, standard height.
 
 The next row after the spacer is the "Summary Income Statement" Tier 1 navy header. No section repeats its own year row — these shared headers apply to IS, KPIs, and Capital Allocation alike.
@@ -317,7 +317,7 @@ FCF Conversion = FCF / Net Income. EBITDA Conversion = FCF / EBITDA. Use em-dash
 | | Interest Coverage (x) | `='Model Tab'!coverage` | 0.0"x" |
 | | *Acquisition IRR* | `='Model Tab'!IRR` | 0.0%, italic |
 
-**Acquisition IRR placement**: Below Interest Coverage, immediately before the ROIC / ROTIC subheader. References the Model Tab (not Capital Allocation Build directly), maintaining the two-source-tab rule. Historical columns are blank. Projection columns show the assumed IRR (green font for cross-sheet reference).
+**Acquisition IRR placement**: Below Interest Coverage, immediately before the ROIC / ROTIC subheader. References the Model Tab (not Capital Allocation Build directly), maintaining the two-source-tab rule. Historical columns are blank. Projection columns show the assumed IRR in default dark #212529 (projection-zone color per the Output color exception — green is historical-only on this tab).
 
 **Conditional inclusion**: Only include the Acquisition IRR row if the model includes material acquisition activity (i.e., non-zero Acquisitions, Net in the projection period). If the model has no projected acquisitions, omit this row entirely.
 

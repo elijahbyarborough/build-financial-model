@@ -48,7 +48,7 @@ If you are resuming a session and the Task Tracker shows phases already complete
 1. Pick 3 cells at random from completed phases (one from a build tab, one from a statement tab, one from a summary/output tab if available)
 2. For each cell, verify:
    - Font color matches firm-formatting rules (blue = hardcode, black = formula, green = cross-sheet)
-   - Number format includes `_)` padding (Integer-format cells like share counts are exempt -- no parenthetical negatives expected)
+   - Number format includes `_)` padding (Integer-format cells are exempt -- no parenthetical negatives expected)
    - If assumption cell: yellow bg (#FFFF00) present, source comment present
 3. Output the audit results to the user:
    ```
@@ -93,7 +93,7 @@ Exit-multiple over DCF. Only build DCF when explicitly requested. Multiple hiera
 
 ### Formula Construction
 - Always use Excel formulas -- never hardcode calculations in Python and paste values
-- **Never embed assumptions as in-cell hardcodes within output/data formulas.** Every model driver assumption must be a clearly identifiable cell with **yellow background (#FFFF00) + blue text (#0000FF)** and a source comment. (Exception: KPI Tracker guidance mid-points stay blue text only, per the `kpi-tracker` skill -- yellow is reserved for projection driver assumptions on build tabs and the Returns tab.)
+- **Never embed assumptions as in-cell hardcodes within output/data formulas.** Every model driver assumption must be a clearly identifiable cell with **yellow background (#FFFF00) + blue text (#0000FF)** and a source comment. Yellow is reserved for projection driver assumptions on build tabs and the Returns tab. (Guidance in a plugin-built model is CAPTURED on the Quarterly Historicals Guidance section, blue + comment; the KPI Tracker links to it in green. Only in the kpi-tracker skill's standalone mode do guidance mid-points sit on the tracker as blue-only hardcodes.)
 - Historical totals must also be formulas (`=SUM()` or equivalent)
 - Comment every assumption with rationale and source
 - Only ASCII in comments (no em dashes, smart quotes)
@@ -103,6 +103,20 @@ Assumption values go directly in the **projection columns of the existing metric
 
 ### Single Hardcode Layer (Historicals Tabs)
 **The Annual Historicals and Quarterly Historicals tabs are the ONLY place hardcoded historical values are allowed** -- entered at capture with blue text (#0000FF) and a source comment citing the filing. Every historical value anywhere else in the model (statements, build tabs, Model Tab, KPI Tracker) must be a formula linking back to a Historicals tab. The audit trail is the source comment, one click away. Raw source tabs (BAMSEC, Tegus, broker) are working material for capture, never live link targets.
+
+### Hardcode Registry (the complete list of legitimate hardcode sites)
+
+Every QC audit (Gates 2 and 5, Phase 12) validates against THIS list. A blue-text data cell anywhere not on it is a finding; a cell on it is never a finding.
+
+| Site | What | Marking |
+|------|------|---------|
+| Annual / Quarterly Historicals | All captured reported values (historical hardcodes) | Blue + source comment |
+| Profit Build, BS & CFS Build, Capital Allocation Build | Projection driver assumptions | Yellow bg + blue + source comment |
+| Returns tab | Exactly 3: Entry Price, Entry Date, Exit P/E | Yellow bg + blue + source comment |
+| Output tab | Exit P/E mirror -- a FORMULA (`=Returns!Exit P/E`) displayed in blue as an assumption cue; not a true hardcode | Blue font on formula (registered exception) |
+| KPI Tracker | Plugin-built models: NONE (fully link-based, incl. guidance -- links to the Quarterly Historicals Guidance section). Standalone mode only: historicals + guidance hardcodes | Blue (standalone only) |
+| Phase 12 freezes | Stray source-tab references frozen to values | Blue + comment tagged `Frozen: Phase 12 [date], from [ref]` |
+| Structural labels | Year headers, row labels, titles | Black (never counted as hardcodes) |
 
 ### Capture Everything
 The Historicals tabs are the "we captured everything the company reports" record. Enter every line the company discloses in each section -- full statement faces, all segment/geographic/operational detail, share data, guidance, footnote schedules. Summarization happens downstream (statements, Model Tab, KPI Tracker), never at capture. Section hierarchy and edge-case protocols (segment recasts, ASC adoptions, FYE changes, restatements) are defined in `meth-historicals.md` (Phases 1-2).
@@ -127,7 +141,7 @@ If any check is non-zero, stop and debug. **Never use a plug, balancing item, or
 When source data contains operating or finance leases (ASC 842), the model must include dedicated lease schedules on the BS & CFS Build tab. Lease detection occurs in Phase 0/1. Key flags tracked on the Task Tracker: `HAS_OPERATING_LEASES`, `HAS_FINANCE_LEASES`, `FL_IN_PPE`, `LEASE_MATERIALITY`, and the full Lease BS Map. The critical rule: **CF Financing finance lease payment = principal only (depreciation amount), NEVER total payment (depreciation + interest).**
 
 ### Iterative Calculation Required
-After Phase 4, the model contains intentional circular references (Capital Allocation waterfall depends on CFS, CFS depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 4. Without it, the model will show circular reference errors.
+After Phase 5, the model contains intentional circular references (Capital Allocation waterfall depends on CFS, CFS depends on waterfall). **Enable iterative calculation in Excel** (`File > Options > Formulas > Enable iterative calculation`) before running Phase 5. Without it, the model will show circular reference errors. Phases 0-4 are a straight-line dependency chain and need no iteration.
 
 ### Subtask Completion Protocol
 
@@ -139,7 +153,7 @@ After completing each subtask (e.g., P2.1, P2.2, P2.3) -- before starting the ne
 Do NOT batch these updates at phase end. Small, frequent writes during work -- not one big write after. If you complete a subtask and move to the next without updating the tracker, you have made an error. Stop and update.
 
 ### ROIC & ROTIC
-Standard in every model. ROIC and ROTIC on the Model Tab. Full formulas provided in the Phase 5 skill.
+Standard in every model. ROIC and ROTIC on the Model Tab. Full formulas provided in the Phase 6 skill (`meth-roic.md`).
 
 ---
 

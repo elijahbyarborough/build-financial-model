@@ -81,7 +81,7 @@ For each identified cell:
 1. Record the current computed value
 2. Replace the formula with the hardcoded value
 3. Change the font color to **blue (#0000FF)** — marks it as a hardcoded input per firm-formatting color coding
-4. Add a source comment citing the origin (`Source: [source tab], [original reference]`)
+4. Add the registry tag comment: `Frozen: Phase 12 [date], from [source tab]![cell]` — this registers the cell in the Hardcode Registry so Gate 5 re-runs and future audits never flag it
 5. **Do NOT add yellow background** — yellow bg is reserved for assumption cells (projection drivers). Historical hardcodes get blue text only.
 
 **Better fix, when practical:** if the value already exists on the Annual/Quarterly Historicals tabs, re-point the formula there (green cross-sheet reference) instead of freezing — that restores the single-hardcode-layer architecture rather than adding a second hardcode site.
@@ -158,7 +158,7 @@ This is unusual and likely a modeling error. Flag it for the user rather than fr
 
 | Cell Type | Font Color | Background | Notes |
 |-----------|-----------|------------|-------|
-| Frozen historical value (was source reference) | Blue (#0000FF) | None (white) | Standard hardcode color per firm-formatting |
+| Frozen historical value (was source reference) | Blue (#0000FF) | None (white) | Standard hardcode color per firm-formatting; comment MUST carry the tag `Frozen: Phase 12 [date], from [source tab]![cell]` — this registers the cell in the Hardcode Registry so Gate 5 re-runs never flag it |
 | Hardcoded assumption (projection driver) | Blue (#0000FF) | Yellow (#FFFF00) | Unchanged — these were already blue/yellow |
 | Live formula | Black (#212529) | None | Unchanged |
 | Cross-sheet model reference | Green (#008000) | None | Unchanged |
@@ -185,7 +185,7 @@ A phase is complete if and only if ALL of the following are true. Report complet
 
 1. **Task Tracker**: Every subtask row for Phase 12 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **Stray source references resolved**: report counts found / frozen / re-pointed / flagged. Zero live source-tab references remain outside the Data Pull tabs and the consensus data source.
-3. **Single-hardcode-layer audit passed**: zero hardcoded historicals outside the Annual/Quarterly Historicals tabs. Report the scan scope and count.
+3. **Single-hardcode-layer audit passed**: zero hardcoded historicals outside the Annual/Quarterly Historicals tabs other than Hardcode Registry-sanctioned cells (including this phase's `Frozen: Phase 12`-tagged freezes). Report the scan scope, count, and the number of tagged freezes.
 4. **Data Pull discipline verified**: model references only Data Pull (Values); snapshot date-stamped; no stray live SPG() formulas.
 5. **BS Check = 0** across all periods. Read and report.
 6. **CF Check = 0** across all periods. Read and report.

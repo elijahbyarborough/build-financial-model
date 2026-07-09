@@ -1,4 +1,4 @@
-<!-- CANONICAL COPY: build-model-phase-3/meth-goodwill.md — sync edits there first -->
+<!-- CANONICAL: this file is canonical in build-model-phase-3. Copies elsewhere sync FROM here. -->
 
 ## BS & CFS Build — Goodwill & Intangibles Section
 

@@ -54,7 +54,7 @@ Ask the user:
 If the user wants prior quarters back N years, ask whether they want the skill to retrieve them via EDGAR (using `edgar-retriever` skill) or whether they'll upload them individually.
 
 Confirm:
-- Time horizon (default: quarterlies back 4 years + LTM/FY columns)
+- Time horizon (default: quarterlies back 4 years + FY columns)
 - Tab placement (default: right after Task Tracker / first input tab)
 
 Skip to A2 ONLY when these are answered.
@@ -240,17 +240,16 @@ For derived rows (margin %, Y/Y growth, per-unit) — DO NOT overwrite. The exis
 
 Update row 4 label for the target column from `FQN YYYYE` → `FQN YYYYA`.
 
-### B7. Move forecast divider one column right
+**Fiscal-year close (FQ4) branch**: when the flipped quarter is FQ4, the fiscal year is now fully actual — ALSO flip the FY column's label `FY YYYYE` → `FY YYYYA` and verify its derivation formulas resolve to actuals (per the FY Derivation Matrix).
 
-Find the column with the existing medium left border (`#212529`, weight Medium). Clear that border. Apply the same border to the NEXT column to the right.
+### B7. Move forecast divider right
 
-```javascript
-// Pseudo: 
-// Old divider was at X — clear X1:X{lastRow} EdgeLeft
-// New divider goes to Y (X+1) — set Y4:Y{lastRow} EdgeLeft to medium #212529
-```
+Find the column with the existing medium left border (`#212529`, weight Medium). Clear that border, then re-place it on the first column that is still a forecast:
 
-The divider should span rows 4 through the last data row. Rows 1–3 (title/units area) stay clean.
+- **FQ1–FQ3 flipped**: the next column to the right (the following quarter).
+- **FQ4 flipped**: TWO columns right — past the now-actual FY column — so the divider lands on the first forecast quarter of the next year. Never leave the divider on a fully-actual FY column.
+
+The divider spans row 4 through the last data row. Rows 1–3 (title/units area) stay clean.
 
 ### B8. Update FY column derivation (if applicable)
 
@@ -269,7 +268,7 @@ Concise summary:
 
 ## Tab Construction Spec (used by Track A)
 
-### Header structure (rows 1–6, firm-formatting standard)
+### Header structure (rows 1–6 — KPI Tracker layout, a registered variant of the firm standard; do not apply to other tabs)
 
 | Row | Content | Border |
 |---|---|---|
@@ -277,7 +276,7 @@ Concise summary:
 | 2 | `($ in millions, except per-unit and per-share data)` — italic, no fill | None |
 | 3 | Blank spacer | None |
 | 4 | Period labels: `FQ1 2022A`, ..., `FY 2026E` — bold black, centered, Arial 10 | **Medium bottom border on `C4:[lastcol]4` ONLY. NO border on `A4:B4`.** |
-| 5 | Period-end dates: `3/31/2022`, etc., format `m/d/yyyy`, centered, regular Arial 10 | **NO border anywhere on row 5.** |
+| 5 | Period-end dates: `03/31/22`, etc., format `MM/DD/YY` (firm header-date format), centered, regular Arial 10 | **NO border anywhere on row 5.** |
 | 6 | Blank spacer | None |
 | 7+ | First section header (Tier 1) | — |
 
@@ -383,7 +382,7 @@ Apply medium left border (`#212529`, weight Medium) to the column representing t
 | Bps | `#,##0_);(#,##0);"-"` |
 | Integer (volumes in 000s) | `#,##0` |
 | Year | `@` (text) |
-| Date | `m/d/yyyy` |
+| Date | `MM/DD/YY` (header-date rows) |
 
 ### Color coding
 
@@ -416,7 +415,7 @@ In standalone mode this applies to BOTH Track A (new build) and Track B (update 
 |---|---|
 | $ flows (revenue, GP, EBITDA, EBIT, NI, capex, $ COGS) | `=SUM(Q1:Q4)` |
 | Volume / unit counts (tons, transactions, etc.) | `=SUM(Q1:Q4)` |
-| Period-end balances (cash, debt, total assets, employees-stock) | `=Q4` (last quarter only) |
+| Period-end balances (cash, debt, total assets, headcount) | `=Q4` (last quarter only) |
 | Diluted shares outstanding (weighted avg) | `=AVERAGE(Q1:Q4)` |
 | Per-share metrics (EPS, DPS) | `=SUM(Q1:Q4)` (sum-of-quarterly EPS — standard convention) |
 | Prices, per-unit costs ($/ton, $/cy) | **Volume-weighted average**: `=SUMPRODUCT(prices, volumes) / SUM(volumes)` |
@@ -456,10 +455,9 @@ Use `IFERROR` ONLY as a secondary wrapper for the rare case where division by ze
 
 - Section header "Guidance" — Tier 1 navy
 - One row per guided item
-- Populate FY (or current guided year) column with the **mid-point** of the range (or the point estimate if no range)
-- Cell note: `"Source: [Company] [Period] Earnings Release — guided [low%-high%] / [$low-$high]M, mid-point shown"`
-- Blue text (hardcoded), italic for % rows
-- **No yellow background**
+- Placement: quarterly guidance → the next unreported quarter's column; full-year guidance → the guided FY column; populate the **mid-point** of the range (or the point estimate if no range)
+- **Sourcing by mode**: plugin-model → guidance is CAPTURED on the Quarterly Historicals Guidance section (blue there) and these rows LINK to it (green cross-sheet refs); standalone → enter mid-points here directly, blue text + cell note: `"Source: [Company] [Period] Earnings Release — guided [low%-high%] / [$low-$high]M, mid-point shown"`
+- Italic for % rows; **no yellow background** either mode
 
 ## Source citations (MANDATORY)
 

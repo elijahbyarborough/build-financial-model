@@ -74,7 +74,9 @@ phases. Do not declare completion before those values are confirmed.
 
 - One phase per subagent. Never run two phases in a single subagent — that defeats the
   context reset that makes this worth doing.
-- Never skip a phase. Order is strict: 0 → 1 → 2 → ... → 12.
+- Never skip a phase. Order is strict: 0 → 1 → 2 → ... → 12. One sanctioned exception:
+  Phase 11 (Consensus) may be skipped when no consensus data source exists — record the
+  skip on the Task Tracker and proceed to Phase 12 (whose preflight accepts it).
 - You (the conductor) never touch Excel cells directly. If tempted to "just fix" something,
   spawn a subagent to do it.
 - If a subagent dies or returns nothing, retry it once; if it fails again, STOP and report.

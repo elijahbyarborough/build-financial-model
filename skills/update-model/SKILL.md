@@ -65,9 +65,9 @@ Follow the `kpi-tracker` skill's **Track B**, with the plugin-model sourcing rul
 
 1. Identify the target column (first column labeled `E` for the printed quarter).
 2. **Write green cross-sheet formulas** into the flipped column pulling the new quarter's cells from Quarterly Historicals — forward columns are blank until flipped, so the links are created now, at flip time.
-3. Flip the period label `E` → `A`; move the forecast divider one column right.
+3. Flip the period label `E` → `A`; move the forecast divider right — one column for FQ1–FQ3, **two columns when FQ4 printed** (past the FY column, which also flips `FY YYYYE` → `FY YYYYA`), per Track B's fiscal-year-close branch.
 4. Intra-tab derived rows (Y/Y, margins, FY derivations) update automatically; verify the FY formulas still span the right quarters per the FY Derivation Matrix.
-5. New guidance mid-points → next unreported quarter column and/or guided FY column, blue + cell note.
+5. New guidance: already CAPTURED on the Quarterly Historicals Guidance section in Step 2.5 — ensure the tracker's guidance rows LINK to those cells (green cross-sheet refs) in the next unreported quarter and/or guided FY column. Never hardcode guidance onto the tracker in a plugin-built model.
 6. If the tracker has run out of forward columns, extend per the kpi-tracker forward-projection matrix.
 
 ## Step 4 — Verify (read values back; do not assert from memory)
@@ -95,4 +95,4 @@ Report the verification block plus a one-line summary of what printed and what w
 - Re-anchor the Returns tab entry date/price (Phase 7)
 - Refresh the Consensus tab source data (Phase 11)
 
-Update the Task Tracker: log the update (date, quarter, sections captured, checks passed) in the Notes/log area. Do not change the Model State Block phase fields — this skill is maintenance, not a build phase.
+Update the Task Tracker: log the update (date, quarter, sections captured, checks passed) in the Notes/log area. Do not change the Model State Block's "Last Skill Run" / "Next Skill" fields — this skill is maintenance, not a build phase.

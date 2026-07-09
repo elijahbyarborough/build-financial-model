@@ -70,7 +70,7 @@ Three lines in strict priority order, plus a check row:
 
 | Row | Label | Historical Formula | Projection Formula | Notes |
 |-----|-------|-------------------|-------------------|-------|
-| 1 | Acquisitions, Net | `=CFS!Acquisitions row` | `=-Acquisitions assumption (from M&A section below)` | Priority 1 |
+| 1 | Acquisitions, Net | `=CFS!Acquisitions row` | `=M&A section Acquisitions, Net row` (pull — the blue/yellow input lives in the M&A section below) | Priority 1 |
 | 2 | Dividends Paid | `=CFS!Dividends row` | `=Total Dividends (from Dividend Policy section below)` | Priority 2 |
 | 3 | Gross Share Repurchases | `=CFS!Share Repurchases row` | See Buyback Plug Formula below | **RESIDUAL SWEEP** |
 | 4 | **Waterfall Check** | `=Cash Available + all deployment = 0` | `=Cash Available + all deployment = 0` | Should be ~0. Bold. |
@@ -79,19 +79,22 @@ Three lines in strict priority order, plus a check row:
 
 Buybacks are the residual sweep — they absorb all excess cash after acquisitions, dividends, and every other CF flow. However, do NOT compute buybacks from the Cap Alloc waterfall residual. The waterfall is informational only.
 
-Instead, compute buybacks as a direct plug against the BS & CFS Build cash target. The formula enumerates every CF line item EXCEPT buybacks:
+Instead, compute buybacks as a direct plug against the BS & CFS Build cash target. The plug is **STRUCTURAL, not enumerated** — it sums the actual CFS ranges rather than a hand-maintained list of line items:
 
 ```
-Buybacks = Target_Cash - Prior_End_Cash - CFO - CFI - SBC_Withholding - Dividends - Debt_Issuance - Debt_Repayment - Other_Financing - FX
+Buybacks = Target_Cash - Prior_End_Cash - (sum of ALL other CFS flow rows)
+         = Target_Cash - Prior_End_Cash - (CFO subtotal + CFI subtotal + SUM(all CFF lines except buybacks) + FX)
 ```
 
 Where:
-- Target_Cash = BS & CFS Build cash balance for the current period (e.g., `='BS & CFS Build'!L10`)
-- Prior_End_Cash = CFS ending cash from the prior period (e.g., `=CFS!K42`)
-- All other terms reference their respective CFS tab rows for the current period
-- Dividends references the Cap Alloc Build dividend row (which flows to CFS)
+- Target_Cash = BS & CFS Build cash balance for the current period (Debt & Cash section cash target row)
+- Prior_End_Cash = CFS ending cash from the prior period
+- The CFO and CFI terms reference the CFS subtotal rows directly; the CFF term is a `SUM()` over the actual CFF range minus the buyback row itself (or a SUM of the range with the buyback cell excluded); FX references the CFS FX row if one exists
+- Implement by summing RANGES, not by typing out individual line items
 
-This guarantees CFS End Cash = Target Cash every period. The waterfall residual approach is fragile because any CFS line not explicitly included in the waterfall (e.g., SBC withholding payments, finance lease principal payments) causes buybacks to be mis-sized, which breaks the BS balance.
+Illustratively, the flows being netted include dividends, debt issuance/repayment, finance lease principal payments, SBC withholding, and other financing — but the formula must capture them via the range sums, NOT via explicit enumeration. A hand-enumerated plug silently mis-sizes buybacks the moment the CFS gains a line the list omitted (finance lease payments were the classic miss under the old enumerated style), which breaks the BS balance. The structural sum makes that failure impossible: any new CFS row is automatically absorbed.
+
+This guarantees CFS End Cash = Target Cash every period.
 
 The Cap Alloc waterfall and its check row remain useful as an informational decomposition of cash sources and uses, but the actual buyback number must come from the direct plug formula.
 
@@ -113,7 +116,7 @@ Turns M&A from a cash black hole into a trackable value creator. Five rows:
 
 | Row | Label | Historical | Projection Formula | Format | Notes |
 |-----|-------|-----------|-------------------|--------|-------|
-| 1 | Acquisitions, Net | `=Deployment Acquisitions row` | `=Deployment Acquisitions row (same value, links up)` | Number | Links to deployment for auditability |
+| 1 | Acquisitions, Net | `=Deployment Acquisitions row` (historical pull) | **Hardcoded assumption** (blue/yellow): annual acquisition spend in dollars, entered NEGATIVE (cash outflow), with source comment | Number, blue/yellow | **THIS row is the single input cell.** The Capital Deployment "Acquisitions, Net" row links to it (`=` this row — same sign, no flip needed) |
 | 2 | Acquisition IRR | blank | assumption (e.g. 15%) | Percentage, italic, blue/yellow | Key thesis assumption |
 | 3 | Cumulative M&A Invested Capital | **blank** | FY1: `=ABS(Acquisitions)`. FY N: `=prior + ABS(FY N acquisitions)` | Currency | Running total — **forecast-period acquisitions only** |
 | 4 | M&A Portfolio Value at Exit | **blank** | FY1: `=ABS(Acquisitions)`. FY N: `=prior_value * (1 + IRR) + ABS(current year acquisitions)` | Currency, bold | Compounds at assumed IRR — **forecast-period only** |
@@ -136,7 +139,7 @@ Two rows that serve as the SINGLE source of truth for SBC across the model's cap
 | Row | Label | Historical Formula | Projection Formula | Format |
 |-----|-------|-------------------|-------------------|--------|
 | 1 | SBC % of Revenue | `=IF(Revenue=0, "", IS!SBC / IS!Revenue)` | assumption (blue/yellow, e.g. 0.75%) | Percentage, italic |
-| 2 | SBC ($mm) | `=IS!SBC row` | `=SBC % * IS!Revenue` | Currency ($#,##0.0) |
+| 2 | SBC ($mm) | `=IS!SBC row` | `=SBC % * IS!Revenue` | Currency (`$#,##0_);($#,##0);"-"`) |
 
 SBC feeds two downstream calculations:
 - **SBC Dilution** in the Share Count section: `SBC $ / Buyback Price` = shares diluted by SBC grants
@@ -167,7 +170,7 @@ Full share count roll-forward with 8 rows:
 - **Shares Repurchased** = `ABS(buyback dollars from deployment) / Buyback Price`. Buyback dollars come from the residual sweep, so shares repurchased is a derived output, not an input.
 - **SBC Dilution** = `SBC dollars (from SBC section) / Buyback Price`. This is the net share dilution from stock-based compensation at the assumed share price.
 - **Ending Basic** = `Beginning - Repurchased + SBC Dilution`. Net share count change reflects both buyback accretion and SBC dilution.
-- **Dilutive Securities (TSM)** is a flat assumption for Treasury Stock Method dilution from outstanding options/RSUs not captured in the annual SBC dilution flow.
+- **Dilutive Securities (TSM)** is a flat assumption for Treasury Stock Method dilution from outstanding options/RSUs not captured in the annual SBC dilution flow. The flat assumption is the modeling default; the TSM formula in `meth-share-count.md` is how you SIZE it — compute TSM at the current share price, hardcode the result with a source comment, refresh when the price moves materially.
 - **Y/Y Change in Diluted Shares** is a quick visual sanity check — should show steady net accretion (negative %) if buybacks exceed SBC dilution.
 
 ---
@@ -199,7 +202,7 @@ Seven rows providing a comprehensive view of how earnings are allocated:
 
 | Row | Label | Formula | Format |
 |-----|-------|---------|--------|
-| 1 | Free Cash Flow (FCF) | `=FCF row from Cash Available section` | Currency, green font (same-tab pull) |
+| 1 | Free Cash Flow (FCF) | `=FCF row from Cash Available section` | Currency, black font (same-tab formula — green is cross-sheet only) |
 | 2 | Less: Stock-Based Compensation | `=-SBC $ from SBC section` | Number |
 | 3 | FCF less SBC | `=FCF + Less SBC` | Currency, bold |
 | 4 | (FCF - SBC) as % of NI | `=IF(NI=0, "", FCF less SBC / IS!Net Income)` | Percentage, italic |
@@ -296,7 +299,7 @@ All assumptions on the Cap Alloc Build tab (blue text #0000FF, yellow background
 | Other Investing | Cash Available | 0 | "Analyst assumption -- no other investing activity" |
 | Finance Lease Payments | Cash Available | Match recent history or declining | "Source: [filing], lease schedule" |
 | Other Financing | Cash Available | Small negative (e.g. -$2mm) | "Analyst assumption -- misc financing" |
-| Acquisitions, Net | M&A section | Company-specific | "Source: management guidance / analyst assumption" |
+| Acquisitions, Net | M&A section (row 1 — the single input cell; Deployment links to it) | Company-specific, entered negative | "Source: management guidance / analyst assumption" |
 | Acquisition IRR | M&A section | 15% | "Source: Analyst assumption -- based on [rationale]" |
 | SBC % of Revenue | SBC section | Match recent history (e.g. 0.75%) | "Source: 5yr historical average" |
 | Buyback Price ($/share) | Share Count | Current share price, growing at appreciation % | "Source: market data as of [date]; appreciation per analyst assumption" |
@@ -428,7 +431,7 @@ A phase is complete if and only if ALL of the following are true. Report complet
 
 1. **Task Tracker**: Every subtask row for Phase 5 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **All 6 verification checks pass** (BS=0, CF=0, NI=0, Waterfall=0, CFS End Cash=Target, CFS End Cash=BS Cash). Read and report actual values for every projection period.
-3. **Phase 4 placeholders re-linked**: Dividends, Buybacks, Acquisitions, Diluted Shares all reference Capital Allocation Build.
+3. **Phase 4 placeholders re-linked — all 6**: CFS Dividends, CFS Buybacks, CFS Acquisitions, IS Diluted Shares, BS & CFS Build PP&E-section Acquisitions row, and BS!M&A Assets all reference Capital Allocation Build. Read each cell and confirm the live link.
 4. **Post-wiring BS equity adjustment** done: RE includes dividends, CSAPIC/Treasury includes buybacks.
 5. **Iterative calculation enabled** and circular refs resolving.
 6. **Tab Completion Verification** output pasted.

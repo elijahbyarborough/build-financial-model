@@ -1,6 +1,6 @@
 ---
 name: build-model-phase-4
-description: "Phase 4 -- Forward Statements. Build all forward projections (IS/BS/CFS) off the Profit Build and BS & CFS Build: lease schedules, PP&E, WC, debt, tax. Includes full methodology for leases, PP&E, WC, tax, interest/debt, and goodwill. Load after build-model and firm-formatting."
+description: "Phase 4 -- Forward Statements. Assemble the projected IS/BS/CFS (Model View) from the completed build tabs -- verify, don't rebuild (Phase 3 owns all build-tab projections). Covers statement wiring, lease CF rules, equity roll, placeholders, and the EBT wiring check. Load after build-model and firm-formatting."
 ---
 
 # Phase 4 -- Forward Statements
@@ -36,8 +36,8 @@ See `phase-4-forward-statements.md` for the complete phase reference.
 - `meth-ppe-build.md` -- PP&E & Capex section: 3-part structure, roll-forward, FL adjustments
 - `meth-working-capital.md` -- Working Capital section: 4-step discovery, driver types, methodology
 - `meth-tax.md` -- Tax section: effective tax rate, NOL companies, tax outputs
-- `meth-interest-debt.md` -- Interest expense & debt: tranche-by-tranche build, cash & equivalents
-- `meth-goodwill.md` -- Goodwill & intangibles: carry-forward, amortization, M&A Assets
+- `meth-interest-debt.md` -- Interest expense & debt: aggregate default vs tranche escalation, interest income, cash target + BS cash wiring
+- `meth-goodwill.md` (canonical in build-model-phase-3) -- Goodwill & intangibles: carry-forward, amortization, M&A Assets
 
 ## After Completing This Phase
 

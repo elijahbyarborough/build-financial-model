@@ -26,7 +26,7 @@ Format every tab. No tab is exempt. Two tabs keep their own layout specs while s
 
 ### Tab Organization
 
-Reorder all tabs to match the firm-standard tab order: Task Tracker → Output → Consensus → Returns → Model → KPI Tracker → IS → BS → CFS → Profit Build → BS & CFS Build → Capital Allocation Build → Annual Historicals → Quarterly Historicals → Data Pull tabs → source tabs. Apply tab colors per firm-formatting Tab Colors table: primary output tabs (incl. KPI Tracker) navy #1C3553; IS/BS/CFS sage #6B9E6F; the three build tabs steel #5B8FA8; Annual/Quarterly Historicals teal #436E71. Move any source/reference tabs to the far right with Gray (#7C7F88) coloring.
+Reorder all tabs to match the firm-standard tab order: Task Tracker → Output → Consensus → Returns → Model Tab → KPI Tracker → IS → BS → CFS → Profit Build → BS & CFS Build → Capital Allocation Build → Annual Historicals → Quarterly Historicals → Data Pull tabs → source tabs. Apply tab colors per firm-formatting Tab Colors table: primary output tabs (incl. KPI Tracker) navy #1C3553; IS/BS/CFS sage #6B9E6F; the three build tabs steel #5B8FA8; Annual/Quarterly Historicals teal #436E71. Move any source/reference tabs to the far right with Gray (#7C7F88) coloring.
 
 ---
 
@@ -42,7 +42,8 @@ TAB VERIFICATION -- [Tab Name]:
   column widths uniform: [yes/no]
   tab color: [hex] -- expected: [hex from Tab Colors table]
   tab position: [correct/wrong]
-  Standard Tab Header (rows 1-6): [correct/missing/wrong]
+  Standard Tab Header (rows 1-6): [correct/missing/wrong -- or "exempt (own layout)" for
+    Returns, Task Tracker, and KPI Tracker, which are exempt per firm-formatting]
   year labels follow convention (FY YYYYA/E): [yes/no]
   number formats include _) padding: [spot-checked yes/no]
   Section Boundary Rule applied: [spot-checked yes/no]
@@ -58,7 +59,7 @@ A phase is complete if and only if ALL of the following are true. Report complet
 
 1. **Task Tracker**: Every subtask row for Phase 8 shows Status = "COMPLETE". Cite the actual cell addresses you checked.
 2. **Self-check checklist** from firm-formatting run on every tab -- all items checked.
-3. **Tab order** matches firm standard (Task Tracker, Output, Consensus, Returns, Model, KPI Tracker, IS, BS, CFS, Profit Build, BS & CFS Build, Capital Allocation Build, Annual Historicals, Quarterly Historicals, data tabs).
+3. **Tab order** matches firm standard (Task Tracker, Output, Consensus, Returns, Model Tab, KPI Tracker, IS, BS, CFS, Profit Build, BS & CFS Build, Capital Allocation Build, Annual Historicals, Quarterly Historicals, data tabs).
 4. **Tab colors** match the Tab Colors table for every tab.
 5. **Tab Completion Verification** output pasted for EVERY tab in the workbook.
 6. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-9".

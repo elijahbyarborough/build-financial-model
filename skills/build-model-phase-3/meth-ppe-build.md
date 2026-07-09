@@ -2,7 +2,7 @@
 
 ## BS & CFS Build — PP&E & Capex Section
 
-The PP&E & Capex section (Tier-2 header on the BS & CFS Build tab) must have exactly 3 sub-blocks, each with a bold-italic sub-header. Build this section AFTER the Finance Lease Schedule when FL_IN_PPE = Y (the D&A driver and "Other" capex line depend on it).
+The PP&E & Capex section (Tier-2 header on the BS & CFS Build tab) must have exactly 3 sub-blocks, each with a bold-italic sub-header (sub-block header style registered in firm-formatting). Build this section AFTER the Finance Lease Schedule when FL_IN_PPE = Y (the D&A driver and "Other" capex line depend on it).
 
 ### Sub-Block 1: Capital Expenditures
 
@@ -28,9 +28,11 @@ Both capex categories are POSITIVE values in this section (asset additions). The
 
 **Projection formula**: `D&A = rate × (2 × BegPPE + Capex) / (2 + rate)` where rate = D&A % of Avg PP&E. This solves the circular reference between D&A and Ending PP&E algebraically.
 
-**If FL_IN_PPE = Y**: the historical D&A % of Avg PP&E driver must EXCLUDE finance lease depreciation — compute it as `(Total D&A − FL Depreciation) / Avg PP&E` — otherwise projected D&A is overstated. Add a "Finance Lease Depreciation" line below the main D&A (= FL Schedule depreciation row, same tab), and project Total D&A = operating D&A (from the % driver) + FL Depreciation.
+**Sign convention (explicit)**: the projection formula above yields a POSITIVE value. D&A is stored as NEGATIVE in this section (asset reduction) — so the D&A $ row is the formula negated: `=-(rate × (2 × BegPPE + Capex) / (2 + rate))`. The roll-forward's "Less: D&A" row references the stored (already negative) value directly, and the IS/CFS apply their own sign handling when they pull it.
 
-D&A is stored as NEGATIVE in this section (asset reduction).
+**Approximation caveat**: the algebraic solution assumes the roll-forward base is Beginning PP&E + Capex only. Once acquisitions (Phase 5 live link) or FL additions enter the roll-forward, projected D&A is a slight approximation (the formula's base excludes those additions). This is acceptable — note it, don't chase precision.
+
+**If FL_IN_PPE = Y**: the historical D&A % of Avg PP&E driver must EXCLUDE finance lease depreciation — compute it as `(Total D&A − FL Depreciation) / Avg PP&E` — otherwise projected D&A is overstated. Add a "Finance Lease Depreciation" line below the main D&A (= FL Schedule depreciation row, same tab), and project Total D&A = operating D&A (from the % driver) + FL Depreciation.
 
 ### Sub-Block 3: Net PP&E Roll-Forward
 

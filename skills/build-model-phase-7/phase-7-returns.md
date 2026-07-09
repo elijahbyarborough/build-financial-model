@@ -34,7 +34,7 @@ Unlike the build tabs, this tab is NOT organized as a long vertical build. It is
 
 | Row | Label | Value/Formula | Format | Notes |
 |-----|-------|--------------|--------|-------|
-| 1 | Entry Price ($/share) | Blue/yellow assumption (e.g. $266.54). Can use `=CIQ()` if available | $#,##0.00, blue/yellow | The price at which the investor enters the position |
+| 1 | Entry Price ($/share) | Blue/yellow assumption (e.g. $266.54). Can use `=SPG("Exchange:Ticker","SP_LASTSALEPRICE",$B$2)` per build-model's SPG spec if live pricing is wanted | $#,##0.00. Hardcoded: blue/yellow. SPG() formula: RED font (#FF0000, external data) with no yellow fill | The price at which the investor enters the position |
 | 2 | Entry Date | `=TODAY()` or user-specified date | mm/dd/yyyy | Drives all YEARFRAC calculations |
 | 3 | Next FYE Date | `=DATE(YEAR(Entry Date), 12, 31)` | mm/dd/yyyy | The next fiscal year-end after entry. Adjust for non-Dec FYE companies |
 | 4 | Year Fraction | `=YEARFRAC(Entry Date, Next FYE Date, 1)` | 0.0%, italic | The fraction of the first fiscal year remaining after entry. Critical for calendarization. |
@@ -63,7 +63,8 @@ Unlike the build tabs, this tab is NOT organized as a long vertical build. It is
 ### Key Design Decisions
 
 - The **Exit date is exactly 5 years from Entry Date**, NOT a fiscal year-end. This creates a 5-year holding period IRR.
-- The FY columns correspond to each projection fiscal year-end that falls within the 5-year holding period — the actual years depend on the model's projection period (e.g., if the model is built in 2025, they would be FY 2026E-2031E; if built in 2027, they would be FY 2028E-2033E)
+- The FY columns cover every fiscal year the holding period touches — each FYE that falls within the 5-year hold, PLUS the fiscal year containing the Exit date (its FYE falls after exit; it is included because the final `1 − Year Fraction` dividend stub accrues within it). The actual years depend on the model's projection period (e.g., if the model is built in 2025, they would be FY 2026E-2031E; if built in 2027, they would be FY 2028E-2033E)
+- **Chronology rule for XIRR**: dividends received during the exit-year stub are dated before the Exit date, and Exit is always the FINAL entry in the XIRR date array — the array must remain strictly chronological even though the exit-year column's FYE label postdates the Exit date
 - Column header row is bold, center-aligned
 - Date row is italic, center-aligned, mm/dd/yy format
 - The number of FY columns = the number of projection years that fall within the 5-year holding period (typically 5-6 FY columns plus Entry and Exit)
@@ -213,11 +214,11 @@ The only difference is the exit cash flow: Total Price vs. EPS-Implied Price.
 
 ### What Returns READS from Other Tabs
 
-| Data Point | Source | Cell Pattern |
+| Data Point | Source | How to locate |
 |-----------|--------|-------------|
-| Diluted EPS (each projection year) | Model Tab | `='Model Tab'!L29`, `='Model Tab'!M29`, etc. |
-| M&A Value Per Share (each projection year) | Capital Allocation Build, M&A Value Per Share row | `='Capital Allocation Build'!L30`, etc. |
-| Annual DPS (each projection year) | Capital Allocation Build, DPS row | `='Capital Allocation Build'!L47`, etc. |
+| Diluted EPS (each projection year) | Model Tab, Diluted EPS row (Platinum List / Summary IS) | Locate by row label — never assume a fixed row number; cite the actual cells in the Task Tracker |
+| M&A Value Per Share (each projection year) | Capital Allocation Build, M&A Value Per Share row (M&A section) | Locate by row label; cite actual cells |
+| Annual DPS (each projection year) | Capital Allocation Build, DPS row (Dividend Policy section) | Locate by row label; cite actual cells |
 
 ### What Returns WRITES to Other Tabs
 
@@ -226,17 +227,18 @@ The only difference is the exit cash flow: Total Price vs. EPS-Implied Price.
 ### Dependency Chain
 
 ```
-IS Tab (Net Income, EPS)
-    |
-    v
-Model Tab (consolidates EPS)
-    |
-    v
-Capital Allocation Build (M&A Value Per Share, DPS)
-    |
-    v
-Returns Tab (reads EPS, M&A Value, DPS -> computes IRR)
+IS Tab (Net Income, EPS)          Capital Allocation Build
+    |                              (M&A Value Per Share, DPS)
+    v                                        |
+Model Tab (consolidates EPS)                 |
+    |                                        |
+    +----------------+-----------------------+
+                     v
+        Returns Tab (reads EPS from Model Tab; M&A Value
+        and DPS from Cap Alloc Build -> computes IRR)
 ```
+
+Model Tab and Capital Allocation Build are PARALLEL sources feeding Returns — the Model Tab does not feed the Cap Alloc Build.
 
 ---
 
@@ -255,7 +257,7 @@ Only THREE assumptions on this entire tab. Everything else is derived from these
 
 | Assumption | Location | Default | Format | Source Comment Guidance |
 |-----------|----------|---------|--------|----------------------|
-| Entry Price ($/share) | Entry Assumptions | Current share price or `=CIQ()` | $#,##0.00, blue/yellow | "Source: market data as of [date]" |
+| Entry Price ($/share) | Entry Assumptions | Current share price (hardcode) or `=SPG()` live pull | $#,##0.00 — blue/yellow if hardcoded, red font if SPG() | "Source: market data as of [date]" |
 | Entry Date | Entry Assumptions | `=TODAY()` | mm/dd/yyyy | Dynamic; updates daily |
 | Exit P/E | Valuation Grid, Exit column | Company-specific (e.g. 26.0x) | 0.0"x", blue/yellow | "Source: Analyst assumption -- [rationale, e.g. 5yr avg NTM P/E]" |
 
@@ -265,15 +267,17 @@ Only THREE assumptions on this entire tab. Everything else is derived from these
 
 | Cell Type | Font Color | Bold | Example |
 |-----------|-----------|------|---------|
-| Entry EPS, Entry P/E (calculated/implied) | Black #000000 | P/E bold, EPS not | Entry P/E = Price / EPS |
-| Projection EPS, DPS, M&A Value (cross-tab links) | Green #008000 | Not bold | `='Model Tab'!L35` |
+| Entry EPS, Entry P/E (calculated/implied) | Near-black #212529 | P/E bold, EPS not | Entry P/E = Price / EPS |
+| Projection EPS, DPS, M&A Value (cross-tab links) | Green #008000 | Not bold | `='Model Tab'!` EPS row |
 | Exit EPS, Exit M&A Value (cross-tab links) | Green #008000 | Bold | Exit values stand out |
 | Exit P/E (hardcoded input) | Blue #0000FF on yellow #FFFF00 | Bold | Analyst assumption |
 | Entry Price, Entry Date (hardcoded inputs) | Blue #0000FF on yellow #FFFF00 | Not bold | User-set inputs |
-| DPS Received, Net Cash Flow (calculated totals) | Black #000000 | Bold | Formula results |
+| DPS Received, Net Cash Flow (calculated totals) | Near-black #212529 | Bold | Formula results |
 | YEARFRAC Weight, Core CF ex-M&A (memo/helper) | Gray #7C7F88 | Italic | Reference lines |
-| IRR decomposition items (EPS CAGR, M&A, Div Yield, Mult Chg) | Black #000000 | Italic | Components |
-| IRR (total return) | Black #000000 | Bold + italic | Key output |
+| IRR decomposition items (EPS CAGR, M&A, Div Yield, Mult Chg) | Near-black #212529 | Italic | Components |
+| IRR (total return) | Near-black #212529 | Bold + italic | Key output |
+
+(Firm near-black #212529 per firm-formatting — never pure #000000.)
 
 ## Gray Highlight Rows (#F2F2F2 Background)
 
@@ -293,8 +297,8 @@ Core Cash Flow (ex-M&A) is a **gray italic memo line** (#7C7F88, italic, not bol
 
 | Location | Border Type |
 |----------|-------------|
-| Column headers row: bottom | Medium solid #000000 |
-| Date row: top | Medium solid #000000 |
+| Column headers row: bottom | Medium solid #212529 |
+| Date row: top | Medium solid #212529 |
 | Exit P/E row: bottom | Thin solid |
 | EPS-Implied Price row: top | Thin solid |
 | M&A Value row: bottom | Thin solid |

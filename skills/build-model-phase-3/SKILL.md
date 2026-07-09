@@ -40,6 +40,7 @@ See `phase-3-drivers.md` for the complete phase reference, including the mandato
 - `meth-cost.md` -- Profit Build cost sections: operating expenses methodology
 - `meth-tax.md` -- Profit Build tax section: effective tax rate, NOL companies, DTA/DTL, memo EBT
 - `meth-ppe-build.md` -- BS & CFS Build PP&E & Capex section: 3-block structure, sign conventions, roll-forward
+- `meth-goodwill.md` -- BS & CFS Build Goodwill & Intangibles section: goodwill carry-forward, intangible amortization, M&A Assets placeholder
 - `meth-working-capital.md` -- BS & CFS Build Working Capital section: 4-step discovery, driver types, denominator consistency, ex-lease disaggregation
 - `meth-debt-build.md` -- BS & CFS Build Debt & Cash section + lease schedules: canonical structure, cash target balance
 

@@ -6,7 +6,7 @@
 
 ### 4-Step Discovery Protocol
 
-1. **Identify**: Scan the BS for all current asset and current liability line items (excluding cash and current debt). These are the WC items to model.
+1. **Identify**: Scan the BS for all operating items — current assets and current liabilities (excluding cash and current debt) AND noncurrent operating items (ARO, pension/postretirement, other operating NCA/NCL). These are the WC items to model. Items owned by other sections are excluded: lease balances (lease schedules, via ex-lease disaggregation below), goodwill/intangibles/M&A Assets (Goodwill & Intangibles section), DTAs/DTLs (Tax section).
 2. **Select Driver**: For each item, pick the best-fit forecast driver from the table below — based on which produces the most stable historical ratio.
 3. **Backtest**: Check ratio stability over available history. If a driver shows high variance (CV >25%), flag it and consider an alternative or qualitative adjustment.
 4. **Structure**: One assumption row + one output row per WC item. Assumption row gets yellow background (#FFFF00) + blue text (#0000FF) + source comment. Output row computes the BS balance from the driver.
@@ -53,9 +53,16 @@ When the Lease BS Map shows a lease component embedded inside a broader reported
 - The BS line in Phase 4 recombines them: `= ex-lease projection + lease schedule component`
 - NEVER project an embedded lease balance with a revenue-based WC driver — lease balances follow their schedules
 
-Lease components with dedicated BS lines need no disaggregation — the BS references the lease schedule directly.
+Every Lease BS Map component gets its own Working Capital section row either way (per `meth-lease-full.md`): a **direct reference** to the lease schedule when the component has its own dedicated BS line (no ex-lease math needed), or the **ex-lease disaggregation pair** above when it is embedded in a broader line. Do not skip the WC row for dedicated-line components — the BS wires through this section in both cases.
 
 ### Methodology
 1. Calculate historical ratios for each WC item using the selected driver (historical balances link to Annual Historicals — green cross-sheet refs)
 2. Project driver metrics: hold flat at recent average, or trend based on management commentary
 3. Change in Working Capital on the CF statement = ending WC - beginning WC (increase in WC asset is a cash outflow, increase in WC liability is a cash inflow)
+
+### CFS Summary Outputs (Required)
+
+The section must end with two summary rows that the CFS references in Phase 4:
+
+1. **Change in Working Capital (CFO)** — net of all current item deltas
+2. **Noncurrent Operating Changes (CFO)** — net of all noncurrent item deltas. Includes the operating lease net change (ΔOL ROU − ΔOL liability, zero in projections by construction); EXCLUDES finance lease liability changes — FL principal flows through CFF, and new FL additions are non-cash.

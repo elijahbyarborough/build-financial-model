@@ -8,7 +8,7 @@ Tax lives in the **Tax section of the Profit Build tab** — the last Tier-2 sec
 
 Most companies can be modeled with a simple effective tax rate. This is the default unless the company has material NOLs or complex tax structures.
 
-- **Memo Pre-Tax Income**: `= EBIT (Consolidated P&L Bridge) − Total Interest Expense ('BS & CFS Build' Debt & Cash section, green ref)`. This row makes the Tax section self-contained; in Phase 4 the IS EBT must tie to it (validation check).
+- **Memo Pre-Tax Income**: `= EBIT (Consolidated P&L Bridge) − Total Interest Expense + Interest Income, if any (both from the 'BS & CFS Build' Debt & Cash section, green refs; interest income is the optional Sub-Block 3 row)`. This row makes the Tax section self-contained; in Phase 4 the IS EBT must tie to it (validation check).
 - **Income Tax Expense**: `= Memo Pre-Tax Income × Effective Tax Rate`
   - Effective tax rate: yellow background (#FFFF00) + blue text (#0000FF), source comment with historical average and statutory reference
   - Default: use the trailing 3-year average effective rate unless management guides otherwise

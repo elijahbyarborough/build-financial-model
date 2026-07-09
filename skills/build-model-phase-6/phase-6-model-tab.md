@@ -59,11 +59,11 @@ Immediately below the standard tab header (row 5 spacer), before the Summary Inc
 
 **Purpose**: These are the three key per-share inputs to the Returns framework — EPS (the primary valuation driver), DPS (dividend income), and M&A Value Per Share (incremental value from acquisitions). Surfacing them at the top of the Model tab provides immediate visibility into the drivers of total return.
 
-**Font color**: Green (#008000) for all data cells (cross-sheet references). Historical and projection columns both use green since all three rows are pulls from other sections/tabs.
+**Font color**: The Model Tab follows the same print-oriented convention as the Output tab (registered in firm-formatting): **historical columns green (#008000), projection columns black (#212529)** — every cell on this tab is a pull, so the green/black split marks actual vs. estimated years rather than cross-sheet vs. local.
 
 **Conditional inclusion**: Dividends Per Share and M&A Value Per Share should always be included even if values are zero — the "-" zero format handles display. The section is standard for every model.
 
-**EPS is always the valuation driver**: For all companies, use Diluted EPS as the key per-share metric. This is the primary driver of the P/E-based exit valuation in the Returns framework.
+**EPS and the exit basis**: Diluted EPS is the key per-share metric surfaced here, and P/E is the DEFAULT exit basis in the Returns framework. The exit-multiple hierarchy (FCF > P/E > EBIT > EBITDA, per build-model core rules) still governs — when the analyst selects a different exit multiple, the corresponding per-share metric drives the Returns valuation and should be surfaced alongside EPS.
 
 ---
 
@@ -158,9 +158,9 @@ Pull FCF generation and deployment metrics from the Capital Allocation Build tab
 | | (blank spacer) | | |
 | | Net Debt / EBITDA | `='BS & CFS Build'!Net Debt / EBITDA` | 0.0"x" |
 | | Interest Coverage | `=EBITDA / ABS(IS!Interest Expense)` | 0.0"x" |
-| | *Acquisition IRR* | `='Capital Allocation Build'!row26` | `0.0%_);(0.0%);"-"`, italic |
+| | *Acquisition IRR* | `='Capital Allocation Build'!` Acquisition IRR row | `0.0%_);(0.0%);"-"`, italic |
 
-**Acquisition IRR**: Pulls from `='Capital Allocation Build'!row26` (the Acquisition IRR assumption). Historical columns show "-" (Cap Alloc Build has no historical IRR values). Projection columns show the assumed IRR (e.g., 10.0%).
+**Acquisition IRR**: Pulls from the Acquisition IRR assumption row in the Capital Allocation Build's M&A section — **locate it by label** (row positions vary by build; never assume a fixed row number) and cite the actual cell address in the Task Tracker. Historical columns show "-" (Cap Alloc Build has no historical IRR values). Projection columns show the assumed IRR (e.g., 10.0%).
 
 **Conditional inclusion**: Only include this row if the model has material acquisition activity (non-zero Acquisitions, Net in the projection period). If no projected acquisitions, omit the row.
 
@@ -193,8 +193,8 @@ This is the ONE section with original calculations. The formulas are computed he
 |-----|-------|---------|--------|
 | | Total Equity | `=BS!Total Equity` | Currency, green font |
 | | Total Debt | `='BS & CFS Build'!Total Debt` | Currency, green font |
-| | Cash & Equivalents | `=-'BS & CFS Build'!Cash` | Number (negated — subtracted from IC) |
-| | **Invested Capital** | `=Equity + Debt - Cash` | **Major Total** (F2F2F2 fill, bold, Currency) |
+| | Less: Cash & Equivalents | `=-'BS & CFS Build'!Cash` | Number (stored negated — displays as a deduction) |
+| | **Invested Capital** | `=Equity + Debt + Cash_row` | **Major Total** (F2F2F2 fill, bold, Currency). The Cash row is ALREADY negated, so the total SUMS all three rows — subtracting the pre-negated row would double-negate and overstate IC |
 | | *Average Invested Capital* | `=(Current IC + Prior IC) / 2` | Currency, italic |
 | | **ROIC** | `=IF(Avg IC=0, "", NOPAT / Avg IC)` | 0.0%, bold |
 
@@ -202,9 +202,9 @@ This is the ONE section with original calculations. The formulas are computed he
 
 | Row | Label | Formula | Format |
 |-----|-------|---------|--------|
-| | Goodwill | `=-BS!Goodwill` | Number (negated — subtracted) |
-| | Intangible Assets | `=-BS!Intangibles` | Number (negated — subtracted) |
-| | **Tangible Invested Capital** | `=IC - Goodwill - Intangibles` | **Major Total** (F2F2F2 fill, bold, Currency) |
+| | Less: Goodwill | `=-BS!Goodwill` | Number (stored negated — displays as a deduction) |
+| | Less: Intangible Assets | `=-BS!Intangibles` | Number (stored negated — displays as a deduction) |
+| | **Tangible Invested Capital** | `=IC + Goodwill_row + Intangibles_row` | **Major Total** (F2F2F2 fill, bold, Currency). Goodwill and Intangibles rows are ALREADY negated, so the total SUMS them — subtracting the pre-negated rows would double-negate and overstate Tangible IC |
 | | *Average Tangible IC* | `=(Current + Prior) / 2` | Currency, italic |
 | | **ROTIC** | `=IF(Avg Tangible IC=0, "", NOPAT / Avg Tangible IC)` | 0.0%, bold |
 
@@ -271,10 +271,10 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 - Other Financing (catch-all)
 - **Cash From Financing** (bold)
 
-**FCF Definitions:**
-- **Unlevered FCF** (bold, Major Total F2F2F2 fill)
-- **Levered FCF** (bold, Major Total F2F2F2 fill)
-- **FCF to Equity** (bold, Major Total F2F2F2 fill)
+**FCF Definitions** (pulled from the CFS tab's memo "FCF Definitions" block, built in Phase 4):
+- **Levered FCF** = CFO − Capex (bold, Major Total F2F2F2 fill)
+- **Unlevered FCF** = Levered FCF + after-tax interest expense (bold, Major Total F2F2F2 fill)
+- **FCF to Equity** = Levered FCF + net debt issuance (bold, Major Total F2F2F2 fill)
 
 **Cash Reconciliation:**
 - Net Change in Cash
@@ -283,7 +283,7 @@ Scan the CFS tab and pull major line items, plus the three FCF definitions.
 
 ### Flexibility Rules
 
-- All three FCF definitions should be pulled from the CFS tab (where they're calculated)
+- All three FCF definitions are pulled from the CFS tab's memo "FCF Definitions" block (Phase 4 builds it below the Cash Reconciliation section) — locate the rows by label
 - If the CFS tab has additional operating items (deferred taxes, gain on sale, etc.), they can be grouped into "Other Operating" here
 - The level of detail in financing should match what matters: if the company has complex debt, show Net LT Debt and Net ST Debt separately
 - CF Check is mandatory — core model integrity check
@@ -336,7 +336,7 @@ EBITDA, Net Income, NOPAT, Invested Capital, Tangible IC, Total Assets, Total L&
 ### Borders
 
 - Thin solid above major totals
-- Medium solid below Tier 1 headers
+- Tier 1 headers: NO border (per firm-formatting — the medium bottom border belongs to year rows only)
 - No vertical borders
 
 ---

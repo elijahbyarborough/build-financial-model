@@ -1,4 +1,4 @@
-<!-- CANONICAL COPY: build-model-phase-1/meth-lease-full.md. If editing, sync edits there first. -->
+<!-- CANONICAL: this file is canonical in build-model-phase-1. Copies elsewhere sync FROM here. -->
 
 ## Lease Accounting (ASC 842)
 
@@ -118,7 +118,7 @@ Noncurrent = Total - Current.
 
 **IS linkage**: Operating lease cost flows to operating expenses (SG&A or a dedicated "Lease Expense" line). This is an operating expense, NOT interest.
 
-**CF linkage**: The net change in operating lease balances (Change in ROU Asset - Change in Liability) flows through working capital on the CF statement. When new lease additions roughly equal amortization, this nets to approximately zero. No separate CF Financing entry for operating leases.
+**CF linkage**: The net change in operating lease balances (Change in ROU Asset - Change in Liability) flows through working capital on the CF statement. Because the ROU and liability roll-forwards use identical formulas (`Beginning + New Leases - Lease Cost`), this nets to exactly zero in projections by construction — regardless of the level of new additions. Any historical ROU-vs-liability wedge is a one-time historical artifact, not a recurring flow. No separate CF Financing entry for operating leases.
 
 ### Finance Lease Schedule
 
@@ -160,7 +160,7 @@ This is a derived flag from the Lease BS Map. If `FL_ROU_ASSET_NC` maps to a PP&
 #### FL_IN_PPE = Y (finance lease ROU inside PP&E)
 
 - **PP&E & Capex section**: New FL additions flow through an "Other" capex line pulling from the Finance Lease Schedule's New Additions row (same tab). FL depreciation is embedded in total D&A.
-- **D&A driver calculation (CRITICAL)**: The D&A-as-%-of-revenue driver must be calculated EXCLUDING finance lease depreciation. Otherwise the FL portion inflates the %, leading to over-projection of D&A. Historical driver formula: `=(Total D&A - FL Depreciation) / Revenue`. Projection D&A allocation formula must subtract FL depreciation before applying the segment/corporate split.
+- **D&A driver calculation (CRITICAL)**: The historical D&A ratio must be calculated EXCLUDING finance lease depreciation — **whichever driver is used**: the primary D&A % of Avg PP&E driver (per `meth-ppe-build.md`), `=(Total D&A - FL Depreciation) / Avg PP&E`, or the derived % of revenue memo, `=(Total D&A - FL Depreciation) / Revenue`. Otherwise the FL portion inflates the ratio, leading to over-projection of D&A. Subtract FL depreciation before any segment-level D&A allocation, where used.
 - **BS**: Single "Net PP&E" line that includes FL ROU. No separate BS line for FL ROU asset.
 - **CFS**: Total D&A add-back on CFS already includes FL depreciation (it is inside the PP&E & Capex section's D&A).
 
@@ -231,11 +231,15 @@ If a lease component has its own dedicated BS line (e.g., "Operating lease liabi
 
 ### Build Order (Updated for Leases)
 
-When leases are present, the build order for Phase 4 (Forward Statements) is:
+When leases are present, the mandatory build order for **Phase 3 (Drivers)** — which owns all build-tab projections — is:
 
-1. Profit Build — revenue sections
-2. Profit Build — cost sections (operating expenses, including OL lease cost)
-3. **BS & CFS Build — Debt & Cash section plus Operating Lease Schedule and Finance Lease Schedule**
-4. BS & CFS Build — PP&E & Capex section (needs FL additions and depreciation from the lease schedules if `FL_IN_PPE=Y`)
-5. BS & CFS Build — Working Capital section (needs lease balances from the schedules, uses Lease BS Map for disaggregation)
-6. Profit Build — Tax section
+1. **Profit Build — segment revenue sections** (drivers + projections)
+2. **Profit Build — cost sections + Consolidated P&L Bridge through EBITDA** (including OL lease cost as an operating expense)
+3. **BS & CFS Build — Debt & Cash** (balances, roll-forward, interest, leverage, cash target)
+4. **BS & CFS Build — Operating Lease Schedule + Finance Lease Schedule** (self-contained: each schedule's projections depend only on its own drivers)
+5. **BS & CFS Build — PP&E & Capex** (needs FL additions and depreciation from the lease schedules if `FL_IN_PPE=Y`)
+6. **BS & CFS Build — Goodwill & Intangibles** (self-contained: amortization schedule + M&A Assets placeholder)
+7. **BS & CFS Build — Working Capital** (needs lease balances from the schedules, uses Lease BS Map for disaggregation)
+8. **Profit Build — Tax** (memo pre-tax income needs interest from step 3 and EBIT)
+
+**Phase 4 assembles statements only — it does not build these.**

@@ -9,7 +9,7 @@
 Project the Model View forward on the IS, BS, and CFS tabs by linking to the two build tabs populated in Phase 3. The statements carry the Model View only — historical columns link to Annual Historicals (done in Phase 1); this phase fills the projection columns.
 
 1. **IS projections**: Pull revenue, costs, and EBITDA detail from the Profit Build. Pull D&A from the BS & CFS Build (PP&E & Capex section). Pull interest from the BS & CFS Build (Debt & Cash section). Pull tax from the Profit Build (Tax section). Compute EBITDA, EBIT, EBT, NI, EPS, margins.
-2. **BS projections**: Pull PP&E from the BS & CFS Build (PP&E & Capex section), debt and cash from the BS & CFS Build (Debt & Cash section), WC items from the BS & CFS Build (Working Capital section). Compute totals and BS Check.
+2. **BS projections**: Pull PP&E from the BS & CFS Build (PP&E & Capex section), Goodwill, Intangibles, and the M&A Assets row from the BS & CFS Build (Goodwill & Intangibles section), debt and cash from the BS & CFS Build (Debt & Cash section), WC items from the BS & CFS Build (Working Capital section). Build the equity roll-forward (see BS — Equity Roll below). Compute totals and BS Check.
 3. **CFS projections**: Pull NI from IS, D&A from the BS & CFS Build, WC deltas and noncurrent operating deltas from the BS & CFS Build (Working Capital section), DTL changes from the Profit Build (Tax section), capex from the BS & CFS Build, debt changes from the BS & CFS Build. Compute CFO, CFI, CFF, ending cash, CF Check.
 
 ---
@@ -21,8 +21,8 @@ Project the Model View forward on the IS, BS, and CFS tabs by linking to the two
 Before assembling any statement, read and confirm on the build tabs (stop and return to Phase 3 if any fails):
 
 1. Profit Build: every segment section projected through the terminal year; Consolidated P&L Bridge totals = SUM of segments
-2. BS & CFS Build: Debt & Cash projected (incl. OL/FL schedules when lease flags set); PP&E & Capex projected (FL adjustments applied if `FL_IN_PPE=Y`); Working Capital projected for every mapped BS item
-3. Profit Build Tax section: projected, with the Memo Pre-Tax Income row (= EBIT − Total Interest) populated
+2. BS & CFS Build: Debt & Cash projected (incl. OL/FL schedules when lease flags set); PP&E & Capex projected (FL adjustments applied if `FL_IN_PPE=Y`); Goodwill & Intangibles projected (amortization schedule; M&A Assets = 0 placeholder); Working Capital projected for every mapped BS item
+3. Profit Build Tax section: projected, with the Memo Pre-Tax Income row (= EBIT − Total Interest Expense + Interest Income, if any) populated
 
 **Assembly order:** Income Statement → Balance Sheet → Cash Flow Statement.
 
@@ -38,6 +38,29 @@ In projections, every CFS line item is a delta from a BS item or a build-tab sec
 - **Cash = plug** (beginning + all flows = ending)
 
 **If any BS item changes in projections and has no CF flow, the model is broken.** Consult the BS→CF mapping from Phase 1. Every mapped item must have its delta flowing through the CFS.
+
+### CFS Memo Block — FCF Definitions (Phase 6 pulls these)
+
+At the bottom of the CFS, build a three-row memo block (historical and projection columns):
+
+1. **Levered FCF** `= CFO − Capex`
+2. **Unlevered FCF** `= Levered FCF + After-Tax Interest Expense`, where After-Tax Interest = Total Interest Expense × (1 − Effective Tax Rate)
+3. **FCF to Equity** `= Levered FCF + Net Debt Issuance / (Repayment)`
+
+The Model Tab (Phase 6) pulls all three by name — label them exactly as above.
+
+### CFS — Additional Required Lines (Phase 5 patch targets)
+
+- **SBC Withholding (CFF)**: shares withheld for employee taxes on vesting. Historicals as reported; projections = 0 placeholder unless reported historically (Phase 5's buyback plug enumerates it).
+- **FX Effect on Cash**: only if the company reports one. Historicals as reported; projections = 0 placeholder.
+
+### BS — Equity Roll (Phase 5 Will Re-Patch)
+
+Build the equity section as an explicit roll-forward so Phase 5's patch targets exist:
+
+- **Retained Earnings** `= Prior RE + IS!Net Income + Dividends (0 placeholder)`
+- **Common Stock & APIC** `= Prior CS&APIC − IS!SBC + SBC Withholding (0 placeholder) + Buybacks (0 placeholder)` — with SBC stored as a negative expense on the IS, `−IS!SBC` is the positive equity credit
+- **Treasury-stock companies**: buybacks accumulate in a negative **Treasury Stock** row instead (`= Prior Treasury + Buybacks`); CS&APIC then excludes the buyback term
 
 ---
 
@@ -71,7 +94,11 @@ This phase uses zero/flat placeholders for all items that depend on the Capital 
 - **Dividends (CFF)**: set to 0 in all projection years
 - **Share Repurchases (CFF)**: set to 0 in all projection years
 - **Acquisitions (CFI)**: set to 0 in all projection years
+- **SBC Withholding (CFF)**: 0 in projection years (unless reported historically — historicals as reported)
+- **FX Effect on Cash**: 0 in projection years (only present if the company reports one)
 - **Diluted Share Count**: hold flat at most recent historical diluted share count
+- **M&A Assets (BS)**: 0 in all projection years (Phase 5 re-links to Cumulative M&A Invested Capital)
+- **Equity roll terms**: the Dividends term in Retained Earnings and the SBC Withholding / Buybacks terms in CS&APIC (or Treasury) reference the 0-placeholder CFS lines above
 
 Phase 5 (Capital Allocation) will overwrite all of these with live formulas linking to the Capital Allocation Build tab. EPS, CFS, and BS update automatically once the links are in place.
 
@@ -98,8 +125,10 @@ Phase 5 (Capital Allocation) will overwrite all of these with live formulas link
 ### CFS — Lease Cash Flow Rules (HARD STOP)
 
 **CF from Operating Activities**:
-- **D&A add-back**: Includes finance lease depreciation. If `FL_IN_PPE=Y`, this is automatic (FL dep is inside the PP&E & Capex section's D&A). If `FL_IN_PPE=N`, pull separately and add: `D&A addback = -'BS & CFS Build'!Total_D&A + -'BS & CFS Build'!FL_Depreciation`.
-- **Working capital changes**: Include the net change in operating lease balances (Change in OL ROU - Change in OL Liability). Also include changes in FL current/noncurrent liabilities as they flow through the Working Capital section's noncurrent operating items.
+- **D&A add-back (sign-critical)**: Includes finance lease depreciation.
+  - If `FL_IN_PPE=Y`: `D&A addback = -'BS & CFS Build'!Total_D&A` — Total D&A already INCLUDES FL depreciation, and the PP&E & Capex section stores D&A as NEGATIVE, so the leading minus yields a positive add-back. Do NOT add FL depreciation again.
+  - If `FL_IN_PPE=N`: `D&A addback = -'BS & CFS Build'!Total_D&A + 'BS & CFS Build'!FL_Depreciation` — FL depreciation is stored POSITIVE in the Finance Lease Schedule, so it is ADDED (plus, not minus).
+- **Working capital changes**: Include the net change in operating lease balances ONLY (Change in OL ROU - Change in OL Liability — zero in projections by construction). **FL liability changes must NOT flow through working capital**: the FL principal reduction is already the CFF finance lease payment line, and new FL additions are non-cash. Routing FL liability deltas through WC double-counts principal and injects a non-cash inflow.
 
 **CF from Financing Activities**:
 - **Finance lease payment**: `= -'BS & CFS Build'!FL_Depreciation` (the DEPRECIATION row, which equals the principal portion)
@@ -121,7 +150,7 @@ All checks must pass for **every period** (historical AND projected):
 2. **CF Check = $0**: Beginning Cash + all CF - Ending Cash = 0
 3. **NI ties IS→CFS**: Net Income on IS = Net Income on CFS
 4. **RE roll-forward**: Beginning RE + NI - Dividends = Ending RE
-5. **EBT wiring check**: IS EBT = Profit Build Memo Pre-Tax Income (the Tax section computed tax off its memo EBT; if the assembled IS EBT diverges, the tax line is stale — re-check interest wiring)
+5. **EBT wiring check**: IS EBT = Profit Build Memo Pre-Tax Income (= EBIT − Total Interest Expense + Interest Income, if any). The Tax section computed tax off its memo EBT; if the assembled IS EBT diverges, the tax line is stale — re-check interest (and interest income) wiring
 
 If any check fails in projections, the most likely cause is a BS item changing without a corresponding CF flow. Use the BS→CF mapping to diagnose — find the BS line that changed and trace whether its delta appears on the CFS.
 
@@ -158,9 +187,9 @@ A phase is complete if and only if ALL of the following are true. Report complet
 5. **RE roll-forward** holds for all projection periods.
 6. **All build-tab deltas wired to CFS**: every BS item with a build-tab section has its delta flowing through CFS.
 7. **EBT wiring check passes**: IS EBT = Profit Build Memo Pre-Tax Income for all projection periods. Read both rows and confirm.
-8. **Capital allocation placeholders** in place (dividends=0, buybacks=0, acquisitions=0, shares=flat).
-8. **Tab Completion Verification** output pasted for IS, BS, CFS.
-9. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-5".
+8. **Capital allocation placeholders** in place (dividends=0, buybacks=0, acquisitions=0, SBC withholding=0, FX=0, shares=flat, M&A Assets=0, equity roll terms wired to the placeholder lines).
+9. **Tab Completion Verification** output pasted for IS, BS, CFS.
+10. **Task Tracker Model State Block**: "Last Skill Run" updated, "Next Skill" = "build-model-phase-5".
 
 If you write "Phase 4 complete" in chat before reading and reporting these values, you have made an error. Re-verify and correct.
 

@@ -5,7 +5,7 @@
     {
       "name": "fc-model-builder",
       "source": "./",
-      "description": "FC 12-phase financial model build system (skills 0-11 + firm formatting)."
+      "description": "FC 13-phase financial model build system (phases 0-12): historicals capture, driver-based 3-statement model, KPI tracker, XIRR returns, post-earnings updates."
     }
   ]
 }

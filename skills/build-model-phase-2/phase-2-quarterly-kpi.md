@@ -192,11 +192,12 @@ These two tabs are the model's update surface. **The `update-model` skill packag
 1. **Append a column** to Quarterly Historicals; capture the release (sections 1-6) same-day
    and the 10-Q sections (7-12) when filed. New tie-out cells for a completed fiscal year.
 2. **KPI Tracker**: follow the kpi-tracker skill's **Track B** -- flip the target column's
-   label E -> A and move the forecast divider one column right -- except values arrive via
-   live links rather than manual writes: WRITE green cross-sheet formulas into the flipped
-   column pulling the new quarter's cells from Quarterly Historicals (forward columns are
-   blank until flipped, so the links must be created at flip time). Intra-tab derived rows
-   (Y/Y, margins, FY formulas) then update automatically.
+   label E -> A and move the forecast divider right (one column for FQ1-FQ3; two columns on
+   an FQ4 close, which also flips the FY label -- per Track B's fiscal-year-close branch) --
+   except values arrive via live links rather than manual writes: WRITE green cross-sheet
+   formulas into the flipped column pulling the new quarter's cells from Quarterly
+   Historicals (forward columns are blank until flipped, so the links must be created at
+   flip time). Intra-tab derived rows (Y/Y, margins, FY formulas) then update automatically.
 3. If a 10-K quarter: update Annual Historicals first (Phase 1's tab), then the quarterly
    column, then verify tie-outs.
 4. Any recast/restatement/ASC change in the release: apply the meth-historicals protocol and
@@ -221,7 +222,7 @@ Change Log section present: [check/x]
 
 ```
 TAB COMPLETION VERIFICATION -- KPI Tracker
-Tab exists, position (right of Model): [check/x]
+Tab exists, position (right of Model Tab): [check/x]
 Tab color = #1C3553: [check/x]
 freezePanes = null: [check/x]   Gridlines off: [check/x]   Font = Arial 10: [check/x]
 KPI count: [N] across [N] sections

@@ -20,4 +20,5 @@ ROTIC isolates the return on the company's physical and working capital — stri
 
 ### Presentation
 - Show ROIC and ROTIC for all historical and projection years
-- Format as percentage rows (italic, percentage format)
+- ROIC and ROTIC headline rows: percentage format, **bold** (they are the section's key outputs — not italic)
+- Supporting ratio rows (Effective Tax Rate, Average IC, Average Tangible IC): italic per firm standard

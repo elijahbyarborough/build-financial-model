@@ -129,7 +129,7 @@ Complete specification for all Excel model formatting. This is the authoritative
 
 ## Standard Tab Header (Rows 1–6)
 
-**Applies to every tab EXCEPT Returns, Task Tracker, and KPI Tracker** (the KPI Tracker's header is defined by the `kpi-tracker` skill). Every qualifying tab opens with this exact 6-row structure:
+**Applies to every tab EXCEPT Returns, Task Tracker, KPI Tracker, Output, and Consensus.** The KPI Tracker's header is defined by the `kpi-tracker` skill; Output uses a 2-row title block and Consensus a 6-row variant, both defined in their phase skills — a reformat pass must not "correct" them to this standard. Every qualifying tab opens with this exact 6-row structure:
 
 | Row | Content | Fill | Font | Alignment | Border |
 |-----|---------|------|------|-----------|--------|
@@ -191,6 +191,9 @@ Complete specification for all Excel model formatting. This is the authoritative
 - **Border**: Thin top border on data cells (label column through all year columns)
 - **Number format**: Currency format (has `$`)
 - **Row height**: Same as all other rows (uniform)
+
+### Sub-Block Headers (build tabs -- registered variant)
+Within a Tier 2 section on the build tabs (e.g., the Debt & Cash section's sub-blocks), a **bold-italic label-only row** (no fill, no border, data cells empty) may head each sub-block. This is the only sanctioned in-section header style; it does not replace or add a tier.
 
 ### Data Rows (default -- not a numbered tier)
 - **Fill**: None
@@ -260,7 +263,7 @@ Maximum indent depth: 2 levels.
 | External data links (SPG(), etc.) | Red | #FF0000 |
 | NM / NA / not meaningful | Gray | #7C7F88 |
 
-**Output tab exception**: The Output tab is designed for print. On the Output tab, use green font (#008000) for **historical columns** and default black for **projection columns** to visually delineate actual vs. estimated years. This overrides the cross-sheet = green rule for that tab only, since every cell on the Output tab is a cross-sheet reference and applying green everywhere would defeat the purpose.
+**Output and Model Tab exception**: These tabs are print/summary-oriented and every cell is a cross-sheet reference — applying green everywhere would defeat the purpose. On both, use green font (#008000) for **historical columns** and default black for **projection columns** to visually delineate actual vs. estimated years. Two further registered Output exceptions: the Exit P/E cell is a formula (`=Returns!Exit P/E`) displayed in blue as an assumption cue, and conversion-metric zero placeholders use an em-dash "—".
 
 **Structural labels are always black** — year headers, row labels, section headers, unit labels, and other non-data text are black (#212529) even though they are technically hardcoded. The blue = hardcoded rule applies only to data assumption values, not to structural elements of the model. Year headers in particular are always black and locally hardcoded per the Year Label Convention.
 
@@ -316,9 +319,10 @@ Which one to use is determined by the **Section Boundary Rule** (below).
 | Per-share | `$#,##0.00_);($#,##0.00);"-"` | EPS, DPS, price per share | Always has `$`, always 2 decimals, regardless of row position |
 | Percentage | `0.0%_);(0.0%);"-"` | Margins, growth rates, yields, rates | Rows are **italic** (both label and data cells) |
 | Multiple | `0.0"x"_);(0.0"x");"-"` | EV/EBITDA, P/E, P/FCF, leverage ratios | The `"x"` suffix is literal |
-| Integer | `#,##0` | Share counts, unit volumes | No `_)` padding needed (no parenthetical negatives expected) |
+| Integer | `#,##0` | Unit volumes, counts | No `_)` padding needed (no parenthetical negatives expected) |
+| Share count | `0.0` | Share counts in millions (basic, diluted, repurchased) | One decimal; shares are stated in millions |
 | Year | `@` (text format) | Year headers | Prevents "2,026" display |
-| Date | `MM/DD/YYYY` | Date cells | |
+| Date | `MM/DD/YYYY` | Date cells | Header FYE-date rows (row 4) use the compact `MM/DD/YY` |
 
 ### Negatives and Zeros
 - **Negatives**: Always parentheses `(1,234)`, never minus sign `-1,234`
@@ -389,11 +393,14 @@ All borders span from label column through all year/data columns.
 
 All horizontal borders — thin subtotal/separator borders, medium header borders, and the year row bottom border — span the full row from column A through the last data column (typically column R on build/statement tabs, column M on Output/Consensus). Borders are never limited to just the numeric data columns; they always include the label column (A) and any spacer column (B).
 
-This applies to every tab in the model: IS, BS, CF, Model, all builds, Output, and Consensus.
+This applies to every tab in the model: IS, BS, CFS, Model Tab, all builds, Output, and Consensus.
 
 ### Vertical Zone Dividers (Output & Consensus Tabs)
 
-Tabs with historical/projection/CAGR column zones (Output, Consensus) use medium solid #808080 vertical borders to separate zones. These dividers are **section-scoped** — they run from each Tier 1 header through the last data row of that section, then stop. Spacer rows between sections have no vertical borders. This prevents a continuous line running the full height of the tab.
+Tabs with historical/projection/CAGR column zones (Output, Consensus) use medium solid #808080 vertical borders to separate zones. The scoping differs by tab:
+
+- **Output**: dividers are **continuous** — they run from the year-label row through the last data row with no breaks at Tier 1 headers, Tier 2 subheaders, or spacer rows (firm preference for the one-pager).
+- **Consensus**: dividers are **section-scoped** — from each Tier 1 header through that section's last Delta row, then stop; spacer rows between sections stay clean.
 
 Build tabs (Profit Build, BS & CFS Build, Capital Allocation Build), the statements (IS, BS, CFS), the Historicals tabs, and the Model tab do not use vertical zone dividers — they rely on font color (green vs. black) to distinguish historical from projected.
 
@@ -417,7 +424,7 @@ Build tabs (Profit Build, BS & CFS Build, Capital Allocation Build), the stateme
 | Session management | Task Tracker | Amber/gold | #D4963A |
 | Analytical build | Profit Build, BS & CFS Build, Capital Allocation Build | Steel blue | #5B8FA8 |
 | Data capture | Annual Historicals, Quarterly Historicals | Dark Teal | #436E71 |
-| Reference/external | BAMSEC, Tegus, broker sources, Data Pull, Data Pull (Values), Source Notes | Gray | #7C7F88 |
+| Reference/external | BAMSEC, Tegus, broker sources, Data Pull, Data Pull (Values) | Gray | #7C7F88 |
 
 ---
 

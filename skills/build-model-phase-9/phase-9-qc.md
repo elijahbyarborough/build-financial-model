@@ -15,9 +15,9 @@ Run structural and formula QC across the entire model. The audit reads — it do
 | Gate | What It Checks | Pass Criteria |
 |------|---------------|---------------|
 | 1. Structural integrity | BS Check = 0, CF Check = 0, NI linkage, RE roll-forward, BS→CF mapping holds, WC denominator consistency | Zero errors, all periods |
-| 2. Assumption review | All blue-text cells sourced, no stale assumptions (>90 days) | Every assumption sourced and current |
+| 2. Assumption review | All blue-text cells sourced and sited per the Hardcode Registry, no stale projection assumptions (>90 days) | Every assumption sourced and current |
 | 3. Model tab consistency | Summary numbers match underlying tabs | Zero mismatches |
-| 4. Returns sanity | XIRR internally consistent, Returns tab pulls from Model tab correctly, entry price current | IRR plausible |
+| 4. Returns sanity | XIRR internally consistent, Returns tab pulls from Model Tab and Capital Allocation Build correctly, entry price current | IRR plausible |
 | 5. Historicals integrity | Quarterly tie-outs = 0, Change Log discipline, single-hardcode-layer audit, segment-version consistency | Zero violations |
 
 ### Gate Failure Protocol
@@ -29,7 +29,9 @@ Run structural and formula QC across the entire model. The audit reads — it do
 
 ### Gate 2 Scope Note
 
-Blue-text cells live in exactly four places: **Profit Build**, **BS & CFS Build**, **Capital Allocation Build** (projection assumptions — yellow bg + blue text), and the **Annual/Quarterly Historicals tabs** (captured reported data — blue text, no yellow). Review sourcing on all of them: assumption cells need a rationale + source comment; Historicals cells need a filing citation comment (`Source: [doc], [date], [ref]`). Blue text anywhere else is a Gate 5 finding, not a Gate 2 finding.
+Blue-text cells are legitimate ONLY at the sites listed in the **Hardcode Registry** (build-model core rules): the three build tabs (projection assumptions — yellow bg + blue text), the two Historicals tabs (captured reported data — blue, no yellow), the Returns tab's three inputs (Entry Price, Entry Date, Exit P/E — yellow + blue), the Output tab's Exit P/E mirror (blue-displayed formula, not a hardcode), and Phase-12 freezes (blue + `Frozen: Phase 12` comment tag). Review sourcing on all of them: assumption cells need a rationale + source comment; Historicals cells need a filing citation. Blue text anywhere NOT in the registry is a Gate 5 finding, not a Gate 2 finding.
+
+**Staleness scope**: the >90-day check applies to PROJECTION driver assumptions only (yellow+blue cells), judged by the date in the source comment. Historicals capture cells are exempt — their sources are filings, which are dated by nature and never "stale."
 
 ---
 
@@ -73,7 +75,7 @@ If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional 
 
 2. **Change Log discipline**: Cross-check the Historicals tabs against their Change Logs. Every versioned segment block ("(pre-FYxxxx presentation)" label), restatement comment, ASC adoption note row, and FYE transition-stub column must have a corresponding Change Log entry (date, change type, periods affected, source filing) — and every Change Log entry must correspond to something visible on the tab. Gaps in either direction = finding.
 
-3. **Single-hardcode-layer audit**: Scan the historical columns of IS, BS, CFS, Profit Build, BS & CFS Build, and Capital Allocation Build for blue-font (#0000FF) hardcoded cells. There must be ZERO — every historical value outside the Annual/Quarterly Historicals tabs must be a formula (link or derived). Report the scan scope and count. Any hit = FAIL with cell address.
+3. **Single-hardcode-layer audit**: Scan the historical columns of IS, BS, CFS, Profit Build, BS & CFS Build, Capital Allocation Build, Model Tab, and KPI Tracker for blue-font (#0000FF) hardcoded cells. There must be ZERO outside the **Hardcode Registry** sites (build-model core rules) — every historical value outside the Annual/Quarterly Historicals tabs must be a formula (link or derived), except registry-sanctioned cells (Returns' three inputs, the Output Exit P/E mirror, and `Frozen: Phase 12`-tagged freezes). Report the scan scope and count. Any unregistered hit = FAIL with cell address.
 
 4. **Segment-version consistency**: If the Historicals tabs contain more than one segment presentation block, verify that every model link (Profit Build segment sections, statements, Model tab) references the CURRENT presentation block. Zero links may point at a frozen legacy block. Trace and report.
 
@@ -90,7 +92,7 @@ If `HAS_OPERATING_LEASES = Y` or `HAS_FINANCE_LEASES = Y`, run these additional 
 
 ### Tab Organization Check
 
-Verify tab order matches firm standard: Task Tracker first, then Output / Consensus / Returns / Model / KPI Tracker, then IS / BS / CFS, then Profit Build / BS & CFS Build / Capital Allocation Build, then Annual Historicals / Quarterly Historicals, then Data Pull and source/reference tabs last. Verify all tab colors match the Tab Colors table in firm-formatting. Flag any STANDARD tab that is out of order or has wrong coloring.
+Verify tab order matches firm standard: Task Tracker first, then Output / Consensus / Returns / Model Tab / KPI Tracker, then IS / BS / CFS, then Profit Build / BS & CFS Build / Capital Allocation Build, then Annual Historicals / Quarterly Historicals, then Data Pull and source/reference tabs last. Verify all tab colors match the Tab Colors table in firm-formatting. Flag any STANDARD tab that is out of order or has wrong coloring.
 
 **Ad-hoc tabs are tolerated, not failed**: tabs outside the standard set (per firm-formatting's Ad-Hoc / Non-Standard Tabs section) are logged as INFO — "Non-standard tabs present: [names]" — with a note that they are user working material, conventionally parked right of the model tabs, and worth archiving before the model is circulated. They are exempt from the tab-order and tab-color checks and from formatting gates beyond the ad-hoc look (Arial 10, gridlines off, number formats).
 

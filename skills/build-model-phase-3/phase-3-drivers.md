@@ -23,10 +23,11 @@ Tier-2 sections, in order:
 Tier-2 sections, in order:
 
 1. **PP&E & Capex** — capex, D&A, net PP&E roll-forward. See `meth-ppe-build.md`.
-2. **Working Capital** — ALL operating BS items, current AND noncurrent, with explicit drivers. See `meth-working-capital.md`.
-3. **Debt & Cash** — debt balances, roll-forward, interest expense, leverage metrics, cash target balance. See `meth-debt-build.md`.
-4. **Operating Lease Schedule** (only if HAS_OPERATING_LEASES = Y). See `meth-debt-build.md`.
-5. **Finance Lease Schedule** (only if HAS_FINANCE_LEASES = Y). See `meth-debt-build.md`.
+2. **Goodwill & Intangibles** — goodwill carried flat, intangible amortization schedule (Beg − Amort + Additions = End), M&A Assets placeholder (0 until Phase 5). See `meth-goodwill.md`.
+3. **Working Capital** — ALL operating BS items, current AND noncurrent, with explicit drivers. See `meth-working-capital.md`.
+4. **Debt & Cash** — debt balances, roll-forward, interest expense, leverage metrics, cash target balance. See `meth-debt-build.md`.
+5. **Operating Lease Schedule** (only if HAS_OPERATING_LEASES = Y). See `meth-debt-build.md`.
+6. **Finance Lease Schedule** (only if HAS_FINANCE_LEASES = Y). See `meth-debt-build.md`.
 
 Historical lease schedules were built in Phase 1. This phase adds their forward drivers (New OL/FL, implied life, rate — yellow bg + blue text) and forward roll-forward projections.
 
@@ -41,8 +42,9 @@ Work in this exact sequence. Each step depends on outputs of earlier steps:
 3. **BS & CFS Build — Debt & Cash** (balances, roll-forward, interest, leverage, cash target)
 4. **BS & CFS Build — Operating Lease Schedule + Finance Lease Schedule** (self-contained: each schedule's projections depend only on its own drivers)
 5. **BS & CFS Build — PP&E & Capex** (capex % needs revenue from step 2; if FL_IN_PPE = Y, the D&A driver and "Other" capex line need Finance Lease Schedule data from step 4)
-6. **BS & CFS Build — Working Capital** (ex-lease disaggregation needs lease schedule balances from step 4)
-7. **Profit Build — Tax** (memo pre-tax income = EBIT − Total Interest Expense; interest exists after step 3, EBIT after step 5)
+6. **BS & CFS Build — Goodwill & Intangibles** (self-contained: amortization schedule from Annual Historicals + M&A Assets placeholder)
+7. **BS & CFS Build — Working Capital** (ex-lease disaggregation needs lease schedule balances from step 4)
+8. **Profit Build — Tax** (memo pre-tax income = EBIT − Total Interest Expense + Interest Income, if any; interest exists after step 3, EBIT after steps 5–6)
 
 **No circularity:** Tax depends on interest; interest depends on debt balances only — never on tax. The dependency chain is a straight line.
 
@@ -68,6 +70,8 @@ The Working Capital section of BS & CFS Build covers ALL operating BS items not 
 
 **Noncurrent operating items:** ARO, Operating Lease ROU Assets & Liabilities (via ex-lease disaggregation — the lease schedules own the lease balances), Other Noncurrent Assets, Other Noncurrent Liabilities, Pension/Postretirement, Deferred Tax Assets (if not in the Tax section)
 
+**Explicitly excluded from WC scope** (owned by other sections): Goodwill, Intangibles, and the M&A Assets row (Goodwill & Intangibles section); lease schedule balances themselves; DTLs modeled in the Tax section.
+
 Each item gets the 4-step treatment:
 1. **Identify**: from the BS→CF mapping
 2. **Select Driver**: DSO/DIO/DPO, % of revenue, % of COGS, % of OpEx, fixed dollar, or growth rate — whichever is most stable historically
@@ -87,7 +91,7 @@ Each item gets the 4-step treatment:
 ## Tax Section: Outputs for IS and CFS
 
 The Tax section of Profit Build must output:
-1. **Income Tax Expense** → IS pulls this in Phase 4. Computed as `Memo Pre-Tax Income × Effective Tax Rate` where Memo Pre-Tax Income = EBIT (P&L Bridge) − Total Interest Expense (Debt & Cash section, green ref).
+1. **Income Tax Expense** → IS pulls this in Phase 4. Computed as `Memo Pre-Tax Income × Effective Tax Rate` where Memo Pre-Tax Income = EBIT (P&L Bridge) − Total Interest Expense + Interest Income, if any (Debt & Cash section, green refs).
 2. **Net change in DTA/DTL** → CFS pulls this as a non-cash CFO adjustment. The driver for DTL growth must be a visible yellow/blue assumption cell, not embedded in a formula.
 3. **Cash Taxes Paid** (memo) → useful for FCF sanity checks.
 

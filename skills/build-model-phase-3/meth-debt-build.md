@@ -2,7 +2,7 @@
 
 ## BS & CFS Build — Debt & Cash Section and Lease Schedules
 
-The **Debt & Cash** section (Tier-2 header) follows a fixed sub-block order, and the two lease schedules are separate Tier-2 sections that follow it. Every model uses this exact structure. Sections/sub-blocks that don't apply (e.g., the Finance Lease Schedule when HAS_FINANCE_LEASES = N) are omitted entirely — do not leave empty headers.
+The **Debt & Cash** section (Tier-2 header) follows a fixed sub-block order, and the two lease schedules are separate Tier-2 sections that follow it. Every model uses this exact structure (inapplicable sections omitted; LOW-materiality lease simplification allowed per `meth-lease-full.md`). Sections/sub-blocks that don't apply (e.g., the Finance Lease Schedule when HAS_FINANCE_LEASES = N) are omitted entirely — do not leave empty headers. If `LEASE_MATERIALITY = LOW`, the simplified straight-line runoff from `meth-lease-full.md` may replace the full lease schedules.
 
 Row numbers below are illustrative; actual rows depend on header placement (rows 1-5 are standard model headers). The key constraint is **ordering**, not exact row numbers.
 
@@ -10,11 +10,13 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 
 | Row | Label | Source |
 |-----|-------|--------|
-| 1 | Short-Term Debt / Current Portion | `=BS!Short-Term Debt` (if applicable) |
-| 2 | Long-Term Debt | `=BS!Long-Term Debt` |
-| 3 | Total Debt | `=SUM(Short-Term + Long-Term)` |
+| 1 | Short-Term Debt / Current Portion | Historicals: `=Annual Historicals` (Debt Detail / BS face), green ref. Projections: ST/LT split of Total Debt via historical current/total ratio or disclosed maturities. |
+| 2 | Long-Term Debt | Historicals: `=Annual Historicals`, green ref. Projections: `=Total Debt - Short-Term Debt`. |
+| 3 | Total Debt | Historicals: `=SUM(Short-Term + Long-Term)`. Projections: `=Sub-Block 2 Ending Total Debt` (the roll-forward is the authority). |
 | 4 | Less: Cash & Equivalents | `=Cash & Equivalents row (Sub-Block 5)` |
 | 5 | Net Debt | `=Total Debt - Cash` |
+
+**The BS pulls FROM this section in Phase 4** (`BS!Short-Term Debt`, `BS!Long-Term Debt` = these rows). This section never references the BS tab — historicals come from Annual Historicals, projections from the roll-forward — so there is no mutual-reference loop.
 
 ### Sub-Block 2: Debt Roll-Forward
 
@@ -31,9 +33,10 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 | 1 | Debt Interest Expense | Historicals link to Annual Historicals. Projections = `Debt Rate × Average Total Debt`. |
 | 2 | Finance Lease Interest Expense | `=FL Schedule Interest row` (only if HAS_FINANCE_LEASES = Y) |
 | 3 | Total Interest Expense | `=SUM(Debt Int + FL Int)` — this is what the IS and the Profit Build Tax section reference. |
-| 4 | Debt Interest Rate | Historical implied = `Debt Int / Avg Total Debt`. Projection = blue assumption (carry forward). |
-| 5 | Finance Lease Interest Rate | `=FL Schedule Rate row` (only if HAS_FINANCE_LEASES = Y) |
-| 6 | Check (Total Int - Debt Int - FL Int) | Must be 0. Validation row. |
+| 4 | Interest Income (optional) | Only if the company earns material interest income. Historicals link to Annual Historicals; projections = conservative money-market rate × average cash (Sub-Block 5). Kept SEPARATE from Total Interest Expense; feeds the Profit Build Memo Pre-Tax Income (`= EBIT - Total Interest Expense + Interest Income`). |
+| 5 | Debt Interest Rate | Historical implied = `Debt Int / Avg Total Debt`. Projection = blue assumption (carry forward). |
+| 6 | Finance Lease Interest Rate | `=FL Schedule Rate row` (only if HAS_FINANCE_LEASES = Y) |
+| 7 | Check (Total Int - Debt Int - FL Int) | Must be 0. Validation row. |
 
 ### Sub-Block 4: Leverage Metrics
 
@@ -62,72 +65,24 @@ Row numbers below are illustrative; actual rows depend on header placement (rows
 
 ### Operating Lease Schedule (own Tier-2 section; only if HAS_OPERATING_LEASES = Y)
 
-**Sub-section: Drivers**
+Section placement: immediately after the Debt & Cash section. Row list, in order:
 
-| Row | Label | Notes |
-|-----|-------|-------|
-| 1 | New Operating Leases (ROU Additions) | Historical = `Ending ROU - Beginning ROU + Lease Cost`. Projection = blue assumption (trailing 3yr avg). |
-| 2 | Implied Useful Life (years) | `=Prior Total Liability / Annual Lease Cost`. Projection = carry forward. |
-| 3 | Operating Lease Cost | `=Prior Total Liability / Useful Life`. NOT revenue-driven. |
-| 4 | % of Revenue (memo) | Memo only. `=Lease Cost / Revenue`. Italic. |
+- **Drivers**: New Operating Leases (historical = `Ending ROU - Beginning ROU + Lease Cost`; projection = blue assumption, trailing 3yr avg) · Implied Useful Life (`=Prior Total Liability / Annual Lease Cost`, carried forward) · Operating Lease Cost (`=Prior Total Liability / Useful Life` — NOT revenue-driven) · % of Revenue memo (italic)
+- **Balance Sheet Items**: ROU Asset Net and Total Liability (identical roll-forwards: `=Beginning + New - Lease Cost`) · Liability Current (**formula-driven split ONLY — never hardcoded**: `=MIN(Total, Next-Year Lease Cost)` or historical current/total ratio) · Liability Non-Current (`=Total - Current`) · Wtd Avg Discount Rate (blue assumption, carried forward)
 
-**Sub-section: Balance Sheet Items**
-
-| Row | Label | Notes |
-|-----|-------|-------|
-| 1 | Operating Lease ROU Asset, Net | Roll-forward: `=Beginning + New - Lease Cost` |
-| 2 | Operating Lease Liability — Current | Blue assumption or formula-driven split |
-| 3 | Operating Lease Liability — Non-Current | `=Total - Current` |
-| 4 | Total Operating Lease Liability | `=Beginning + New - Lease Cost` |
-| 5 | Wtd Avg Discount Rate | Blue assumption (carry forward historical) |
+**Schedule mechanics, formulas, CF rules, and edge cases per `meth-lease-full.md` (canonical in build-model-phase-1).**
 
 ### Finance Lease Schedule (own Tier-2 section; only if HAS_FINANCE_LEASES = Y)
 
-**Sub-section: Drivers**
+Section placement: immediately after the Operating Lease Schedule. Row list, in order:
 
-| Row | Label | Notes |
-|-----|-------|-------|
-| 1 | New Finance Leases | Historical = `Ending Gross ROU - Beginning Gross ROU`. Projection = blue assumption. |
-| 2 | Implied Depreciation Life (years) | Historical = `Beginning Net ROU / Depreciation`. Projection = carry forward. |
-| 3 | Depreciation Expense | `=(Beginning Net ROU + New) / Life` |
-| 4 | Interest Rate | Historical = `FL Interest / Beginning Liability`. Projection = blue assumption. |
-| 5 | Interest Expense | `=Rate × Beginning Liability` (use beginning, NOT average — avoids circular ref) |
+- **Drivers**: New Finance Leases (historical = `Ending Gross ROU - Beginning Gross ROU`; projection = blue assumption) · Implied Depreciation Life (historical = `Beginning Net ROU / Depreciation`, carried forward) · Depreciation Expense (`=Beginning Net ROU / Life` — straight-line on the beginning balance; new additions begin depreciating the following year, which keeps the implied-life inversion internally consistent) · Interest Rate (historical = `FL Interest / Beginning Liability`; projection = blue assumption) · Interest Expense (`=Rate × Beginning Liability` — beginning, NOT average, to avoid the circular ref)
+- **ROU Asset Roll-Forward**: `Ending Net ROU = Beginning + New - Depreciation` (gross + accumulated-depreciation roll where the company disclosure supports it, per meth-lease-full)
+- **Liability Roll-Forward**: `Ending = Beginning + New + Interest Accrued - Cash Payments`, where Cash Payments `= Depreciation + Interest`
+- **Balance Sheet Items**: ROU Asset Net (`=ROU roll-forward ending`) · Liability Current (**formula-driven split ONLY — never hardcoded**) · Liability Non-Current (`=Total - Current`) · Total Liability (`=Liability roll-forward ending`)
+- **Finance Lease Expense (IS memo)**: Depreciation · Interest · Total (`=Dep + Int`)
 
-**Sub-section: ROU Asset Roll-Forward**
-
-| Row | Label | Formula |
-|-----|-------|---------|
-| 1 | Beginning ROU Asset, Net | `=Prior Ending` |
-| 2 | + New Finance Leases | `=Drivers New FL` |
-| 3 | - Depreciation of ROU Assets | `=-Drivers Depreciation` (negative) |
-| 4 | Ending ROU Asset, Net | `=Beginning + New - Depreciation` |
-
-**Sub-section: Liability Roll-Forward**
-
-| Row | Label | Formula |
-|-----|-------|---------|
-| 1 | Beginning Liability | `=Prior Ending` |
-| 2 | + New Finance Leases | `=Drivers New FL` |
-| 3 | + Interest Accrued | `=Drivers Interest` |
-| 4 | - Cash Payments (= Dep + Int) | `=-(Depreciation + Interest)` (negative) |
-| 5 | Ending Liability | `=Beginning + New + Interest - Payments` |
-
-**Sub-section: Balance Sheet Items**
-
-| Row | Label | Notes |
-|-----|-------|-------|
-| 1 | Finance Lease ROU Asset, Net | `=ROU Roll-Forward Ending` |
-| 2 | Finance Lease Liability — Current | Blue assumption or formula split |
-| 3 | Finance Lease Liability — Non-Current | `=Total - Current` |
-| 4 | Total Finance Lease Liability | `=Liability Roll-Forward Ending` |
-
-**Sub-section: Finance Lease Expense (IS Memo)**
-
-| Row | Label | Notes |
-|-----|-------|-------|
-| 1 | Depreciation of ROU Assets | `=Drivers Depreciation` |
-| 2 | Interest on Lease Liabilities | `=Drivers Interest` |
-| 3 | Total Finance Lease Cost | `=Depreciation + Interest` |
+**Schedule mechanics, formulas, CF rules (principal-only CFF payment), and edge cases per `meth-lease-full.md` (canonical in build-model-phase-1).**
 
 ### Key Rules
 
