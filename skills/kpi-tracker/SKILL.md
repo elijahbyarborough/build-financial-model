@@ -275,7 +275,7 @@ Concise summary:
 | 1 | `[Company Name] (TICKER) – Quarterly KPI Tracker` — navy fill `#1C3553`, white bold Arial 10, **MERGED A:[last col]** | None |
 | 2 | `($ in millions, except per-unit and per-share data)` — italic, no fill | None |
 | 3 | Blank spacer | None |
-| 4 | Period labels: `FQ1 2022A`, ..., `FY 2026E` — bold black, centered, Arial 10 | **Medium bottom border on `C4:[lastcol]4` ONLY. NO border on `A4:B4`.** |
+| 4 | Period labels: `FQ1 2022A`, ..., `FY 2026E` — bold black, centered, Arial 10 | **Medium bottom border on `A4:[lastcol]4` — FULL width including label column A and spacer column B**, per firm-formatting's Horizontal Border Extent (matches every other tab's year-row border) |
 | 5 | Period-end dates: `03/31/22`, etc., format `MM/DD/YY` (firm header-date format), centered, regular Arial 10 | **NO border anywhere on row 5.** |
 | 6 | Blank spacer | None |
 | 7+ | First section header (Tier 1) | — |
@@ -343,7 +343,7 @@ Major Total rows (Total Capex, FCF, Net Debt, Total Assets) stay regular weight 
 #### Borders
 
 **No borders anywhere in the body.** The only borders allowed on a KPI tab:
-- Medium bottom border on `C4:[lastcol]4` (under period labels)
+- Medium bottom border on `A4:[lastcol]4` (under period labels — full width from column A, per firm Horizontal Border Extent)
 - Forecast divider: medium left border (`#212529`, weight Medium) on the first forecast column, spanning row 4 through last data row
 
 That's it. No row 5 top border, no thin top borders on Major Totals, no internal section borders, no FY-column edge borders. The visual hierarchy comes from the navy section bands, FY gray fill, indentation, and italics — not from borders.
@@ -473,7 +473,7 @@ For every cell holding data pulled directly from a release:
 - [ ] One blank breather row directly below EVERY section header (between navy band and first data row); FY gray fill extends through the breather
 - [ ] Indentation: every derived sub-row (Y/Y %, margin %, bps Δ, ex-FX %, incremental %) at indent level 1, applied across full row width A:[lastcol]; primary $/count/balance lines at indent 0
 - [ ] No bold anywhere in the body — bold ONLY on row 1 title, row 4 period labels, and section header bands
-- [ ] No borders anywhere in the body — only row 4 bottom border (`C4:[lastcol]4`) and the forecast divider remain
+- [ ] No borders anywhere in the body — only row 4 bottom border (`A4:[lastcol]4`, full width) and the forecast divider remain
 - [ ] Italic on all % and bps rows (label + data)
 - [ ] Forecast divider in place (medium left border on first forecast column)
 - [ ] Sourcing matches mode: plugin-model → historicals are green live links to Quarterly Historicals, no hardcoded historicals on this tab; standalone → no green font (cross-sheet refs converted to values)

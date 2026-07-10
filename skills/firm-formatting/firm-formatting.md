@@ -395,7 +395,7 @@ All borders span from label column through all year/data columns.
 
 All horizontal borders — thin subtotal/separator borders, medium header borders, and the year row bottom border — span the full row from column A through the last data column (typically column R on build/statement tabs, column M on Output/Consensus). Borders are never limited to just the numeric data columns; they always include the label column (A) and any spacer column (B).
 
-This applies to every tab in the model: IS, BS, CFS, Model Tab, all builds, Output, and Consensus.
+This applies to every tab in the model: IS, BS, CFS, Model Tab, all builds, Output, Consensus, and the KPI Tracker (whose header border also runs full width from column A — the layout carve-out does not exempt border extent).
 
 ### Vertical Zone Dividers (Output & Consensus Tabs)
 
