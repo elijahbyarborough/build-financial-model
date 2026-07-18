@@ -38,7 +38,7 @@ The system is designed for **Claude for Excel** (the Excel add-in), where Claude
 | 0 | `build-model-phase-00` | Setup — create all tabs, build Task Tracker, detect lease exposure, run Sector Discovery (incl. KPI taxonomy selection), set column structure |
 | 1 | `build-model-phase-01` | Annual Historicals & Statements — capture everything the company reports annually, then build Model-View-only IS/BS/CFS linking to it |
 | 2 | `build-model-phase-02` | Quarterly Historicals & KPI Tracker — capture ≥16 quarters of reported data, build the KPI Tracker tab (loads `kpi-tracker`) |
-| 3 | `build-model-phase-03` | Drivers — populate Profit Build (segments → EBITDA → tax) and BS & CFS Build (PP&E, WC, debt & cash, leases) with historicals, drivers, and forward projections |
+| 3 | `build-model-phase-03` | Drivers — populate Profit Build (segments → EBITDA → tax) and BS & CFS Build (PP&E, WC, debt & cash, leases) with historicals, drivers, and forward projections. **Optional:** a quarterly EBIT build for the near-term forecast (rest of current FY + next FY) that the annual Profit Build sums up — with a triage for when to extend it to quarterly BS/CFS schedules (`meth-quarterly-build.md`) |
 | 4 | `build-model-phase-04` | Forward Statements — assemble projected IS, BS, CFS from the build tabs |
 | 5 | `build-model-phase-05` | Capital Allocation — cash waterfall, buybacks, dividends, M&A program, share count (enables circular references) |
 | 6 | `build-model-phase-06` | Model Tab — consolidate all outputs: Platinum List Indicators, Summary IS, KPIs, Capital Allocation, Summary BS, Summary CFS |
@@ -123,6 +123,8 @@ Phases must execute in order: 0 → 1 → 2 → … → 12. Each phase has expli
 - **ASC 842 lease-aware** — operating and finance lease schedules on the BS & CFS Build
 - **Iterative calculation required** after Phase 5 (circular Capital Allocation waterfall)
 - **Balance sheet must balance** — BS Check = 0, CF Check = 0, no plugs ever
+- **Optional quarterly build** — the near-term forecast (rest of current FY + next FY) can be modeled quarter-by-quarter (EBIT layer) and summed into the annual Profit Build; a triage guides when to extend it to quarterly capex→D&A or other BS/CFS timing
+- **Freeze panes** — grid tabs (build tabs, statements, Historicals) freeze at `B5`; the Model Tab and KPI Tracker freeze at `B6`; summary tabs (Task Tracker, Output, Consensus, Returns) stay unfrozen. Single source of truth: the Freeze Pane Standard in `firm-formatting`
 
 ## Repository Structure
 
@@ -146,6 +148,7 @@ skills/
   build-model-phase-03/      # Drivers
     meth-revenue.md  meth-cost.md  meth-tax.md          # (canonical)
     meth-ppe-build.md  meth-working-capital.md  meth-debt-build.md
+    meth-quarterly-build.md                             # (canonical) optional quarterly build -> annual
   build-model-phase-04/      # Forward Statements
     meth-goodwill.md  meth-interest-debt.md             # (canonical)
   build-model-phase-05/      # Capital Allocation

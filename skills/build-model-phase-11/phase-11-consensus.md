@@ -273,7 +273,7 @@ A single vertical divider separates historical columns from projection columns �
 
 ### Freeze Panes
 
-**No freeze panes.** Consistent with all other tabs.
+**No freeze panes** — Consensus is a summary comparison tab, unfrozen per the Freeze Pane Standard (like Output, Returns, and the Task Tracker).
 
 ---
 
@@ -285,7 +285,7 @@ A single vertical divider separates historical columns from projection columns �
 - **Cross-check units** — validate at least one historical year before building forward columns.
 - **Conditional formatting** — green (#006100) for positive deltas, red (#9C0006) for negative.
 - **No F2F2F2 fills** — white background on all data rows.
-- **No freeze panes. Gridlines off.**
+- **No freeze panes** (summary tab, unfrozen per the Freeze Pane Standard). Gridlines off.
 
 ---
 
@@ -295,7 +295,7 @@ Before reporting the Consensus tab complete, read and paste:
 
 ```
 TAB VERIFICATION -- Consensus:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   tab color: [hex] -- expected: #1C3553

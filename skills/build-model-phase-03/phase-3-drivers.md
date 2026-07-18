@@ -37,6 +37,16 @@ Historical lease schedules were built in Phase 1 (anchored at the bottom of the 
 
 ---
 
+## Optional — Quarterly Build (near-term forecast)
+
+**Off by default.** For most models the annual driver build above is sufficient. When the near-term quarterly path is itself the thesis (a product ramp, a margin-inflection quarter, a capex cycle, a guidance-vs-model debate), you can optionally model the business **quarter by quarter** for the near horizon — the **rest of the current fiscal year + the next full fiscal year** — and have the annual Profit Build's forecast columns **sum the quarters up**.
+
+The default is an **EBIT-layer** build (quarterly segment revenue → segment P&L → Operating Income) on a dedicated steel-blue **`Quarterly Build`** tab that links its actuals from Quarterly Historicals and feeds the annual Profit Build forecast-window columns via `SUM`/revenue-weighted formulas. Before building, run the triage in `meth-quarterly-build.md` to decide whether the business *also* needs a quarterly balance-sheet/cash-flow schedule (the common one is accelerating **capex → D&A** timing, which additionally feeds the BS & CFS Build PP&E section) — for most businesses, EBIT-only suffices.
+
+**If used, build the Quarterly Build tab in this phase, before finalizing the annual Profit Build forecast columns (they pull from it).** Full methodology, triage checklist, tab structure, tie-out checks, the annual-pull formulas, and the seam-continuity rule are in **`meth-quarterly-build.md`**.
+
+---
+
 ## Mandatory Build Order (Cross-Tab Dependencies)
 
 Work in this exact sequence. Each step depends on outputs of earlier steps:
@@ -112,7 +122,7 @@ In Phase 4, the IS EBT must tie to the Memo Pre-Tax Income row — this is a val
 - **Non-contractual debt changes (optional prepayment, new issuance beyond scheduled amort) in projection years: set to 0 as a placeholder.** Phase 5 will incorporate final debt decisions.
 - **Cash & Equivalents lives in the Debt & Cash section** as a target balance assumption (yellow bg + blue text in projections, green ref to BS for historicals). The change in cash feeds the Capital Allocation Build — see `meth-debt-build.md` for the full spec.
 - **Both build tabs output balances (for BS) and deltas (for CFS)** — the statements pull from them in Phase 4.
-- **No freeze panes.**
+- **Freeze panes at `B5`** on Profit Build, BS & CFS Build, and the optional Quarterly Build (Freeze Pane Standard).
 
 ---
 
@@ -122,7 +132,7 @@ Before reporting either build tab complete, read and paste:
 
 ```
 TAB VERIFICATION -- [Tab Name]:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]
@@ -142,7 +152,7 @@ Do NOT "conduct a review in your head." Write the driver review into the Task Tr
 
 | Tab | Driver | FY_last_E Value | Confidence | Rationale | Flag/Action |
 
-**One row per driver assumption.** Every yellow-bg/blue-text assumption cell on Profit Build and BS & CFS Build must appear as a row in this table — including lease schedule drivers.
+**One row per driver assumption.** Every yellow-bg/blue-text assumption cell on Profit Build, BS & CFS Build, and the Quarterly Build (when used) must appear as a row in this table — including lease schedule drivers and quarterly drivers. For quarterly drivers, one row per driver per fiscal year is sufficient (cite the quarter cells in the rationale) — do not omit them just because they are quarterly.
 
 ### Completeness Check
 

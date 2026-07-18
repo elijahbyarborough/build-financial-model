@@ -432,7 +432,7 @@ After writing all labels, visually verify none are clipped by the column boundar
 - **Vertical dividers** between Historical | Projection | CAGR zones (IS/KPIs/CapAlloc only, not Returns).
 - **Entry EPS and Entry P/E use black font**, not green.
 - **Em-dash "—" zero placeholder** for conversion metrics.
-- **No freeze panes. All formatting defers to `firm-formatting`.**
+- **No freeze panes** — Output is a one-page summary, unfrozen per the Freeze Pane Standard. All formatting defers to `firm-formatting`.
 
 ---
 
@@ -442,7 +442,7 @@ Before reporting the Output tab complete, read and paste:
 
 ```
 TAB VERIFICATION -- Output:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   tab color: [hex] -- expected: #1C3553

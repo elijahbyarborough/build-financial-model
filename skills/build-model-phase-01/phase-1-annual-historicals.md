@@ -148,7 +148,7 @@ Before reporting any tab complete (Annual Historicals, IS, BS, CFS, BS & CFS Bui
 
 ```
 TAB VERIFICATION -- [Tab Name]:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]

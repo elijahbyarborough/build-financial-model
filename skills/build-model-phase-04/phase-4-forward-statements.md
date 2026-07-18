@@ -154,7 +154,7 @@ All checks must pass for **every period** (historical AND projected):
 
 If any check fails in projections, the most likely cause is a BS item changing without a corresponding CF flow. Use the BS→CF mapping to diagnose — find the BS line that changed and trace whether its delta appears on the CFS.
 
-**No freeze panes. All formatting defers to `firm-formatting`.**
+**Freeze panes at `B5` on IS/BS/CFS (Freeze Pane Standard). All formatting defers to `firm-formatting`.**
 
 ---
 
@@ -164,7 +164,7 @@ Before reporting any tab's forward projections complete, read and paste:
 
 ```
 TAB VERIFICATION -- [Tab Name] (Forward Projections):
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]

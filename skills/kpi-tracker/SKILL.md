@@ -280,6 +280,8 @@ Concise summary:
 | 6 | Blank spacer | None |
 | 7+ | First section header (Tier 1) | — |
 
+**Freeze panes at `B6`** (per the firm-formatting Freeze Pane Standard): column A (labels) and the 5-row header block (title, units, spacer, period labels, dates — rows 1–5) stay pinned as you scroll. This is the same `B6` variant the Model Tab uses (both have a header one row longer than the Standard Tab Header). Gridlines off.
+
 ### Row heights and column widths
 
 | Element | Spec |
@@ -480,7 +482,7 @@ For every cell holding data pulled directly from a release:
 - [ ] No yellow highlights
 - [ ] All hardcoded values from releases have source cell notes (standalone mode)
 - [ ] FY-from-quarters formulas match the derivation matrix
-- [ ] Gridlines off; freeze panes off
+- [ ] Gridlines off; freeze panes at `B6` (per the firm-formatting Freeze Pane Standard — KPI Tracker's 5-row header block)
 - [ ] Forward projections extend through current FY (if last actual is mid-year) + full next FY + Q1 next year holds guidance
 - [ ] Section header navy band spans FULL width `A:[lastcol]` (merged), white bold text re-applied after merge
 - [ ] Row height = 15 uniform; col A ≈ 240pt; col B ≈ 8pt; data cols width 9.5 (≈63pt)

@@ -1,6 +1,6 @@
 ---
 name: build-model-phase-03
-description: "Phase 3 -- Drivers. Populate the two driver tabs (Profit Build, BS & CFS Build) with historicals linked to Annual Historicals, driver assumptions, and build-tab projections. Includes revenue, cost, tax, PP&E, WC, and debt/lease methodology. Load after build-model and firm-formatting."
+description: "Phase 3 -- Drivers. Populate the two driver tabs (Profit Build, BS & CFS Build) with historicals linked to Annual Historicals, driver assumptions, and build-tab projections. Includes revenue, cost, tax, PP&E, WC, and debt/lease methodology, plus an optional quarterly build for the near-term forecast. Load after build-model and firm-formatting."
 ---
 
 # Phase 3 -- Drivers
@@ -43,6 +43,8 @@ See `phase-3-drivers.md` for the complete phase reference, including the mandato
 - `meth-goodwill.md` -- BS & CFS Build Goodwill & Intangibles section: goodwill carry-forward, intangible amortization, M&A Assets placeholder
 - `meth-working-capital.md` -- BS & CFS Build Working Capital section: 4-step discovery, driver types, denominator consistency, ex-lease disaggregation
 - `meth-debt-build.md` -- BS & CFS Build Debt & Cash section + lease schedules: canonical structure, cash target balance
+- `meth-quarterly-build.md` -- OPTIONAL quarterly build: near-term quarterly EBIT model (rest of current FY + next FY) that the annual Profit Build sums up; includes the triage for when quarterly BS/CFS schedules (e.g., capex -> D&A) are needed
+- `meth-lease-full.md` -- ASC 842 lease methodology (sync copy; canonical in build-model-phase-01)
 
 ## After Completing This Phase
 

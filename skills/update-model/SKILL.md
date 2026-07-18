@@ -91,6 +91,7 @@ Any failed check → stop and fix before reporting the update complete. A BS/CF 
 Report the verification block plus a one-line summary of what printed and what was captured. Then list the **deliberate follow-ups NOT done** (analyst's call, separate sessions):
 
 - Revisit driver assumptions against the new actuals (Phase 3 build tabs)
+- **Quarterly Build (if the model has one)**: re-point the printed quarter's column from driver formulas to actual links (Quarterly Historicals, green refs), flip its label E→A, verify its tie-out checks = 0, and extend the quarterly horizon if it has run out — per `build-model-phase-03/meth-quarterly-build.md`. Until this is done, the annual sums for that FY blend actuals with a stale estimated quarter
 - Extend the projection horizon if a fiscal year closed (Phase 3/4)
 - Re-anchor the Returns tab entry date/price (Phase 7)
 - Refresh the Consensus tab source data (Phase 11)

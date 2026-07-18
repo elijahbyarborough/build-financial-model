@@ -24,6 +24,7 @@ In a clean v2 build, Step 1 should find ZERO stray references — every hit is a
 
 - IS, BS, CFS (historical columns)
 - Profit Build (historical cells)
+- Quarterly Build (if present — actual-quarter cells must link to Quarterly Historicals, never to a source/scratch tab)
 - BS & CFS Build (historical cells, including lease schedule historicals)
 - Capital Allocation Build (historical cells)
 - Model, Returns, Output, KPI Tracker

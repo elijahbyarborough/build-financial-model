@@ -103,7 +103,7 @@ If the user doesn't specify, ask.
 - [ ] Key assumptions have yellow (#FFFF00) background?
 - [ ] Uniform column widths for all year/data columns?
 - [ ] Gridlines removed on this tab?
-- [ ] No frozen panes on this tab?
+- [ ] Freeze panes set per the Freeze Pane Standard (grid tabs `B5` / Model Tab `B6`; summary tabs unfrozen)?
 - [ ] Standard Tab Header (rows 1–6) matches spec? (navy title row, italic unit label, year row, FYE dates, blank spacer, then first section header) — skip for Returns, Task Tracker, and KPI Tracker tabs.
 - [ ] Year labels follow the Year Label Convention? (`FY 2026E` not `FY2026E`, `2026E`, or `FY 2026`)
 
@@ -424,7 +424,7 @@ Build tabs (Profit Build, BS & CFS Build, Capital Allocation Build), the stateme
 | Primary output | Output, Returns, Model Tab, Consensus, KPI Tracker | Dark navy | #1C3553 |
 | Financial statements | IS, BS, CFS | Sage green | #6B9E6F |
 | Session management | Task Tracker | Amber/gold | #D4963A |
-| Analytical build | Profit Build, BS & CFS Build, Capital Allocation Build | Steel blue | #5B8FA8 |
+| Analytical build | Profit Build, Quarterly Build (optional), BS & CFS Build, Capital Allocation Build | Steel blue | #5B8FA8 |
 | Data capture | Annual Historicals, Quarterly Historicals | Dark Teal | #436E71 |
 | Reference/external | BAMSEC, Tegus, broker sources, Data Pull, Data Pull (Values) | Gray | #7C7F88 |
 
@@ -468,11 +468,35 @@ openpyxl constants for Python-based formatting are not included here — Claude 
 
 ---
 
+## Freeze Panes
+
+**The Freeze Pane Standard.** Data-grid tabs freeze the label column and the header block so the year/period labels and the row labels stay visible while scrolling right or down. Summary and one-page tabs stay unfrozen.
+
+**Freeze at cell `B5`** — column A (row labels) plus header rows 1–4 (title, units, year/period row, dates) stay pinned — on every grid tab:
+
+| Tab | Freeze cell |
+|-----|-------------|
+| Profit Build | `B5` |
+| BS & CFS Build | `B5` |
+| Capital Allocation Build | `B5` |
+| Quarterly Build (optional — see Phase 3) | `B5` |
+| IS, BS, CFS | `B5` |
+| Annual Historicals | `B5` |
+| Quarterly Historicals | `B5` |
+| Model Tab | **`B6`** (5-row header variant — see below) |
+| KPI Tracker | **`B6`** (5-row header variant — see below) |
+
+**Unfrozen tabs** (no freeze panes): Task Tracker, Output, Consensus, Returns, and any ad-hoc/source tab. These are short summaries or own-layout tabs where a frozen header adds nothing.
+
+**The freeze point is uniform (`B5`) across every Standard-Tab-Header tab.** Two documented variants freeze one row lower, at `B6`, because their title blocks run rows 1–5 (period/year labels on row 4, dates on row 5): the **Model Tab** and the **KPI Tracker**. General rule for any tab whose header length differs from the standard: freeze at **column B, on the row immediately below the last date/period header row**.
+
+---
+
 ## Display Settings
 
 Apply on every tab in the workbook:
 - **Remove gridlines.** Gridlines off. The visual hierarchy provides all structure.
-- **Do not freeze panes.** No freeze panes on any tab.
+- **Freeze panes per the Freeze Pane Standard** (above): grid tabs freeze at `B5` (Model Tab and KPI Tracker `B6`); summary tabs (Task Tracker, Output, Consensus, Returns) stay unfrozen.
 
 ---
 

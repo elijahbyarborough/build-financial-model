@@ -7,7 +7,7 @@
 **If resuming (Task Tracker exists):** Read the Task Tracker → identify current phase → load that phase's skill per the Phase Router. Skip everything below.
 
 **If new build:**
-1. **HARD REQUIREMENT:** The `firm-formatting` skill must be loaded and internalized BEFORE creating any tab. Specifically, you must apply on every tab you create: Standard Tab Header (rows 1-6), Year Label Convention, Visual Hierarchy tiers, Display Settings (gridlines off, no freeze panes), Column Structure (uniform widths, no blank columns), Tab Colors, and Spacer Row rules. Do NOT defer formatting to Phase 8 — tabs must be correctly formatted from the moment they are created.
+1. **HARD REQUIREMENT:** The `firm-formatting` skill must be loaded and internalized BEFORE creating any tab. Specifically, you must apply on every tab you create: Standard Tab Header (rows 1-6), Year Label Convention, Visual Hierarchy tiers, Display Settings (gridlines off, freeze panes per the Freeze Pane Standard), Column Structure (uniform widths, no blank columns), Tab Colors, and Spacer Row rules. Do NOT defer formatting to Phase 8 — tabs must be correctly formatted from the moment they are created.
 2. Read the workbook: scan all tabs, list what exists.
 3. Identify starting scenario (see Starting Scenarios below).
 4. Run sector discovery (see Sector Discovery Framework below).
@@ -27,12 +27,12 @@
 - **Standard Tab Header (rows 1-6)** on every tab except Returns, Task Tracker, and KPI Tracker (the `kpi-tracker` skill owns that tab's header and quarterly column layout): navy title row, italic unit label, year row with medium bottom border, FYE dates, blank spacer, then first section header
 - **Year columns**: historical years (`FY YYYYA`) + 7 projection years (`FY YYYYE`), text format (`@`), locally hardcoded on every tab (never cross-sheet references). The **Quarterly Historicals** tab uses fiscal-quarter labels (`FQN YYYYA`) per the Year Label Convention instead of FY labels — at least 16 historical quarters.
 - **Column structure**: Column A = labels, then data columns immediately adjacent. **No blank columns anywhere.** Uniform data column widths (~13 chars / ~95px).
-- **No freeze panes** on any tab. Ever.
+- **Freeze panes per the Freeze Pane Standard** (firm-formatting): grid tabs frozen at `B5` (Model Tab `B6`); summary/own-layout tabs unfrozen. Apply at tab creation — do not defer to Phase 8.
 - **Gridlines off** on every tab
 - **No merged cells** in data area
 - **Display settings applied** before moving to Phase 1
 
-**Verify every tab is correctly set up before proceeding.** If any tab has wrong naming, missing year columns, incorrect colors, freeze panes, or structural issues, fix it now. Do not carry setup debt into Phase 1.
+**Verify every tab is correctly set up before proceeding.** If any tab has wrong naming, missing year columns, incorrect colors, missing or misplaced freeze panes (per the Freeze Pane Standard), or structural issues, fix it now. Do not carry setup debt into Phase 1.
 
 ---
 
@@ -52,6 +52,7 @@ Tab order in the workbook (left to right):
 | BS | Balance Sheet — Model View | Sage green (#6B9E6F) |
 | CFS | Cash Flow Statement — Model View | Sage green (#6B9E6F) |
 | Profit Build | Segment revenue & cost drivers through EBIT, plus tax | Steel blue (#5B8FA8) |
+| Quarterly Build | **Optional** — quarterly EBIT build for the near-term forecast that the Profit Build sums up. Created only when used (Phase 3). Positioned right of Profit Build. See `build-model-phase-03/meth-quarterly-build.md`. | Steel blue (#5B8FA8) |
 | BS & CFS Build | PP&E & capex, working capital, debt & cash, lease schedules | Steel blue (#5B8FA8) |
 | Capital Allocation Build | Cash waterfall, buybacks, dividends | Steel blue (#5B8FA8) |
 | Annual Historicals | As-reported annual data capture layer | Dark teal (#436E71) |
@@ -364,7 +365,7 @@ TAB VERIFICATION:
   Standard Tab Header (rows 1-6): [present/missing/N-A for Returns, Task Tracker, KPI Tracker]
   Year columns: [count] historical + [count] projection (Quarterly Historicals: [count] FQ columns)
   Column widths uniform: [yes/no]
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
 ```
 

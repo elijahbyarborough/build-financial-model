@@ -407,7 +407,7 @@ Defer to `firm-formatting` for all formatting rules. Key format decisions for th
 - **Post-wiring BS equity patch is mandatory** — RE and CSAPIC/Treasury must be updated after wiring. See Post-Wiring BS Equity Adjustment.
 - **CFS End Cash stays flow-based** — never override with a direct BS & CFS Build pull. See CFS End Cash Architecture.
 - **All 6 verification checks must pass.** See Verification Gate.
-- **No freeze panes.**
+- **Freeze panes at `B5`** on Capital Allocation Build (Freeze Pane Standard).
 
 ---
 
@@ -429,7 +429,7 @@ Before reporting the Capital Allocation Build tab complete, read and paste:
 
 ```
 TAB VERIFICATION -- Capital Allocation Build:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]

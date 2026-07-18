@@ -39,8 +39,8 @@ you materially improves driver assumptions.
   quarter is APPENDED as a new column post-earnings -- never overwrite an old column.
 - No FY columns on this tab. Annual figures live on Annual Historicals; quarterly tie-out
   rows reference them cross-tab.
-- Tab color teal `#436E71`, positioned immediately right of Annual Historicals. No freeze
-  panes, gridlines off, Arial 10pt, uniform data column widths.
+- Tab color teal `#436E71`, positioned immediately right of Annual Historicals. Freeze panes
+  at `B5` (Freeze Pane Standard), gridlines off, Arial 10pt, uniform data column widths.
 
 ### Capture rules (identical to Annual Historicals -- see `meth-historicals.md`)
 
@@ -211,7 +211,7 @@ These two tabs are the model's update surface. **The `update-model` skill packag
 TAB COMPLETION VERIFICATION -- Quarterly Historicals
 Tab exists, position (right of Annual Historicals): [check/x]
 Tab color = #436E71: [check/x]
-freezePanes = null: [check/x]   Gridlines off: [check/x]   Font = Arial 10: [check/x]
+freezePanes per Freeze Pane Standard: [check/x]   Gridlines off: [check/x]   Font = Arial 10: [check/x]
 Quarters captured: [N] (>= 16 + current partial year: [check/x])
 Sections present: [list -- omitted sections listed as "not reported"]
 Hardcodes blue #0000FF + source comments (spot-check 3 cells): [cell refs + PASS/FAIL]
@@ -224,7 +224,7 @@ Change Log section present: [check/x]
 TAB COMPLETION VERIFICATION -- KPI Tracker
 Tab exists, position (right of Model Tab): [check/x]
 Tab color = #1C3553: [check/x]
-freezePanes = null: [check/x]   Gridlines off: [check/x]   Font = Arial 10: [check/x]
+freezePanes per Freeze Pane Standard: [check/x]   Gridlines off: [check/x]   Font = Arial 10: [check/x]
 KPI count: [N] across [N] sections
 Column span: [first period] -> [last period] incl. forward columns: [check/x]
 Historical cells = live green refs to Quarterly Historicals (spot-check 3): [cells + PASS/FAIL]

@@ -72,14 +72,17 @@ All skills are designed for Claude for Excel cell-level operations.
 
 ## Core Rules (Always Apply -- Every Phase)
 
-### No Freeze Panes
-**Never freeze panes on any tab, ever.** No exceptions. Gridlines off. No merged cells in data area.
+### Freeze Panes
+**Grid tabs freeze panes at `B5`** (label column A + header rows 1–4 pinned); the Model Tab and KPI Tracker freeze at `B6` (their headers are one row longer). Summary/own-layout tabs — Task Tracker, Output, Consensus, Returns — stay unfrozen. Full spec and the per-tab list are the **Freeze Pane Standard** in `firm-formatting`. Gridlines off. No merged cells in data area.
 
 ### Projection Length
 **7 dynamic projection years** (5yr hold + NTM exit window). Calculate from today's date + FYE. When in doubt, add one more year.
 
 ### Historical Periods
 As many years of actuals as available. No fixed minimum -- use what the data gives you.
+
+### Optional Quarterly Build (near-term forecast)
+The near-term forecast window -- rest of the current fiscal year + the next full fiscal year -- may optionally be modeled quarter-by-quarter on a dedicated **Quarterly Build** tab (EBIT layer by default), with the annual Profit Build's forecast columns summing the quarters up. Off by default; built in Phase 3 when the quarterly path is itself the thesis. Spec, triage (when quarterly BS/CFS schedules are also needed), and the annual-pull formulas: `build-model-phase-03/meth-quarterly-build.md`.
 
 ### Revenue Driver Priority
 1. Unit economics / driver-based (volume x price/rate) -- strongly preferred
@@ -111,7 +114,7 @@ Every QC audit (Gates 2 and 5, Phase 12) validates against THIS list. A blue-tex
 | Site | What | Marking |
 |------|------|---------|
 | Annual / Quarterly Historicals | All captured reported values (historical hardcodes) | Blue + source comment |
-| Profit Build, BS & CFS Build, Capital Allocation Build | Projection driver assumptions | Yellow bg + blue + source comment |
+| Profit Build, BS & CFS Build, Capital Allocation Build, Quarterly Build (optional, when present) | Projection driver assumptions | Yellow bg + blue + source comment |
 | Returns tab | Exactly 3: Entry Price, Entry Date, Exit P/E | Yellow bg + blue + source comment |
 | Output tab | Exit P/E mirror -- a FORMULA (`=Returns!Exit P/E`) displayed in blue as an assumption cue; not a true hardcode | Blue font on formula (registered exception) |
 | KPI Tracker | Plugin-built models: NONE (fully link-based, incl. guidance -- links to the Quarterly Historicals Guidance section). Standalone mode only: historicals + guidance hardcodes | Blue (standalone only) |

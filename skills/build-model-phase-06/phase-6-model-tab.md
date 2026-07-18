@@ -313,7 +313,7 @@ EBITDA, Net Income, Total Assets, Total L&E, uFCF, LFCF, FCFE
 - **Output/summary layer only** — no assumption inputs. Every cell is a formula pull.
 - **Scan the Profit Build dynamically** — don't hardcode specific KPI rows. Mirror whatever its segment sections track.
 - **All number formats defer to `firm-formatting`** — use standard format strings with `_)` padding.
-- **No freeze panes. Gridlines off.**
+- **Freeze panes at `B6`** — the Model Tab title block runs rows 1–5, so it freezes one row below the standard to keep the full header pinned (Freeze Pane Standard). Gridlines off.
 
 ---
 
@@ -323,7 +323,7 @@ Before reporting the Model Tab complete, read and paste:
 
 ```
 TAB VERIFICATION -- Model Tab:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]

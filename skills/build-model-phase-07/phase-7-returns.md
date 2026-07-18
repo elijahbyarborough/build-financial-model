@@ -338,7 +338,7 @@ Core Cash Flow (ex-M&A) is a **gray italic memo line** (#7C7F88, italic, not bol
 - **4 gray highlight rows**: EPS-Implied Price, Total Price, Net Cash Flow, IRR.
 - **Core CF (ex-M&A) is a gray italic memo line** — no background fill.
 - **No vertical divider borders** on this tab.
-- **No freeze panes. All formatting defers to `firm-formatting`.**
+- **No freeze panes** — Returns is a compact summary tab, unfrozen per the Freeze Pane Standard. All formatting defers to `firm-formatting`.
 
 ---
 
@@ -348,7 +348,7 @@ Before reporting the Returns tab complete, read and paste:
 
 ```
 TAB VERIFICATION -- Returns:
-  freezePanes: [null -- if not null, STOP and fix]
+  freezePanes: [expected value per the firm-formatting Freeze Pane Standard -- STOP and fix if wrong]
   gridlines: [off -- if on, STOP and fix]
   font: [Arial 10pt -- if not, STOP and fix]
   column widths uniform: [yes/no]
