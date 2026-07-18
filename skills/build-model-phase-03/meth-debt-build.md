@@ -2,7 +2,7 @@
 
 ## BS & CFS Build — Debt & Cash Section and Lease Schedules
 
-The **Debt & Cash** section (Tier-2 header) follows a fixed sub-block order, and the two lease schedules are separate Tier-2 sections that follow it. Every model uses this exact structure (inapplicable sections omitted; LOW-materiality lease simplification allowed per `meth-lease-full.md`). Sections/sub-blocks that don't apply (e.g., the Finance Lease Schedule when HAS_FINANCE_LEASES = N) are omitted entirely — do not leave empty headers. If `LEASE_MATERIALITY = LOW`, the simplified straight-line runoff from `meth-lease-full.md` may replace the full lease schedules.
+The **Debt & Cash** section (Tier-2 header) follows a fixed sub-block order, and the two lease schedules are separate Tier-2 sections that follow it — they anchor the **bottom** of the BS & CFS Build tab, below the backbone sections (PP&E, Goodwill, Working Capital, Debt & Cash), per the canonical tab layout in `phase-3-drivers.md`. If the build surfaces additional self-contained schedules beyond leases, group them here at the bottom too, so the sections above always reference *down* into them. Every model uses this exact structure (inapplicable sections omitted; LOW-materiality lease simplification allowed per `meth-lease-full.md`). Sections/sub-blocks that don't apply (e.g., the Finance Lease Schedule when HAS_FINANCE_LEASES = N) are omitted entirely — do not leave empty headers. If `LEASE_MATERIALITY = LOW`, the simplified straight-line runoff from `meth-lease-full.md` may replace the full lease schedules.
 
 Row numbers below are illustrative; actual rows depend on header placement (rows 1-5 are standard model headers). The key constraint is **ordering**, not exact row numbers.
 

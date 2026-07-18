@@ -20,7 +20,7 @@ Tier-2 sections, in order:
 
 ### BS & CFS Build — every balance sheet driver and its CFS delta
 
-Tier-2 sections, in order:
+**Canonical tab layout (physical top → bottom).** The tab reads backbone-first — the sections that drive the balance sheet and cash flow come first; the self-contained lease schedules are anchored at the bottom as supporting sub-schedules that the sections above reference down into:
 
 1. **PP&E & Capex** — capex, D&A, net PP&E roll-forward. See `meth-ppe-build.md`.
 2. **Goodwill & Intangibles** — goodwill carried flat, intangible amortization schedule (Beg − Amort + Additions = End), M&A Assets placeholder (0 until Phase 5). See `meth-goodwill.md`.
@@ -29,7 +29,11 @@ Tier-2 sections, in order:
 5. **Operating Lease Schedule** (only if HAS_OPERATING_LEASES = Y). See `meth-debt-build.md`.
 6. **Finance Lease Schedule** (only if HAS_FINANCE_LEASES = Y). See `meth-debt-build.md`.
 
-Historical lease schedules were built in Phase 1. This phase adds their forward drivers (New OL/FL, implied life, rate — yellow bg + blue text) and forward roll-forward projections.
+**This is layout order, not build order.** The physical top-to-bottom sequence above is how the finished tab reads; the sequence you *compute* the sections in is the dependency-driven "Mandatory Build Order" below (Debt & Cash and leases get calculated early even though they sit lower on the tab). Don't conflate the two.
+
+**Extensibility — additional sections discovered during the build.** The six above are the standard set, but many companies surface company- or industry-specific BS/CFS sections that need their own build section (e.g., equity-method / other long-term investments, pension & OPEB assets/liabilities, deferred revenue or contract-liability schedules, insurance float/reserves, a loan/lease receivable book, regulatory assets). Slot each new section into the layout by analytical category, keeping the backbone-first flow: **assets** (PP&E → Goodwill & Intangibles → other long-term assets) → **operating working capital** → **financing** (Debt & Cash) → **self-contained schedules** (leases, and any similar standalone sub-schedules) anchored at the bottom. Place a new section adjacent to its nearest analytical kin (a pension liability sits with the other long-term liabilities near Debt & Cash; an investment asset sits up with PP&E/Goodwill), and give any new *self-contained schedule* the same bottom-anchor treatment as the lease schedules so references keep pointing up into it. Every added section still needs the four mapping elements below (historical link, inline driver, projected balance, CFS delta).
+
+Historical lease schedules were built in Phase 1 (anchored at the bottom of the tab). This phase adds their forward drivers (New OL/FL, implied life, rate — yellow bg + blue text) and forward roll-forward projections.
 
 ---
 

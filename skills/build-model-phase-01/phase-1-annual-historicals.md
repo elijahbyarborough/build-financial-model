@@ -87,6 +87,8 @@ Create a mapping (on the Task Tracker or as a working section):
 
 ## Step 4b: Lease Schedule Historicals (BS & CFS Build)
 
+**Placement: anchor these schedules at the BOTTOM of the BS & CFS Build tab.** They are the first thing built on this tab (Phase 1), but they are *not* the first thing on it. In Phase 3 the backbone sections — PP&E & Capex, Goodwill & Intangibles, Working Capital, Debt & Cash — are built **above** these lease schedules, so the finished tab reads backbone-first with the lease schedules anchored last (the canonical layout in `build-model-phase-03/phase-3-drivers.md`). Leave room above; do not let the lease schedules sit at the top of the tab.
+
 If `HAS_OPERATING_LEASES = Y`, add an **Operating Lease Schedule** section to the BS & CFS Build with historical rows:
 - **Drivers**: New Operating Leases (implied from ROU roll-forward: `Ending ROU - Beginning ROU + Lease Cost`), Implied Useful Life (`Prior Liability / Lease Cost`), Operating Lease Cost, Lease Cost as % of Revenue (memo)
 - **Balance Sheet Items**: Operating Lease ROU Asset Net, Operating Lease Liability -- Current, Operating Lease Liability -- Noncurrent, Total Operating Lease Liability
